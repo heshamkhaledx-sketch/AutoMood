@@ -515,6 +515,7 @@ min="0"
 placeholder="مبلغ الخدمة"
 >
 
+
 <h3>🛒 شراء منتجات</h3>
 
 <div class="category-buttons">
@@ -999,15 +1000,22 @@ type="date"
 
 <script>
 
+/* =========================
+   API
+========================= */
+
 const API_URL =
 "https://script.google.com/macros/s/AKfycbzNoSKZeYqTSWBNeJeCM1PK90i8Q3Vx0xXEiwMDmoiaKzHxupT92OfzJUAKivP5EqE3Ew/exec";
+
 
 let allProducts = [];
 let allServices = [];
 let cart = [];
 
 
-/* ================= API ================= */
+/* =========================
+   API REQUEST
+========================= */
 
 async function api(action,data={}){
 
@@ -1015,21 +1023,33 @@ try{
 
 const url = new URL(API_URL);
 
-url.searchParams.set("action",action);
+url.searchParams.set(
+"action",
+action
+);
 
 Object.keys(data).forEach(key=>{
 
 let value = data[key];
 
-if(typeof value === "object" && value !== null){
+if(
+typeof value === "object" &&
+value !== null
+){
+
 value = JSON.stringify(value);
+
 }
 
-url.searchParams.set(key,value);
+url.searchParams.set(
+key,
+value
+);
 
 });
 
-const response = await fetch(
+const response =
+await fetch(
 url.toString(),
 {
 method:"GET",
@@ -1038,14 +1058,25 @@ cache:"no-store"
 );
 
 if(!response.ok){
-throw new Error("فشل الاتصال بالسيرفر");
+
+throw new Error(
+"فشل الاتصال بالسيرفر"
+);
+
 }
 
-return await response.json();
+const result =
+await response.json();
 
-}catch(error){
+return result;
 
-console.error("API ERROR:",error);
+}
+catch(error){
+
+console.error(
+"API ERROR:",
+error
+);
 
 throw error;
 
@@ -1054,12 +1085,19 @@ throw error;
 }
 
 
-/* ================= MESSAGE ================= */
+/* =========================
+   MESSAGE
+========================= */
 
-function showMessage(text,type="success"){
+function showMessage(
+text,
+type="success"
+){
 
 const box =
-document.getElementById("message");
+document.getElementById(
+"message"
+);
 
 box.innerHTML =
 `<div class="${type}">
@@ -1073,19 +1111,27 @@ box.innerHTML="";
 }
 
 
-/* ================= PAGE ================= */
+/* =========================
+   PAGE
+========================= */
 
 function openPage(id){
 
-document.querySelectorAll(".page").forEach(page=>{
+document
+.querySelectorAll(".page")
+.forEach(
+page=>{
 page.classList.remove("active");
-});
+}
+);
 
 const page =
 document.getElementById(id);
 
 if(page){
+
 page.classList.add("active");
+
 }
 
 window.scrollTo({
@@ -1094,6 +1140,7 @@ behavior:"smooth"
 });
 
 }
+
 
 function goHome(){
 
@@ -1104,7 +1151,9 @@ loadDashboard();
 }
 
 
-/* ================= DASHBOARD ================= */
+/* =========================
+   HOME
+========================= */
 
 async function loadDashboard(){
 
@@ -1114,25 +1163,36 @@ const result =
 await api("getDashboard");
 
 if(!result.success){
+
 return;
+
 }
 
 const data =
 result.data || {};
 
-document.getElementById("invoiceCount").innerText =
+document.getElementById(
+"invoiceCount"
+).innerText =
 Number(data.invoiceCount || 0);
 
-document.getElementById("salesTotal").innerText =
+document.getElementById(
+"salesTotal"
+).innerText =
 Number(data.sales || 0);
 
-document.getElementById("expenseTotal").innerText =
+document.getElementById(
+"expenseTotal"
+).innerText =
 Number(data.expenses || 0);
 
-document.getElementById("netTotal").innerText =
+document.getElementById(
+"netTotal"
+).innerText =
 Number(data.net || 0);
 
-}catch(error){
+}
+catch(error){
 
 console.error(error);
 
@@ -1146,7 +1206,9 @@ showMessage(
 }
 
 
-/* ================= SERVICES ================= */
+/* =========================
+   SERVICES
+========================= */
 
 async function loadServices(){
 
@@ -1156,64 +1218,103 @@ const result =
 await api("getServices");
 
 if(!result.success){
+
 throw new Error(
-result.message || "تعذر تحميل الخدمات"
+result.message ||
+"تعذر تحميل الخدمات"
 );
+
 }
 
 allServices =
 result.data || [];
 
 const select =
-document.getElementById("service");
+document.getElementById(
+"service"
+);
 
 select.innerHTML =
 '<option value="">اختر الخدمة</option>';
 
-allServices.forEach(service=>{
+allServices.forEach(
+service=>{
 
 const option =
-document.createElement("option");
+document.createElement(
+"option"
+);
 
 option.value =
 service.name;
 
+/*
+السعر يظل محفوظًا داخل option
+حتى يتم وضعه تلقائيًا في خانة مبلغ الخدمة،
+لكن لا يتم عرضه داخل قائمة نوع الخدمة.
+*/
+
 option.dataset.price =
 Number(service.price || 0);
 
+/* عرض اسم الخدمة فقط */
 option.textContent =
-`${service.name} - ${Number(service.price || 0)} جنيه`;
+service.name;
 
-select.appendChild(option);
+select.appendChild(
+option
+);
 
 });
 
-}catch(error){
+}
+catch(error){
 
 console.error(error);
 
-document.getElementById("service").innerHTML =
+const select =
+document.getElementById(
+"service"
+);
+
+select.innerHTML =
 '<option value="">تعذر تحميل الخدمات</option>';
 
-showMessage(error.message,"error");
+showMessage(
+error.message,
+"error"
+);
 
 }
 
 }
 
 
-/* ================= SERVICE PRICE ================= */
+/* =========================
+   اختيار الخدمة
+========================= */
 
-document.addEventListener("change",function(e){
+document.addEventListener(
+"change",
+function(e){
 
-if(e.target.id === "service"){
+if(
+e.target.id === "service"
+){
 
 const option =
-e.target.options[e.target.selectedIndex];
+e.target.options[
+e.target.selectedIndex
+];
 
-if(option && option.dataset.price){
+if(
+option &&
+option.dataset.price
+){
 
-document.getElementById("servicePrice").value =
+document.getElementById(
+"servicePrice"
+).value =
 option.dataset.price;
 
 updateTotals();
@@ -1222,10 +1323,13 @@ updateTotals();
 
 }
 
-});
+}
+);
 
 
-/* ================= INVOICE ================= */
+/* =========================
+   INVOICE
+========================= */
 
 async function openInvoicePage(){
 
@@ -1233,9 +1337,17 @@ openPage("invoicePage");
 
 cart = [];
 
-document.getElementById("customerName").value = "";
-document.getElementById("phone").value = "";
-document.getElementById("servicePrice").value = "";
+document.getElementById(
+"customerName"
+).value = "";
+
+document.getElementById(
+"phone"
+).value = "";
+
+document.getElementById(
+"servicePrice"
+).value = "";
 
 await Promise.all([
 loadServices(),
@@ -1249,7 +1361,9 @@ renderCart();
 }
 
 
-/* ================= PRODUCTS ================= */
+/* =========================
+   PRODUCTS
+========================= */
 
 async function loadProducts(){
 
@@ -1261,7 +1375,8 @@ await api("getProducts");
 if(!result.success){
 
 throw new Error(
-result.message || "تعذر تحميل المنتجات"
+result.message ||
+"تعذر تحميل المنتجات"
 );
 
 }
@@ -1269,43 +1384,62 @@ result.message || "تعذر تحميل المنتجات"
 allProducts =
 result.data || [];
 
-}catch(error){
+}
+catch(error){
 
 console.error(error);
 
 allProducts = [];
 
-showMessage(error.message,"error");
+showMessage(
+error.message,
+"error"
+);
 
 }
 
 }
 
 
-function showProducts(category,button){
+function showProducts(
+category,
+button
+){
 
 if(button){
 
-document.querySelectorAll(
+document
+.querySelectorAll(
 ".category-buttons button"
-).forEach(b=>{
+)
+.forEach(
+b=>{
 b.classList.remove("active");
-});
+}
+);
 
 button.classList.add("active");
 
 }
 
 const box =
-document.getElementById("invoiceProducts");
+document.getElementById(
+"invoiceProducts"
+);
 
 box.innerHTML = "";
 
 const products =
-allProducts.filter(product=>{
-return category === "all" ||
-product.category === category;
-});
+allProducts.filter(
+product => {
+
+return (
+category === "all" ||
+product.category === category
+);
+
+}
+);
 
 if(!products.length){
 
@@ -1316,7 +1450,8 @@ return;
 
 }
 
-products.forEach(product=>{
+products.forEach(
+product=>{
 
 const stock =
 Number(product.stock || 0);
@@ -1325,13 +1460,34 @@ const price =
 Number(product.price || 0);
 
 const card =
-document.createElement("div");
+document.createElement(
+"div"
+);
 
 card.className =
 "product-card";
 
-card.innerHTML = `
+const button =
+document.createElement(
+"button"
+);
 
+button.textContent =
+stock <= 0
+? "نفد المخزون"
+: "إضافة للسلة";
+
+button.disabled =
+stock <= 0;
+
+button.onclick =
+function(){
+
+addToCart(product.id);
+
+};
+
+card.innerHTML = `
 <div class="product-name">
 ${escapeHtml(product.name)}
 </div>
@@ -1343,23 +1499,7 @@ ${price} جنيه
 <div class="product-stock">
 المتاح: ${stock}
 </div>
-
 `;
-
-const button =
-document.createElement("button");
-
-button.textContent =
-stock <= 0
-? "نفد المخزون"
-: "إضافة للسلة";
-
-button.disabled =
-stock <= 0;
-
-button.onclick = function(){
-addToCart(product.id);
-};
 
 card.appendChild(button);
 
@@ -1370,13 +1510,17 @@ box.appendChild(card);
 }
 
 
-/* ================= CART ================= */
+/* =========================
+   CART
+========================= */
 
 function addToCart(id){
 
 const product =
 allProducts.find(
-p=>String(p.id) === String(id)
+p =>
+String(p.id) ===
+String(id)
 );
 
 if(!product){
@@ -1406,27 +1550,42 @@ return;
 
 const existing =
 cart.find(
-p=>String(p.id) === String(id)
+p =>
+String(p.id) ===
+String(id)
 );
 
 if(existing){
 
-if(existing.qty < stock){
+if(
+existing.qty < stock
+){
+
 existing.qty++;
-}else{
+
+}
+else{
+
 showMessage(
 "لا يمكن تجاوز المخزون",
 "error"
 );
+
 }
 
-}else{
+}
+else{
 
 cart.push({
+
 id:product.id,
+
 name:product.name,
+
 price:Number(product.price || 0),
+
 qty:1
+
 });
 
 }
@@ -1439,7 +1598,9 @@ renderCart();
 function renderCart(){
 
 const box =
-document.getElementById("cartItems");
+document.getElementById(
+"cartItems"
+);
 
 if(!cart.length){
 
@@ -1454,36 +1615,58 @@ return;
 
 box.innerHTML = "";
 
-cart.forEach((item,index)=>{
+cart.forEach(
+(item,index)=>{
 
 const div =
-document.createElement("div");
+document.createElement(
+"div"
+);
 
 div.className =
 "cart-item";
 
 const info =
-document.createElement("div");
+document.createElement(
+"div"
+);
 
 info.innerHTML = `
-<strong>${escapeHtml(item.name)}</strong>
+<strong>
+${escapeHtml(item.name)}
+</strong>
 <br>
 ${item.price} جنيه
 `;
 
 const input =
-document.createElement("input");
+document.createElement(
+"input"
+);
 
-input.type = "number";
-input.min = "1";
-input.value = item.qty;
+input.type =
+"number";
 
-input.onchange = function(){
-changeCartQty(index,this.value);
+input.min =
+"1";
+
+input.value =
+item.qty;
+
+input.onchange =
+function(){
+
+changeCartQty(
+index,
+this.value
+);
+
 };
 
 const remove =
-document.createElement("button");
+document.createElement(
+"button"
+);
 
 remove.className =
 "remove";
@@ -1491,8 +1674,11 @@ remove.className =
 remove.textContent =
 "حذف";
 
-remove.onclick = function(){
+remove.onclick =
+function(){
+
 removeFromCart(index);
+
 };
 
 div.appendChild(info);
@@ -1508,7 +1694,10 @@ updateTotals();
 }
 
 
-function changeCartQty(index,value){
+function changeCartQty(
+index,
+value
+){
 
 if(!cart[index]){
 return;
@@ -1519,7 +1708,8 @@ Number(value);
 
 const product =
 allProducts.find(
-p=>String(p.id) ===
+p =>
+String(p.id) ===
 String(cart[index].id)
 );
 
@@ -1534,7 +1724,8 @@ if(qty < 1){
 
 cart[index].qty = 1;
 
-}else if(qty > stock){
+}
+else if(qty > stock){
 
 cart[index].qty = stock;
 
@@ -1543,7 +1734,8 @@ showMessage(
 "error"
 );
 
-}else{
+}
+else{
 
 cart[index].qty = qty;
 
@@ -1563,7 +1755,9 @@ renderCart();
 }
 
 
-/* ================= TOTALS ================= */
+/* =========================
+   TOTALS
+========================= */
 
 function updateTotals(){
 
@@ -1588,46 +1782,66 @@ service + products;
 
 document.getElementById(
 "serviceTotalDisplay"
-).innerText = service;
+).innerText =
+service;
 
 document.getElementById(
 "productsTotalDisplay"
-).innerText = products;
+).innerText =
+products;
 
 document.getElementById(
 "invoiceTotalDisplay"
-).innerText = total;
+).innerText =
+total;
 
 }
 
 
-document.addEventListener("input",function(e){
+document.addEventListener(
+"input",
+function(e){
 
-if(e.target.id === "servicePrice"){
+if(
+e.target.id === "servicePrice"
+){
+
 updateTotals();
+
 }
 
-});
+}
+);
 
 
-/* ================= CREATE INVOICE ================= */
+/* =========================
+   CREATE INVOICE
+========================= */
 
 async function createInvoice(){
 
 try{
 
 const phone =
-document.getElementById("phone").value.trim();
+document.getElementById(
+"phone"
+).value.trim();
 
 const customerName =
-document.getElementById("customerName").value.trim();
+document.getElementById(
+"customerName"
+).value.trim();
 
 const service =
-document.getElementById("service").value;
+document.getElementById(
+"service"
+).value;
 
 const servicePrice =
 Number(
-document.getElementById("servicePrice").value || 0
+document.getElementById(
+"servicePrice"
+).value || 0
 );
 
 if(!phone){
@@ -1667,11 +1881,17 @@ const result =
 await api(
 "createInvoice",
 {
+
 phone,
+
 customerName,
+
 service,
+
 servicePrice,
+
 products:cart
+
 }
 );
 
@@ -1693,6 +1913,7 @@ cart = [];
 renderCart();
 
 await loadProducts();
+
 await loadDashboard();
 
 setTimeout(
@@ -1700,7 +1921,8 @@ goHome,
 800
 );
 
-}catch(error){
+}
+catch(error){
 
 console.error(error);
 
@@ -1714,7 +1936,9 @@ error.message,
 }
 
 
-/* ================= SALES ================= */
+/* =========================
+   SALES
+========================= */
 
 async function openSalesPage(){
 
@@ -1723,7 +1947,9 @@ openPage("salesPage");
 try{
 
 const result =
-await api("getInvoices");
+await api(
+"getInvoices"
+);
 
 if(!result.success){
 
@@ -1743,7 +1969,8 @@ getToday();
 const data =
 invoices.filter(
 invoice =>
-getDateOnly(invoice.date) === today
+getDateOnly(invoice.date) ===
+today
 );
 
 const sales =
@@ -1765,11 +1992,14 @@ document.getElementById(
 sales;
 
 const table =
-document.getElementById("salesTable");
+document.getElementById(
+"salesTable"
+);
 
 table.innerHTML = "";
 
-data.forEach(item=>{
+data.forEach(
+item=>{
 
 let products = "-";
 
@@ -1789,7 +2019,6 @@ p =>
 }
 
 table.innerHTML += `
-
 <tr>
 
 <td>
@@ -1797,15 +2026,21 @@ ${formatDate(item.date)}
 </td>
 
 <td>
-${escapeHtml(item.customerName || "")}
+${escapeHtml(
+item.customerName || ""
+)}
 </td>
 
 <td>
-${escapeHtml(item.phone || "")}
+${escapeHtml(
+item.phone || ""
+)}
 </td>
 
 <td>
-${escapeHtml(item.service || "")}
+${escapeHtml(
+item.service || ""
+)}
 <br>
 ${Number(item.servicePrice || 0)} جنيه
 </td>
@@ -1822,7 +2057,6 @@ ${Number(item.total || 0)}
 </td>
 
 </tr>
-
 `;
 
 });
@@ -1839,7 +2073,8 @@ table.innerHTML = `
 
 }
 
-}catch(error){
+}
+catch(error){
 
 showMessage(
 error.message,
@@ -1851,7 +2086,9 @@ error.message,
 }
 
 
-/* ================= EXPENSES ================= */
+/* =========================
+   EXPENSES
+========================= */
 
 async function openExpensesPage(){
 
@@ -1900,7 +2137,9 @@ amount
 
 if(!result.success){
 
-throw new Error(result.message);
+throw new Error(
+result.message
+);
 
 }
 
@@ -1917,9 +2156,11 @@ showMessage(
 );
 
 await loadExpenses();
+
 await loadDashboard();
 
-}catch(error){
+}
+catch(error){
 
 showMessage(
 error.message,
@@ -1936,11 +2177,15 @@ async function loadExpenses(){
 try{
 
 const result =
-await api("getExpenses");
+await api(
+"getExpenses"
+);
 
 if(!result.success){
 
-throw new Error(result.message);
+throw new Error(
+result.message
+);
 
 }
 
@@ -1953,7 +2198,8 @@ getToday();
 const data =
 expenses.filter(
 expense =>
-getDateOnly(expense.date) === today
+getDateOnly(expense.date) ===
+today
 );
 
 const total =
@@ -1976,10 +2222,10 @@ document.getElementById(
 
 table.innerHTML = "";
 
-data.forEach(item=>{
+data.forEach(
+item=>{
 
 table.innerHTML += `
-
 <tr>
 
 <td>
@@ -1995,7 +2241,6 @@ ${Number(item.amount || 0)} جنيه
 </td>
 
 </tr>
-
 `;
 
 });
@@ -2012,7 +2257,8 @@ table.innerHTML = `
 
 }
 
-}catch(error){
+}
+catch(error){
 
 showMessage(
 error.message,
@@ -2024,11 +2270,15 @@ error.message,
 }
 
 
-/* ================= CUSTOMERS ================= */
+/* =========================
+   CUSTOMERS
+========================= */
 
 function openCustomersPage(){
 
-openPage("customersPage");
+openPage(
+"customersPage"
+);
 
 }
 
@@ -2061,7 +2311,9 @@ await api(
 
 if(!result.success){
 
-throw new Error(result.message);
+throw new Error(
+result.message
+);
 
 }
 
@@ -2123,7 +2375,8 @@ let html = `
 <tbody>
 `;
 
-data.forEach(item=>{
+data.forEach(
+item=>{
 
 let products = "-";
 
@@ -2176,7 +2429,8 @@ html += `
 box.innerHTML =
 html;
 
-}catch(error){
+}
+catch(error){
 
 showMessage(
 error.message,
@@ -2188,11 +2442,15 @@ error.message,
 }
 
 
-/* ================= STOCK ================= */
+/* =========================
+   STOCK
+========================= */
 
 async function openStockPage(){
 
-openPage("stockPage");
+openPage(
+"stockPage"
+);
 
 await loadStock();
 
@@ -2204,11 +2462,15 @@ async function loadStock(){
 try{
 
 const result =
-await api("getProducts");
+await api(
+"getProducts"
+);
 
 if(!result.success){
 
-throw new Error(result.message);
+throw new Error(
+result.message
+);
 
 }
 
@@ -2216,11 +2478,14 @@ allProducts =
 result.data || [];
 
 const table =
-document.getElementById("stockTable");
+document.getElementById(
+"stockTable"
+);
 
 table.innerHTML = "";
 
-allProducts.forEach(product=>{
+allProducts.forEach(
+product=>{
 
 table.innerHTML += `
 
@@ -2231,7 +2496,9 @@ ${escapeHtml(product.name)}
 </td>
 
 <td>
-${escapeHtml(product.category || "أخرى")}
+${escapeHtml(
+product.category || "أخرى"
+)}
 </td>
 
 <td>
@@ -2261,7 +2528,6 @@ value="${Number(product.stock || 0)}"
 </td>
 
 </tr>
-
 `;
 
 });
@@ -2278,7 +2544,8 @@ table.innerHTML = `
 
 }
 
-}catch(error){
+}
+catch(error){
 
 showMessage(
 error.message,
@@ -2301,16 +2568,26 @@ document.querySelectorAll(
 
 const products = [];
 
-rows.forEach(row=>{
+rows.forEach(
+row=>{
 
 const priceInput =
-row.querySelector(".price-input");
+row.querySelector(
+".price-input"
+);
 
 const stockInput =
-row.querySelector(".stock-input");
+row.querySelector(
+".stock-input"
+);
 
-if(!priceInput || !stockInput){
+if(
+!priceInput ||
+!stockInput
+){
+
 return;
+
 }
 
 products.push({
@@ -2318,10 +2595,14 @@ products.push({
 id:priceInput.dataset.id,
 
 price:
-Number(priceInput.value || 0),
+Number(
+priceInput.value || 0
+),
 
 stock:
-Number(stockInput.value || 0)
+Number(
+stockInput.value || 0
+)
 
 });
 
@@ -2335,7 +2616,9 @@ await api(
 
 if(!result.success){
 
-throw new Error(result.message);
+throw new Error(
+result.message
+);
 
 }
 
@@ -2345,7 +2628,8 @@ showMessage(
 
 await loadStock();
 
-}catch(error){
+}
+catch(error){
 
 showMessage(
 error.message,
@@ -2357,7 +2641,9 @@ error.message,
 }
 
 
-/* ================= ADD PRODUCT ================= */
+/* =========================
+   ADD PRODUCT
+========================= */
 
 async function addProduct(){
 
@@ -2422,7 +2708,9 @@ category
 
 if(!result.success){
 
-throw new Error(result.message);
+throw new Error(
+result.message
+);
 
 }
 
@@ -2444,7 +2732,8 @@ showMessage(
 
 await loadStock();
 
-}catch(error){
+}
+catch(error){
 
 showMessage(
 error.message,
@@ -2456,13 +2745,18 @@ error.message,
 }
 
 
-/* ================= SUPPLIERS ================= */
+/* =========================
+   SUPPLIERS
+========================= */
 
 async function openSuppliersPage(){
 
-openPage("suppliersPage");
+openPage(
+"suppliersPage"
+);
 
 await loadSuppliers();
+
 await preparePurchaseForm();
 
 }
@@ -2510,7 +2804,9 @@ notes
 
 if(!result.success){
 
-throw new Error(result.message);
+throw new Error(
+result.message
+);
 
 }
 
@@ -2531,9 +2827,11 @@ showMessage(
 );
 
 await loadSuppliers();
+
 await preparePurchaseForm();
 
-}catch(error){
+}
+catch(error){
 
 showMessage(
 error.message,
@@ -2550,11 +2848,15 @@ async function loadSuppliers(){
 try{
 
 const result =
-await api("getSuppliers");
+await api(
+"getSuppliers"
+);
 
 if(!result.success){
 
-throw new Error(result.message);
+throw new Error(
+result.message
+);
 
 }
 
@@ -2568,7 +2870,8 @@ document.getElementById(
 
 table.innerHTML = "";
 
-suppliers.forEach(item=>{
+suppliers.forEach(
+item=>{
 
 table.innerHTML += `
 
@@ -2587,7 +2890,6 @@ ${escapeHtml(item.notes || "")}
 </td>
 
 </tr>
-
 `;
 
 });
@@ -2604,7 +2906,8 @@ table.innerHTML = `
 
 }
 
-}catch(error){
+}
+catch(error){
 
 showMessage(
 error.message,
@@ -2616,16 +2919,22 @@ error.message,
 }
 
 
-/* ================= PURCHASE FORM ================= */
+/* =========================
+   PURCHASE FORM
+========================= */
 
 async function preparePurchaseForm(){
 
 try{
 
 const productsResult =
-await api("getProducts");
+await api(
+"getProducts"
+);
 
-if(!productsResult.success){
+if(
+!productsResult.success
+){
 
 throw new Error(
 productsResult.message
@@ -2644,22 +2953,27 @@ document.getElementById(
 productSelect.innerHTML =
 '<option value="">اختر المنتج</option>';
 
-allProducts.forEach(product=>{
+allProducts.forEach(
+product=>{
 
 productSelect.innerHTML += `
 
 <option value="${escapeHtml(product.id)}">
 ${escapeHtml(product.name)}
 </option>
-
 `;
 
 });
 
-const suppliersResult =
-await api("getSuppliers");
 
-if(!suppliersResult.success){
+const suppliersResult =
+await api(
+"getSuppliers"
+);
+
+if(
+!suppliersResult.success
+){
 
 throw new Error(
 suppliersResult.message
@@ -2678,19 +2992,20 @@ document.getElementById(
 supplierSelect.innerHTML =
 '<option value="">اختر المورد</option>';
 
-suppliers.forEach(supplier=>{
+suppliers.forEach(
+supplier=>{
 
 supplierSelect.innerHTML += `
 
 <option value="${escapeHtml(supplier.id)}">
 ${escapeHtml(supplier.name)}
 </option>
-
 `;
 
 });
 
-}catch(error){
+}
+catch(error){
 
 showMessage(
 error.message,
@@ -2702,7 +3017,9 @@ error.message,
 }
 
 
-/* ================= PURCHASE ================= */
+/* =========================
+   PURCHASE
+========================= */
 
 async function addPurchase(){
 
@@ -2781,7 +3098,8 @@ const supplierName =
 supplierSelect
 .options[
 supplierSelect.selectedIndex
-]?.text || "";
+]
+?.text || "";
 
 const result =
 await api(
@@ -2807,7 +3125,9 @@ unitPrice
 
 if(!result.success){
 
-throw new Error(result.message);
+throw new Error(
+result.message
+);
 
 }
 
@@ -2825,7 +3145,8 @@ document.getElementById(
 
 await preparePurchaseForm();
 
-}catch(error){
+}
+catch(error){
 
 showMessage(
 error.message,
@@ -2837,22 +3158,28 @@ error.message,
 }
 
 
-/* ================= REPORTS ================= */
+/* =========================
+   REPORTS
+========================= */
 
 async function openReportsPage(){
 
-openPage("reportsPage");
+openPage(
+"reportsPage"
+);
 
 const today =
 getToday();
 
 document.getElementById(
 "reportFrom"
-).value = today;
+).value =
+today;
 
 document.getElementById(
 "reportTo"
-).value = today;
+).value =
+today;
 
 await loadReport();
 
@@ -2896,12 +3223,18 @@ return;
 }
 
 const invoicesResult =
-await api("getInvoices");
+await api(
+"getInvoices"
+);
 
 const expensesResult =
-await api("getExpenses");
+await api(
+"getExpenses"
+);
 
-if(!invoicesResult.success){
+if(
+!invoicesResult.success
+){
 
 throw new Error(
 invoicesResult.message
@@ -2909,7 +3242,9 @@ invoicesResult.message
 
 }
 
-if(!expensesResult.success){
+if(
+!expensesResult.success
+){
 
 throw new Error(
 expensesResult.message
@@ -2924,22 +3259,30 @@ const expenses =
 expensesResult.data || [];
 
 const filteredInvoices =
-invoices.filter(item=>{
+invoices.filter(
+item=>{
 
 const date =
 getDateOnly(item.date);
 
-return date >= from && date <= to;
+return (
+date >= from &&
+date <= to
+);
 
 });
 
 const filteredExpenses =
-expenses.filter(item=>{
+expenses.filter(
+item=>{
 
 const date =
 getDateOnly(item.date);
 
-return date >= from && date <= to;
+return (
+date >= from &&
+date <= to
+);
 
 });
 
@@ -2979,7 +3322,8 @@ document.getElementById(
 ).innerText =
 sales - expenseTotal;
 
-}catch(error){
+}
+catch(error){
 
 showMessage(
 error.message,
@@ -2991,14 +3335,18 @@ error.message,
 }
 
 
-/* ================= FINISH DAY ================= */
+/* =========================
+   FINISH DAY
+========================= */
 
 async function confirmFinishDay(){
 
 try{
 
 const status =
-await api("getDayStatus");
+await api(
+"getDayStatus"
+);
 
 if(
 status.success &&
@@ -3021,11 +3369,15 @@ confirm(
 );
 
 if(!confirmed){
+
 return;
+
 }
 
 const result =
-await api("finishDay");
+await api(
+"finishDay"
+);
 
 if(!result.success){
 
@@ -3041,7 +3393,8 @@ alert(
 
 await loadDashboard();
 
-}catch(error){
+}
+catch(error){
 
 showMessage(
 error.message,
@@ -3053,7 +3406,9 @@ error.message,
 }
 
 
-/* ================= DATE ================= */
+/* =========================
+   DATE
+========================= */
 
 function getToday(){
 
@@ -3063,9 +3418,13 @@ new Date();
 return (
 d.getFullYear() +
 "-" +
-String(d.getMonth()+1).padStart(2,"0") +
+String(
+d.getMonth()+1
+).padStart(2,"0") +
 "-" +
-String(d.getDate()).padStart(2,"0")
+String(
+d.getDate()
+).padStart(2,"0")
 );
 
 }
@@ -3074,22 +3433,34 @@ String(d.getDate()).padStart(2,"0")
 function getDateOnly(value){
 
 if(!value){
+
 return "";
+
 }
 
 const d =
 new Date(value);
 
-if(isNaN(d.getTime())){
+if(
+isNaN(
+d.getTime()
+)
+){
+
 return "";
+
 }
 
 return (
 d.getFullYear() +
 "-" +
-String(d.getMonth()+1).padStart(2,"0") +
+String(
+d.getMonth()+1
+).padStart(2,"0") +
 "-" +
-String(d.getDate()).padStart(2,"0")
+String(
+d.getDate()
+).padStart(2,"0")
 );
 
 }
@@ -3098,36 +3469,67 @@ String(d.getDate()).padStart(2,"0")
 function formatDate(value){
 
 if(!value){
+
 return "";
+
 }
 
 const d =
 new Date(value);
 
-if(isNaN(d.getTime())){
+if(
+isNaN(
+d.getTime()
+)
+){
+
 return value;
-}
-
-return d.toLocaleString("ar-EG");
 
 }
 
+return d.toLocaleString(
+"ar-EG"
+);
 
-/* ================= ESCAPE HTML ================= */
+}
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
 
 function escapeHtml(value){
 
-return String(value ?? "")
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
+return String(
+value ?? ""
+)
+.replace(
+/&/g,
+"&amp;"
+)
+.replace(
+/</g,
+"&lt;"
+)
+.replace(
+/>/g,
+"&gt;"
+)
+.replace(
+/"/g,
+"&quot;"
+)
+.replace(
+/'/g,
+"&#039;"
+);
 
 }
 
 
-/* ================= START ================= */
+/* =========================
+   START
+========================= */
 
 document.addEventListener(
 "DOMContentLoaded",
