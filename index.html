@@ -1,3622 +1,3030 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-
 <title>AUTO MOOD</title>
 
 <style>
-
 *{
-box-sizing:border-box;
-font-family:Arial,sans-serif;
+  box-sizing:border-box;
+  font-family:Arial,Tahoma,sans-serif;
+}
+
+:root{
+  --bg:#f4f6f8;
+  --card:#fff;
+  --dark:#111827;
+  --dark2:#1f2937;
+  --primary:#2563eb;
+  --success:#16a34a;
+  --danger:#dc2626;
+  --warning:#d97706;
+  --border:#e5e7eb;
+  --text:#111827;
+  --muted:#6b7280;
 }
 
 body{
-margin:0;
-background:#f4f5f7;
-color:#222;
-}
-
-header{
-background:#111;
-color:white;
-padding:20px;
-text-align:center;
-}
-
-header h1{
-margin:0;
-color:#ff7a00;
-font-size:32px;
-}
-
-header p{
-margin:5px 0 0;
-color:#ddd;
-}
-
-.container{
-max-width:1200px;
-margin:20px auto;
-padding:15px;
-}
-
-.page{
-display:none;
-}
-
-.page.active{
-display:block;
-}
-
-.cards{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-gap:15px;
-margin-bottom:20px;
-}
-
-.card,
-.section,
-.menu-button{
-background:white;
-border-radius:14px;
-box-shadow:0 2px 10px #0002;
-}
-
-.card{
-padding:20px;
-text-align:center;
-}
-
-.card h3{
-margin:0;
-font-size:17px;
-}
-
-.number{
-font-size:30px;
-font-weight:bold;
-color:#ff7a00;
-margin-top:10px;
-}
-
-.menu{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:15px;
-}
-
-.menu-button{
-border:0;
-padding:25px 15px;
-cursor:pointer;
-color:#222;
-}
-
-.menu-button:hover{
-transform:translateY(-2px);
-}
-
-.menu-icon{
-font-size:40px;
-margin-bottom:10px;
-}
-
-.menu-title{
-font-size:20px;
-font-weight:bold;
-color:#ff7a00;
-}
-
-.menu-desc{
-color:#777;
-margin-top:7px;
-}
-
-.section{
-padding:22px;
-margin-bottom:20px;
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
 }
 
 button,
 input,
-select{
-width:100%;
-padding:12px;
-margin:7px 0;
-border-radius:8px;
-border:1px solid #ddd;
-font-size:16px;
+select,
+textarea{
+  font:inherit;
 }
 
 button{
-background:#ff7a00;
-color:white;
-border:0;
-font-weight:bold;
-cursor:pointer;
+  cursor:pointer;
+  border:0;
 }
 
-button:hover{
-background:#e66c00;
+.app{
+  min-height:100vh;
+  display:flex;
 }
 
-button:disabled{
-background:#aaa;
-cursor:not-allowed;
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+  width:240px;
+  background:var(--dark);
+  color:#fff;
+  min-height:100vh;
+  position:fixed;
+  right:0;
+  top:0;
+  bottom:0;
+  z-index:100;
+  padding:20px 14px;
 }
 
-.back-button{
-background:#111;
+.logo{
+  text-align:center;
+  font-size:25px;
+  font-weight:800;
+  padding:12px 5px 25px;
 }
 
-.danger{
-background:#d62828;
+.logo span{
+  color:#60a5fa;
 }
 
-.success{
-background:#e8f8ee;
-color:#187a3d;
-padding:12px;
-border-radius:8px;
-margin-bottom:15px;
+.nav{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
 }
 
-.error{
-background:#ffe8e8;
-color:#b00020;
-padding:12px;
-border-radius:8px;
-margin-bottom:15px;
+.nav button{
+  width:100%;
+  background:transparent;
+  color:#d1d5db;
+  text-align:right;
+  padding:13px 14px;
+  border-radius:9px;
+  transition:.15s;
 }
 
-.products-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:12px;
-margin-top:15px;
+.nav button:hover,
+.nav button.active{
+  background:#2563eb;
+  color:#fff;
 }
 
-.product-card{
-border:1px solid #ddd;
-border-radius:12px;
-padding:15px;
-background:#fafafa;
+/* ================= MAIN ================= */
+
+.main{
+  width:calc(100% - 240px);
+  margin-right:240px;
+  padding:20px;
 }
 
-.product-name{
-font-weight:bold;
-font-size:17px;
+.topbar{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:15px 18px;
+  margin-bottom:18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
 }
 
-.product-price{
-color:#ff7a00;
-font-weight:bold;
-margin:7px 0;
+.topbar h1{
+  margin:0;
+  font-size:22px;
 }
 
-.product-stock{
-font-size:13px;
-color:#777;
-margin-bottom:8px;
+.status{
+  font-size:13px;
+  color:var(--muted);
 }
 
-.cart{
-margin-top:20px;
-background:#f7f7f7;
-border-radius:12px;
-padding:15px;
+/* ================= SECTIONS ================= */
+
+.section{
+  display:none;
 }
 
-.cart-item{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:10px;
-background:white;
-padding:10px;
-margin-bottom:8px;
-border-radius:8px;
+.section.active{
+  display:block;
 }
 
-.cart-item input{
-width:80px;
-margin:0;
-text-align:center;
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
 }
 
-.remove{
-background:#d62828;
-width:auto;
-padding:8px 12px;
-margin:0;
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:18px;
+  box-shadow:0 2px 8px rgba(0,0,0,.03);
 }
 
-.total-box{
-background:#111;
-color:white;
-padding:18px;
-border-radius:10px;
-margin-top:15px;
-font-size:20px;
+.stat-title{
+  color:var(--muted);
+  font-size:14px;
+  margin-bottom:10px;
 }
 
-.total-box strong{
-color:#ff7a00;
-font-size:28px;
+.stat-value{
+  font-size:25px;
+  font-weight:800;
 }
 
-.category-buttons{
-display:flex;
-gap:8px;
-flex-wrap:wrap;
-margin-bottom:15px;
+.stat-value.blue{color:var(--primary)}
+.stat-value.green{color:var(--success)}
+.stat-value.red{color:var(--danger)}
+.stat-value.orange{color:var(--warning)}
+
+.two{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+  margin-top:15px;
 }
 
-.category-buttons button{
-width:auto;
-padding:10px 15px;
+/* ================= FORMS ================= */
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
 }
 
-.category-buttons button.active{
-background:#111;
+.form-group{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
 }
 
-
-/* =========================
-   SERVICE BUTTONS
-========================= */
-
-.service-buttons{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-gap:10px;
-margin:10px 0 15px;
+.form-group.full{
+  grid-column:1/-1;
 }
 
-.service-button{
-background:white;
-color:#222;
-border:2px solid #ddd;
-padding:15px 10px;
-border-radius:10px;
-font-size:16px;
-font-weight:bold;
-cursor:pointer;
-transition:0.2s;
-margin:0;
-width:100%;
+label{
+  font-size:13px;
+  font-weight:bold;
 }
 
-.service-button:hover{
-background:#fff5ed;
-border-color:#ff7a00;
-transform:translateY(-2px);
+input,
+select,
+textarea{
+  width:100%;
+  padding:11px 12px;
+  border:1px solid #d1d5db;
+  border-radius:8px;
+  outline:none;
+  background:#fff;
 }
 
-.service-button.active{
-background:#111;
-color:white;
-border-color:#ff7a00;
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:var(--primary);
+}
+
+textarea{
+  min-height:80px;
+  resize:vertical;
+}
+
+.btn{
+  padding:11px 16px;
+  border-radius:8px;
+  font-weight:bold;
+}
+
+.btn-primary{
+  background:var(--primary);
+  color:#fff;
+}
+
+.btn-success{
+  background:var(--success);
+  color:#fff;
+}
+
+.btn-danger{
+  background:var(--danger);
+  color:#fff;
+}
+
+.btn-secondary{
+  background:#e5e7eb;
+  color:#111827;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+
+/* ================= TABLE ================= */
+
+.table-wrap{
+  overflow:auto;
+  margin-top:15px;
 }
 
 table{
-width:100%;
-border-collapse:collapse;
-margin-top:15px;
-background:white;
+  width:100%;
+  border-collapse:collapse;
+  min-width:700px;
 }
 
 th,
 td{
-border-bottom:1px solid #eee;
-padding:10px;
-text-align:center;
+  border-bottom:1px solid var(--border);
+  padding:11px 9px;
+  text-align:right;
+  white-space:nowrap;
 }
 
 th{
-background:#111;
-color:white;
+  background:#f9fafb;
+  font-size:13px;
 }
 
-.stock-input{
-width:90px;
-text-align:center;
+td{
+  font-size:13px;
 }
 
-.price-input{
-width:100px;
-text-align:center;
+.badge{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:20px;
+  font-size:11px;
+  background:#e5e7eb;
 }
 
-.summary{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-gap:15px;
+.badge.green{
+  background:#dcfce7;
+  color:#166534;
 }
 
-.summary-box{
-background:#f7f7f7;
-border-radius:12px;
-padding:18px;
-text-align:center;
+.badge.red{
+  background:#fee2e2;
+  color:#991b1b;
 }
 
-.summary-box strong{
-display:block;
-font-size:27px;
-color:#ff7a00;
-margin-top:8px;
+/* ================= INVOICE PRODUCTS ================= */
+
+.product-row{
+  display:grid;
+  grid-template-columns:2fr 100px 100px 40px;
+  gap:8px;
+  margin-bottom:8px;
+  align-items:center;
 }
 
-.report-filters{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
+.remove-product{
+  background:#fee2e2;
+  color:#991b1b;
+  height:40px;
+  border-radius:7px;
 }
+
+/* ================= SEARCH ================= */
+
+.search{
+  margin-bottom:12px;
+}
+
+.search input{
+  max-width:400px;
+}
+
+/* ================= LOADING ================= */
 
 .loading{
-text-align:center;
-padding:20px;
-color:#777;
+  position:fixed;
+  inset:0;
+  background:rgba(255,255,255,.7);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+
+.loading.show{
+  display:flex;
+}
+
+.loader{
+  background:#111827;
+  color:#fff;
+  padding:15px 25px;
+  border-radius:10px;
+}
+
+/* ================= TOAST ================= */
+
+.toast{
+  position:fixed;
+  left:20px;
+  bottom:20px;
+  z-index:1000;
+  min-width:250px;
+  padding:13px 16px;
+  border-radius:9px;
+  background:#111827;
+  color:#fff;
+  display:none;
+}
+
+.toast.show{
+  display:block;
+}
+
+.toast.success{
+  background:#15803d;
+}
+
+.toast.error{
+  background:#b91c1c;
+}
+
+/* ================= MOBILE ================= */
+
+.mobile-menu{
+  display:none;
+  background:#111827;
+  color:#fff;
+  padding:10px 13px;
+  border-radius:8px;
+}
+
+@media(max-width:900px){
+
+  .sidebar{
+    transform:translateX(100%);
+    transition:.2s;
+  }
+
+  .sidebar.open{
+    transform:translateX(0);
+  }
+
+  .main{
+    width:100%;
+    margin-right:0;
+    padding:12px;
+  }
+
+  .mobile-menu{
+    display:block;
+  }
+
+  .grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .two{
+    grid-template-columns:1fr;
+  }
+
 }
 
 @media(max-width:600px){
 
-.cards{
-grid-template-columns:repeat(2,1fr);
-}
+  .grid{
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
 
-.menu{
-grid-template-columns:repeat(2,1fr);
-}
+  .card{
+    padding:13px;
+  }
 
-.menu-button{
-padding:20px 8px;
-}
+  .form-grid{
+    grid-template-columns:1fr;
+  }
 
-.menu-title{
-font-size:16px;
-}
+  .form-group.full{
+    grid-column:auto;
+  }
 
-.menu-icon{
-font-size:32px;
-}
+  .product-row{
+    grid-template-columns:1fr 80px 80px 35px;
+  }
 
-table{
-font-size:12px;
+  .topbar{
+    flex-direction:column;
+    align-items:stretch;
+  }
 }
-
-th,
-td{
-padding:7px 3px;
-}
-
-.cart-item{
-flex-direction:column;
-align-items:stretch;
-}
-
-.report-filters{
-grid-template-columns:1fr;
-}
-
-.service-buttons{
-grid-template-columns:repeat(2,1fr);
-}
-
-.service-button{
-padding:13px 8px;
-font-size:14px;
-}
-
-}
-
 </style>
 </head>
 
 <body>
 
-<header>
-
-<h1>AUTO MOOD</h1>
-
-<p>Car Care Management System</p>
-
-</header>
-
-<div class="container">
-
-<div id="message"></div>
-
-
-<!-- ================= HOME ================= -->
-
-<div id="homePage" class="page active">
-
-<div class="cards">
-
-<div class="card">
-<h3>فواتير اليوم</h3>
-<div class="number" id="invoiceCount">0</div>
+<div class="loading" id="loading">
+  <div class="loader">جاري التحميل...</div>
 </div>
 
-<div class="card">
-<h3>مبيعات اليوم</h3>
-<div class="number" id="salesTotal">0</div>
-<small>جنيه</small>
+<div class="toast" id="toast"></div>
+
+<div class="app">
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar" id="sidebar">
+
+  <div class="logo">
+    AUTO <span>MOOD</span>
+  </div>
+
+  <nav class="nav">
+
+    <button class="active" data-section="dashboard">
+      📊 الرئيسية
+    </button>
+
+    <button data-section="invoice">
+      🧾 فاتورة جديدة
+    </button>
+
+    <button data-section="invoices">
+      📋 الفواتير
+    </button>
+
+    <button data-section="customers">
+      👥 العملاء
+    </button>
+
+    <button data-section="stock">
+      📦 المخزن
+    </button>
+
+    <button data-section="purchases">
+      🛒 المشتريات
+    </button>
+
+    <button data-section="suppliers">
+      🚚 الموردين
+    </button>
+
+    <button data-section="expenses">
+      💸 المصروفات
+    </button>
+
+    <button data-section="reports">
+      📈 التقارير
+    </button>
+
+  </nav>
+
+</aside>
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+  <div class="topbar">
+
+    <div>
+      <button class="mobile-menu" onclick="toggleSidebar()">
+        ☰ القائمة
+      </button>
+    </div>
+
+    <div>
+      <h1 id="pageTitle">لوحة التحكم</h1>
+      <div class="status" id="connectionStatus">
+        متصل بقاعدة البيانات
+      </div>
+    </div>
+
+  </div>
+
+<!-- =========================================================
+ DASHBOARD
+========================================================= -->
+
+<section class="section active" id="dashboard">
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="stat-title">عدد الفواتير اليوم</div>
+      <div class="stat-value blue" id="dashInvoices">0</div>
+    </div>
+
+    <div class="card">
+      <div class="stat-title">المبيعات اليوم</div>
+      <div class="stat-value green" id="dashSales">0</div>
+    </div>
+
+    <div class="card">
+      <div class="stat-title">المصروفات اليوم</div>
+      <div class="stat-value red" id="dashExpenses">0</div>
+    </div>
+
+    <div class="card">
+      <div class="stat-title">صافي اليوم</div>
+      <div class="stat-value orange" id="dashNet">0</div>
+    </div>
+
+  </div>
+
+  <div class="two">
+
+    <div class="card">
+      <h3>حالة اليوم</h3>
+
+      <p id="dayStatus">
+        جاري التحميل...
+      </p>
+
+      <button
+        class="btn btn-danger"
+        onclick="finishDay()">
+        إنهاء اليوم
+      </button>
+    </div>
+
+    <div class="card">
+
+      <h3>اختصارات</h3>
+
+      <div class="actions">
+
+        <button
+          class="btn btn-primary"
+          onclick="openSection('invoice')">
+          فاتورة جديدة
+        </button>
+
+        <button
+          class="btn btn-secondary"
+          onclick="openSection('stock')">
+          المخزن
+        </button>
+
+        <button
+          class="btn btn-secondary"
+          onclick="openSection('reports')">
+          التقارير
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- =========================================================
+ INVOICE
+========================================================= -->
+
+<section class="section" id="invoice">
+
+  <div class="card">
+
+    <h2>فاتورة جديدة</h2>
+
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>رقم الهاتف</label>
+        <input id="invoicePhone" type="tel">
+      </div>
+
+      <div class="form-group">
+        <label>اسم العميل</label>
+        <input id="invoiceCustomerName">
+      </div>
+
+      <div class="form-group">
+        <label>نوع الخدمة</label>
+
+        <!-- بدون الأسعار -->
+        <select id="invoiceService">
+          <option value="">اختر نوع الخدمة</option>
+        </select>
+
+      </div>
+
+      <div class="form-group">
+        <label>سعر الخدمة</label>
+        <input id="invoiceServicePrice" type="number" min="0">
+      </div>
+
+    </div>
+
+    <hr>
+
+    <h3>المنتجات</h3>
+
+    <div id="invoiceProducts"></div>
+
+    <button
+      class="btn btn-secondary"
+      onclick="addInvoiceProduct()">
+      + إضافة منتج
+    </button>
+
+    <div class="card" style="margin-top:15px;background:#f9fafb">
+
+      <div>
+        إجمالي المنتجات:
+        <strong id="invoiceProductTotal">0</strong>
+      </div>
+
+      <div style="margin-top:8px">
+        الإجمالي:
+        <strong id="invoiceTotal">0</strong>
+      </div>
+
+    </div>
+
+    <div class="actions">
+
+      <button
+        class="btn btn-success"
+        onclick="saveInvoice()">
+        حفظ الفاتورة
+      </button>
+
+      <button
+        class="btn btn-secondary"
+        onclick="resetInvoice()">
+        إلغاء
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- =========================================================
+ INVOICES
+========================================================= -->
+
+<section class="section" id="invoices">
+
+  <div class="card">
+
+    <h2>الفواتير</h2>
+
+    <div class="search">
+      <input
+        id="invoiceSearch"
+        placeholder="بحث بالاسم أو الهاتف..."
+        oninput="renderInvoices()">
+    </div>
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>رقم</th>
+            <th>التاريخ</th>
+            <th>العميل</th>
+            <th>الهاتف</th>
+            <th>الخدمة</th>
+            <th>المنتجات</th>
+            <th>الإجمالي</th>
+          </tr>
+        </thead>
+
+        <tbody id="invoicesTable"></tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- =========================================================
+ CUSTOMERS
+========================================================= -->
+
+<section class="section" id="customers">
+
+  <div class="card">
+
+    <h2>بحث العميل</h2>
+
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>رقم الهاتف</label>
+        <input id="customerPhone">
+      </div>
+
+    </div>
+
+    <div class="actions">
+
+      <button
+        class="btn btn-primary"
+        onclick="searchCustomer()">
+        بحث
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="card" style="margin-top:15px">
+
+    <h3>سجل العميل</h3>
+
+    <div id="customerResult">
+      لا يوجد بحث
+    </div>
+
+  </div>
+
+</section>
+
+<!-- =========================================================
+ STOCK
+========================================================= -->
+
+<section class="section" id="stock">
+
+  <div class="card">
+
+    <h2>المخزن</h2>
+
+    <div class="actions">
+
+      <button
+        class="btn btn-primary"
+        onclick="addProductRow()">
+        + إضافة منتج
+      </button>
+
+      <button
+        class="btn btn-success"
+        onclick="saveStock()">
+        حفظ التعديلات
+      </button>
+
+    </div>
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>الكود</th>
+            <th>المنتج</th>
+            <th>الفئة</th>
+            <th>سعر البيع</th>
+            <th>المخزون</th>
+          </tr>
+        </thead>
+
+        <tbody id="stockTable"></tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- =========================================================
+ PURCHASES
+========================================================= -->
+
+<section class="section" id="purchases">
+
+  <div class="card">
+
+    <h2>إضافة مشتريات</h2>
+
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>المنتج</label>
+        <select id="purchaseProduct"></select>
+      </div>
+
+      <div class="form-group">
+        <label>المورد</label>
+        <select id="purchaseSupplier">
+          <option value="">اختر المورد</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>الكمية</label>
+        <input id="purchaseQuantity" type="number" min="1">
+      </div>
+
+      <div class="form-group">
+        <label>سعر الشراء</label>
+        <input id="purchaseUnitPrice" type="number" min="0">
+      </div>
+
+    </div>
+
+    <div class="actions">
+
+      <button
+        class="btn btn-success"
+        onclick="savePurchase()">
+        تسجيل الشراء
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- =========================================================
+ SUPPLIERS
+========================================================= -->
+
+<section class="section" id="suppliers">
+
+  <div class="card">
+
+    <h2>إضافة مورد</h2>
+
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>اسم المورد</label>
+        <input id="supplierName">
+      </div>
+
+      <div class="form-group">
+        <label>الهاتف</label>
+        <input id="supplierPhone">
+      </div>
+
+      <div class="form-group full">
+        <label>ملاحظات</label>
+        <textarea id="supplierNotes"></textarea>
+      </div>
+
+    </div>
+
+    <div class="actions">
+
+      <button
+        class="btn btn-success"
+        onclick="saveSupplier()">
+        إضافة المورد
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="card" style="margin-top:15px">
+
+    <h2>الموردين</h2>
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>الكود</th>
+            <th>الاسم</th>
+            <th>الهاتف</th>
+            <th>الملاحظات</th>
+          </tr>
+        </thead>
+
+        <tbody id="suppliersTable"></tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- =========================================================
+ EXPENSES
+========================================================= -->
+
+<section class="section" id="expenses">
+
+  <div class="card">
+
+    <h2>إضافة مصروف</h2>
+
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>اسم المصروف</label>
+        <input id="expenseName">
+      </div>
+
+      <div class="form-group">
+        <label>المبلغ</label>
+        <input id="expenseAmount" type="number" min="0">
+      </div>
+
+      <div class="form-group">
+        <label>التصنيف</label>
+        <input id="expenseCategory">
+      </div>
+
+      <div class="form-group">
+        <label>ملاحظات</label>
+        <input id="expenseNotes">
+      </div>
+
+    </div>
+
+    <div class="actions">
+
+      <button
+        class="btn btn-success"
+        onclick="saveExpense()">
+        حفظ المصروف
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="card" style="margin-top:15px">
+
+    <h2>المصروفات</h2>
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>التاريخ</th>
+            <th>المصروف</th>
+            <th>التصنيف</th>
+            <th>المبلغ</th>
+            <th>ملاحظات</th>
+          </tr>
+        </thead>
+
+        <tbody id="expensesTable"></tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- =========================================================
+ REPORTS
+========================================================= -->
+
+<section class="section" id="reports">
+
+  <div class="card">
+
+    <h2>التقارير</h2>
+
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>من تاريخ</label>
+        <input id="reportFrom" type="date">
+      </div>
+
+      <div class="form-group">
+        <label>إلى تاريخ</label>
+        <input id="reportTo" type="date">
+      </div>
+
+    </div>
+
+    <div class="actions">
+
+      <button
+        class="btn btn-primary"
+        onclick="loadReport()">
+        عرض التقرير
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="grid" style="margin-top:15px">
+
+    <div class="card">
+      <div class="stat-title">الفواتير</div>
+      <div class="stat-value blue" id="reportInvoices">0</div>
+    </div>
+
+    <div class="card">
+      <div class="stat-title">المبيعات</div>
+      <div class="stat-value green" id="reportSales">0</div>
+    </div>
+
+    <div class="card">
+      <div class="stat-title">المصروفات</div>
+      <div class="stat-value red" id="reportExpenses">0</div>
+    </div>
+
+    <div class="card">
+      <div class="stat-title">الصافي</div>
+      <div class="stat-value orange" id="reportNet">0</div>
+    </div>
+
+  </div>
+
+</section>
+
+</main>
 </div>
-
-<div class="card">
-<h3>مصروفات اليوم</h3>
-<div class="number" id="expenseTotal">0</div>
-<small>جنيه</small>
-</div>
-
-<div class="card">
-<h3>صافي اليوم</h3>
-<div class="number" id="netTotal">0</div>
-<small>جنيه</small>
-</div>
-
-</div>
-
-<div class="menu">
-
-<button class="menu-button" onclick="openInvoicePage()">
-<div class="menu-icon">🧾</div>
-<div class="menu-title">فاتورة جديدة</div>
-<div class="menu-desc">إنشاء فاتورة للعميل</div>
-</button>
-
-<button class="menu-button" onclick="openSalesPage()">
-<div class="menu-icon">📊</div>
-<div class="menu-title">مبيعات اليوم</div>
-<div class="menu-desc">عرض الفواتير</div>
-</button>
-
-<button class="menu-button" onclick="openExpensesPage()">
-<div class="menu-icon">💰</div>
-<div class="menu-title">المصروفات</div>
-<div class="menu-desc">إضافة ومتابعة المصروفات</div>
-</button>
-
-<button class="menu-button" onclick="openCustomersPage()">
-<div class="menu-icon">👤</div>
-<div class="menu-title">العملاء</div>
-<div class="menu-desc">سجل العميل</div>
-</button>
-
-<button class="menu-button" onclick="openStockPage()">
-<div class="menu-icon">📦</div>
-<div class="menu-title">المخزن</div>
-<div class="menu-desc">الأسعار والكميات</div>
-</button>
-
-<button class="menu-button" onclick="openSuppliersPage()">
-<div class="menu-icon">🏪</div>
-<div class="menu-title">الموردين</div>
-<div class="menu-desc">الموردين والمشتريات</div>
-</button>
-
-<button class="menu-button" onclick="openReportsPage()">
-<div class="menu-icon">📈</div>
-<div class="menu-title">التقارير</div>
-<div class="menu-desc">اختيار فترة زمنية</div>
-</button>
-
-<button class="menu-button" onclick="confirmFinishDay()">
-<div class="menu-icon">🔴</div>
-<div class="menu-title">إنهاء اليوم</div>
-<div class="menu-desc">إغلاق يوم العمل</div>
-</button>
-
-</div>
-
-</div>
-
-
-<!-- ================= INVOICE ================= -->
-
-<div id="invoicePage" class="page">
-
-<button class="back-button" onclick="goHome()">
-← الرئيسية
-</button>
-
-<div class="section">
-
-<h2>🧾 فاتورة جديدة</h2>
-
-<label>اسم العميل</label>
-
-<input
-id="customerName"
-placeholder="اسم العميل"
->
-
-<label>رقم التليفون</label>
-
-<input
-id="phone"
-type="tel"
-placeholder="01xxxxxxxxx"
->
-
-<label>نوع الخدمة</label>
-
-<!-- أزرار الخدمات -->
-
-<div id="serviceButtons" class="service-buttons">
-
-<div class="loading">
-جاري تحميل الخدمات...
-</div>
-
-</div>
-
-<!-- نخزن اسم الخدمة المختارة هنا -->
-
-<input
-type="hidden"
-id="service"
->
-
-<label>مبلغ الخدمة</label>
-
-<input
-id="servicePrice"
-type="number"
-min="0"
-placeholder="مبلغ الخدمة"
->
-
-
-<h3>🛒 شراء منتجات</h3>
-
-<div class="category-buttons">
-
-<button
-class="active"
-onclick="showProducts('all',this)">
-الكل
-</button>
-
-<button
-onclick="showProducts('معطرات',this)">
-معطرات
-</button>
-
-<button
-onclick="showProducts('Car Care',this)">
-Car Care
-</button>
-
-<button
-onclick="showProducts('إكسسوارات',this)">
-إكسسوارات
-</button>
-
-<button
-onclick="showProducts('أخرى',this)">
-أخرى
-</button>
-
-</div>
-
-<div id="invoiceProducts" class="products-grid">
-</div>
-
-<div class="cart">
-
-<h3>🛒 السلة</h3>
-
-<div id="cartItems">
-لا توجد منتجات
-</div>
-
-<div class="total-box">
-
-إجمالي الخدمة:
-
-<strong id="serviceTotalDisplay">0</strong>
-
-جنيه
-
-<br><br>
-
-إجمالي المنتجات:
-
-<strong id="productsTotalDisplay">0</strong>
-
-جنيه
-
-<br><br>
-
-إجمالي الفاتورة:
-
-<strong id="invoiceTotalDisplay">0</strong>
-
-جنيه
-
-</div>
-
-</div>
-
-<button onclick="createInvoice()">
-حفظ الفاتورة
-</button>
-
-</div>
-
-</div>
-
-
-<!-- ================= SALES ================= -->
-
-<div id="salesPage" class="page">
-
-<button class="back-button" onclick="goHome()">
-← الرئيسية
-</button>
-
-<div class="section">
-
-<h2>📊 مبيعات اليوم</h2>
-
-<div class="summary">
-
-<div class="summary-box">
-عدد الفواتير
-<strong id="salesInvoiceCount">0</strong>
-</div>
-
-<div class="summary-box">
-إجمالي المبيعات
-<strong id="salesTodayTotal">0</strong>
-جنيه
-</div>
-
-</div>
-
-<table>
-
-<thead>
-
-<tr>
-<th>التاريخ</th>
-<th>العميل</th>
-<th>التليفون</th>
-<th>الخدمة</th>
-<th>المنتجات</th>
-<th>الإجمالي</th>
-</tr>
-
-</thead>
-
-<tbody id="salesTable"></tbody>
-
-</table>
-
-</div>
-
-</div>
-
-
-<!-- ================= EXPENSES ================= -->
-
-<div id="expensesPage" class="page">
-
-<button class="back-button" onclick="goHome()">
-← الرئيسية
-</button>
-
-<div class="section">
-
-<h2>💰 إضافة مصروف</h2>
-
-<input
-id="expenseName"
-placeholder="اسم المصروف"
->
-
-<input
-id="expenseAmount"
-type="number"
-min="0"
-placeholder="المبلغ"
->
-
-<button onclick="addExpense()">
-إضافة المصروف
-</button>
-
-</div>
-
-<div class="section">
-
-<h2>📊 مصروفات اليوم</h2>
-
-<div class="summary-box">
-
-إجمالي المصروفات
-
-<strong id="todayExpensesTotal">0</strong>
-
-جنيه
-
-</div>
-
-<table>
-
-<thead>
-
-<tr>
-<th>التاريخ</th>
-<th>المصروف</th>
-<th>المبلغ</th>
-</tr>
-
-</thead>
-
-<tbody id="expenseTable"></tbody>
-
-</table>
-
-</div>
-
-</div>
-
-
-<!-- ================= CUSTOMERS ================= -->
-
-<div id="customersPage" class="page">
-
-<button class="back-button" onclick="goHome()">
-← الرئيسية
-</button>
-
-<div class="section">
-
-<h2>👤 سجل العميل</h2>
-
-<input
-id="searchPhone"
-type="tel"
-placeholder="رقم تليفون العميل"
->
-
-<button onclick="searchCustomer()">
-بحث
-</button>
-
-<div id="customerResult"></div>
-
-</div>
-
-</div>
-
-
-<!-- ================= STOCK ================= -->
-
-<div id="stockPage" class="page">
-
-<button class="back-button" onclick="goHome()">
-← الرئيسية
-</button>
-
-<div class="section">
-
-<h2>📦 المخزن</h2>
-
-<p>
-من هنا تقدر تعدل <b>السعر والكمية</b> وتحفظهم.
-</p>
-
-<button onclick="loadStock()">
-🔄 تحديث
-</button>
-
-<button onclick="saveStock()">
-💾 حفظ الأسعار والكميات
-</button>
-
-<h3>➕ إضافة منتج جديد</h3>
-
-<input
-id="newProductName"
-placeholder="اسم المنتج"
->
-
-<input
-id="newProductPrice"
-type="number"
-min="0"
-placeholder="السعر"
->
-
-<input
-id="newProductStock"
-type="number"
-min="0"
-placeholder="الكمية"
->
-
-<select id="newProductCategory">
-
-<option value="معطرات">
-معطرات
-</option>
-
-<option value="Car Care">
-Car Care
-</option>
-
-<option value="إكسسوارات">
-إكسسوارات
-</option>
-
-<option value="أخرى">
-أخرى
-</option>
-
-</select>
-
-<button onclick="addProduct()">
-إضافة المنتج
-</button>
-
-<table>
-
-<thead>
-
-<tr>
-<th>المنتج</th>
-<th>التصنيف</th>
-<th>السعر</th>
-<th>المتاح</th>
-</tr>
-
-</thead>
-
-<tbody id="stockTable"></tbody>
-
-</table>
-
-</div>
-
-</div>
-
-
-<!-- ================= SUPPLIERS ================= -->
-
-<div id="suppliersPage" class="page">
-
-<button class="back-button" onclick="goHome()">
-← الرئيسية
-</button>
-
-<div class="section">
-
-<h2>🏪 إضافة مورد</h2>
-
-<input
-id="supplierName"
-placeholder="اسم المورد"
->
-
-<input
-id="supplierPhone"
-placeholder="رقم التليفون"
->
-
-<input
-id="supplierNotes"
-placeholder="ملاحظات"
->
-
-<button onclick="addSupplier()">
-إضافة المورد
-</button>
-
-</div>
-
-<div class="section">
-
-<h2>📋 الموردين</h2>
-
-<table>
-
-<thead>
-
-<tr>
-<th>المورد</th>
-<th>التليفون</th>
-<th>ملاحظات</th>
-</tr>
-
-</thead>
-
-<tbody id="suppliersTable"></tbody>
-
-</table>
-
-</div>
-
-<div class="section">
-
-<h2>📥 شراء منتجات</h2>
-
-<select id="purchaseProduct">
-<option value="">اختر المنتج</option>
-</select>
-
-<select id="purchaseSupplier">
-<option value="">اختر المورد</option>
-</select>
-
-<input
-id="purchaseQuantity"
-type="number"
-min="1"
-placeholder="الكمية"
->
-
-<input
-id="purchaseUnitPrice"
-type="number"
-min="0"
-placeholder="سعر الشراء"
->
-
-<button onclick="addPurchase()">
-تسجيل الشراء
-</button>
-
-</div>
-
-</div>
-
-
-<!-- ================= REPORTS ================= -->
-
-<div id="reportsPage" class="page">
-
-<button class="back-button" onclick="goHome()">
-← الرئيسية
-</button>
-
-<div class="section">
-
-<h2>📈 التقارير</h2>
-
-<div class="report-filters">
-
-<div>
-
-<label>من تاريخ</label>
-
-<input
-id="reportFrom"
-type="date"
->
-
-</div>
-
-<div>
-
-<label>إلى تاريخ</label>
-
-<input
-id="reportTo"
-type="date"
->
-
-</div>
-
-</div>
-
-<button onclick="loadReport()">
-🔍 عرض التقرير
-</button>
-
-<div class="summary">
-
-<div class="summary-box">
-الفواتير
-<strong id="reportInvoices">0</strong>
-</div>
-
-<div class="summary-box">
-المبيعات
-<strong id="reportSales">0</strong>
-جنيه
-</div>
-
-<div class="summary-box">
-المصروفات
-<strong id="reportExpenses">0</strong>
-جنيه
-</div>
-
-<div class="summary-box">
-الصافي
-<strong id="reportNet">0</strong>
-جنيه
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
 
 <script>
 
-/* =========================
-   API
-========================= */
+/* =========================================================
+   CONFIG
+========================================================= */
 
-const API_URL =
-"https://script.google.com/macros/s/AKfycbzNoSKZeYqTSWBNeJeCM1PK90i8Q3Vx0xXEiwMDmoiaKzHxupT92OfzJUAKivP5EqE3Ew/exec";
-
-
-let allProducts = [];
-let allServices = [];
-let cart = [];
+/*
+  ضع هنا رابط Google Apps Script Web App
+*/
+const API_URL = "ضع_رابط_WEB_APP_هنا";
 
 
-/* =========================
-   API REQUEST
-========================= */
+/* =========================================================
+   STATE
+========================================================= */
+
+const state = {
+  services: [],
+  products: [],
+  suppliers: [],
+  invoices: [],
+  expenses: []
+};
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function $(id){
+  return document.getElementById(id);
+}
+
+function money(value){
+  return Number(value || 0).toLocaleString("ar-EG");
+}
+
+function showLoading(show=true){
+  $("loading").classList.toggle("show",show);
+}
+
+function toast(message,type="success"){
+
+  const el = $("toast");
+
+  el.textContent = message;
+
+  el.className =
+    "toast show " +
+    (type === "error" ? "error" : "success");
+
+  setTimeout(()=>{
+    el.className = "toast";
+  },2500);
+}
 
 async function api(action,data={}){
 
-try{
+  const params = new URLSearchParams();
 
-const url = new URL(API_URL);
+  params.append("action",action);
 
-url.searchParams.set(
-"action",
-action
-);
+  Object.keys(data).forEach(key=>{
 
-Object.keys(data).forEach(key=>{
+    let value = data[key];
 
-let value = data[key];
+    if(
+      typeof value === "object" &&
+      value !== null
+    ){
+      value = JSON.stringify(value);
+    }
 
-if(
-typeof value === "object" &&
-value !== null
-){
+    params.append(key,value);
 
-value = JSON.stringify(value);
+  });
 
+  const response =
+    await fetch(
+      API_URL + "?" + params.toString(),
+      {
+        method:"GET",
+        cache:"no-store"
+      }
+    );
+
+  if(!response.ok){
+    throw new Error("خطأ في الاتصال بالخادم");
+  }
+
+  return response.json();
 }
 
-url.searchParams.set(
-key,
-value
-);
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+const titles = {
+
+  dashboard:"لوحة التحكم",
+  invoice:"فاتورة جديدة",
+  invoices:"الفواتير",
+  customers:"العملاء",
+  stock:"المخزن",
+  purchases:"المشتريات",
+  suppliers:"الموردين",
+  expenses:"المصروفات",
+  reports:"التقارير"
+
+};
+
+document.querySelectorAll(".nav button")
+.forEach(button=>{
+
+  button.addEventListener("click",()=>{
+
+    openSection(
+      button.dataset.section
+    );
+
+  });
 
 });
 
-const response =
-await fetch(
-url.toString(),
-{
-method:"GET",
-cache:"no-store"
-}
-);
 
-if(!response.ok){
+function openSection(section){
 
-throw new Error(
-"فشل الاتصال بالسيرفر"
-);
+  document
+    .querySelectorAll(".section")
+    .forEach(el=>{
+      el.classList.remove("active");
+    });
 
-}
+  const target =
+    $(section);
 
-const result =
-await response.json();
+  if(target){
+    target.classList.add("active");
+  }
 
-return result;
+  document
+    .querySelectorAll(".nav button")
+    .forEach(btn=>{
+      btn.classList.toggle(
+        "active",
+        btn.dataset.section === section
+      );
+    });
 
-}
-catch(error){
+  $("pageTitle").textContent =
+    titles[section] || "AUTO MOOD";
 
-console.error(
-"API ERROR:",
-error
-);
+  $("sidebar").classList.remove("open");
 
-throw error;
+  if(section==="dashboard"){
+    loadDashboard();
+  }
 
-}
+  if(section==="invoice"){
+    loadInvoiceData();
+  }
 
-}
+  if(section==="invoices"){
+    loadInvoices();
+  }
 
+  if(section==="stock"){
+    loadProducts();
+  }
 
-/* =========================
-   MESSAGE
-========================= */
+  if(section==="suppliers"){
+    loadSuppliers();
+  }
 
-function showMessage(
-text,
-type="success"
-){
+  if(section==="purchases"){
+    loadPurchaseData();
+  }
 
-const box =
-document.getElementById(
-"message"
-);
+  if(section==="expenses"){
+    loadExpenses();
+  }
 
-box.innerHTML =
-`<div class="${type}">
-${escapeHtml(text)}
-</div>`;
-
-setTimeout(()=>{
-box.innerHTML="";
-},4000);
-
-}
-
-
-/* =========================
-   PAGE
-========================= */
-
-function openPage(id){
-
-document
-.querySelectorAll(".page")
-.forEach(
-page=>{
-page.classList.remove("active");
-}
-);
-
-const page =
-document.getElementById(id);
-
-if(page){
-
-page.classList.add("active");
-
-}
-
-window.scrollTo({
-top:0,
-behavior:"smooth"
-});
+  if(section==="reports"){
+    setDefaultReportDates();
+  }
 
 }
 
 
-function goHome(){
+function toggleSidebar(){
+  $("sidebar").classList.toggle("open");
+}
 
-openPage("homePage");
 
-loadDashboard();
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
+
+async function init(){
+
+  try{
+
+    showLoading();
+
+    await api("init");
+
+    await Promise.all([
+      loadServices(),
+      loadProducts(),
+      loadSuppliers()
+    ]);
+
+    await loadDashboard();
+
+    $("connectionStatus").textContent =
+      "متصل بقاعدة البيانات ✓";
+
+  }catch(error){
+
+    console.error(error);
+
+    $("connectionStatus").textContent =
+      "تعذر الاتصال";
+
+    toast(
+      error.message || "خطأ في الاتصال",
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
 
 }
 
 
-/* =========================
-   HOME
-========================= */
-
-async function loadDashboard(){
-
-try{
-
-const result =
-await api("getDashboard");
-
-if(!result.success){
-
-return;
-
-}
-
-const data =
-result.data || {};
-
-document.getElementById(
-"invoiceCount"
-).innerText =
-Number(data.invoiceCount || 0);
-
-document.getElementById(
-"salesTotal"
-).innerText =
-Number(data.sales || 0);
-
-document.getElementById(
-"expenseTotal"
-).innerText =
-Number(data.expenses || 0);
-
-document.getElementById(
-"netTotal"
-).innerText =
-Number(data.net || 0);
-
-}
-catch(error){
-
-console.error(error);
-
-showMessage(
-"تعذر تحميل بيانات لوحة التحكم",
-"error"
-);
-
-}
-
-}
-
-
-/* =========================
+/* =========================================================
    SERVICES
-========================= */
+========================================================= */
 
 async function loadServices(){
 
-try{
+  const result =
+    await api("getServices");
 
-const result =
-await api("getServices");
+  if(!result.success){
+    throw new Error(result.message);
+  }
 
-if(!result.success){
+  state.services =
+    result.data || [];
 
-throw new Error(
-result.message ||
-"تعذر تحميل الخدمات"
-);
-
-}
-
-allServices =
-result.data || [];
-
-const container =
-document.getElementById(
-"serviceButtons"
-);
-
-container.innerHTML = "";
-
-if(!allServices.length){
-
-container.innerHTML =
-"<p>لا توجد خدمات متاحة.</p>";
-
-return;
-
-}
-
-allServices.forEach(
-service=>{
-
-const button =
-document.createElement("button");
-
-button.type =
-"button";
-
-button.className =
-"service-button";
-
-/* اسم الخدمة فقط */
-button.textContent =
-service.name;
-
-/* السعر محفوظ داخلياً فقط */
-button.dataset.name =
-service.name;
-
-button.dataset.price =
-Number(service.price || 0);
-
-button.onclick =
-function(){
-
-/* إزالة التحديد من جميع الأزرار */
-document
-.querySelectorAll(
-".service-button"
-)
-.forEach(
-btn=>{
-btn.classList.remove("active");
-}
-);
-
-/* تحديد الخدمة */
-this.classList.add("active");
-
-/* حفظ اسم الخدمة */
-document.getElementById(
-"service"
-).value =
-this.dataset.name;
-
-/* وضع السعر تلقائياً */
-document.getElementById(
-"servicePrice"
-).value =
-this.dataset.price;
-
-/* تحديث الإجمالي */
-updateTotals();
-
-};
-
-container.appendChild(
-button
-);
-
-});
-
-}
-catch(error){
-
-console.error(error);
-
-const container =
-document.getElementById(
-"serviceButtons"
-);
-
-container.innerHTML =
-"<p>تعذر تحميل الخدمات</p>";
-
-showMessage(
-error.message,
-"error"
-);
-
-}
+  renderServices();
 
 }
 
 
-/* =========================
-   INVOICE
-========================= */
+function renderServices(){
 
-async function openInvoicePage(){
+  const select =
+    $("invoiceService");
 
-openPage("invoicePage");
+  select.innerHTML =
+    '<option value="">اختر نوع الخدمة</option>';
 
-cart = [];
+  state.services.forEach(service=>{
 
-document.getElementById(
-"customerName"
-).value = "";
+    const option =
+      document.createElement("option");
 
-document.getElementById(
-"phone"
-).value = "";
+    option.value =
+      service.name;
 
-document.getElementById(
-"servicePrice"
-).value = "";
+    option.textContent =
+      service.name;
 
-document.getElementById(
-"service"
-).value = "";
+    /*
+      مهم:
+      لا يوجد سعر بجانب اسم الخدمة
+    */
 
-/* إزالة تحديد الخدمة */
-document
-.querySelectorAll(
-".service-button"
-)
-.forEach(
-button=>{
-button.classList.remove("active");
-}
-);
+    select.appendChild(option);
 
-await Promise.all([
-loadServices(),
-loadProducts()
-]);
-
-showProducts("all");
-
-renderCart();
+  });
 
 }
 
 
-/* =========================
+/* =========================================================
    PRODUCTS
-========================= */
+========================================================= */
 
 async function loadProducts(){
 
-try{
+  const result =
+    await api("getProducts");
 
-const result =
-await api("getProducts");
+  if(!result.success){
+    throw new Error(result.message);
+  }
 
-if(!result.success){
+  state.products =
+    result.data || [];
 
-throw new Error(
-result.message ||
-"تعذر تحميل المنتجات"
-);
-
-}
-
-allProducts =
-result.data || [];
-
-}
-catch(error){
-
-console.error(error);
-
-allProducts = [];
-
-showMessage(
-error.message,
-"error"
-);
-
-}
+  renderStock();
 
 }
 
 
-function showProducts(
-category,
-button
+function renderStock(){
+
+  const tbody =
+    $("stockTable");
+
+  tbody.innerHTML = "";
+
+  state.products.forEach(product=>{
+
+    const tr =
+      document.createElement("tr");
+
+    tr.innerHTML = `
+
+      <td>${escapeHtml(product.id)}</td>
+
+      <td>${escapeHtml(product.name)}</td>
+
+      <td>
+        <input
+          class="stock-category"
+          data-id="${escapeAttr(product.id)}"
+          value="${escapeAttr(product.category || "أخرى")}"
+        >
+      </td>
+
+      <td>
+        <input
+          class="stock-price"
+          data-id="${escapeAttr(product.id)}"
+          type="number"
+          min="0"
+          value="${Number(product.price || 0)}"
+        >
+      </td>
+
+      <td>
+        <input
+          class="stock-qty"
+          data-id="${escapeAttr(product.id)}"
+          type="number"
+          min="0"
+          value="${Number(product.stock || 0)}"
+        >
+      </td>
+
+    `;
+
+    tbody.appendChild(tr);
+
+  });
+
+}
+
+
+function addProductRow(){
+
+  const name =
+    prompt("اسم المنتج:");
+
+  if(!name){
+    return;
+  }
+
+  const price =
+    Number(
+      prompt("سعر البيع:", "0")
+    );
+
+  const stock =
+    Number(
+      prompt("الكمية:", "0")
+    );
+
+  const category =
+    prompt("الفئة:", "أخرى");
+
+  saveNewProduct(
+    name,
+    price,
+    stock,
+    category
+  );
+
+}
+
+
+async function saveNewProduct(
+  name,
+  price,
+  stock,
+  category
 ){
 
-if(button){
+  try{
 
-document
-.querySelectorAll(
-".category-buttons button"
-)
-.forEach(
-b=>{
-b.classList.remove("active");
-}
-);
+    showLoading();
 
-button.classList.add("active");
+    const result =
+      await api(
+        "addProduct",
+        {
+          name,
+          price,
+          stock,
+          category
+        }
+      );
 
-}
+    if(!result.success){
+      throw new Error(result.message);
+    }
 
-const box =
-document.getElementById(
-"invoiceProducts"
-);
+    toast(result.message);
 
-box.innerHTML = "";
+    await loadProducts();
 
-const products =
-allProducts.filter(
-product => {
+  }catch(error){
 
-return (
-category === "all" ||
-product.category === category
-);
+    toast(
+      error.message,
+      "error"
+    );
 
-}
-);
+  }finally{
 
-if(!products.length){
+    showLoading(false);
 
-box.innerHTML =
-"<p>لا توجد منتجات في هذا التصنيف.</p>";
-
-return;
-
-}
-
-products.forEach(
-product=>{
-
-const stock =
-Number(product.stock || 0);
-
-const price =
-Number(product.price || 0);
-
-const card =
-document.createElement(
-"div"
-);
-
-card.className =
-"product-card";
-
-const button =
-document.createElement(
-"button"
-);
-
-button.textContent =
-stock <= 0
-? "نفد المخزون"
-: "إضافة للسلة";
-
-button.disabled =
-stock <= 0;
-
-button.onclick =
-function(){
-
-addToCart(product.id);
-
-};
-
-card.innerHTML = `
-<div class="product-name">
-${escapeHtml(product.name)}
-</div>
-
-<div class="product-price">
-${price} جنيه
-</div>
-
-<div class="product-stock">
-المتاح: ${stock}
-</div>
-`;
-
-card.appendChild(button);
-
-box.appendChild(card);
-
-});
-
-}
-
-
-/* =========================
-   CART
-========================= */
-
-function addToCart(id){
-
-const product =
-allProducts.find(
-p =>
-String(p.id) ===
-String(id)
-);
-
-if(!product){
-
-showMessage(
-"المنتج غير موجود",
-"error"
-);
-
-return;
-
-}
-
-const stock =
-Number(product.stock || 0);
-
-if(stock <= 0){
-
-showMessage(
-"المنتج غير متاح",
-"error"
-);
-
-return;
-
-}
-
-const existing =
-cart.find(
-p =>
-String(p.id) ===
-String(id)
-);
-
-if(existing){
-
-if(
-existing.qty < stock
-){
-
-existing.qty++;
-
-}
-else{
-
-showMessage(
-"لا يمكن تجاوز المخزون",
-"error"
-);
-
-}
-
-}
-else{
-
-cart.push({
-
-id:product.id,
-
-name:product.name,
-
-price:Number(product.price || 0),
-
-qty:1
-
-});
-
-}
-
-renderCart();
-
-}
-
-
-function renderCart(){
-
-const box =
-document.getElementById(
-"cartItems"
-);
-
-if(!cart.length){
-
-box.innerHTML =
-"لا توجد منتجات";
-
-updateTotals();
-
-return;
-
-}
-
-box.innerHTML = "";
-
-cart.forEach(
-(item,index)=>{
-
-const div =
-document.createElement(
-"div"
-);
-
-div.className =
-"cart-item";
-
-const info =
-document.createElement(
-"div"
-);
-
-info.innerHTML = `
-<strong>
-${escapeHtml(item.name)}
-</strong>
-<br>
-${item.price} جنيه
-`;
-
-const input =
-document.createElement(
-"input"
-);
-
-input.type =
-"number";
-
-input.min =
-"1";
-
-input.value =
-item.qty;
-
-input.onchange =
-function(){
-
-changeCartQty(
-index,
-this.value
-);
-
-};
-
-const remove =
-document.createElement(
-"button"
-);
-
-remove.className =
-"remove";
-
-remove.textContent =
-"حذف";
-
-remove.onclick =
-function(){
-
-removeFromCart(index);
-
-};
-
-div.appendChild(info);
-div.appendChild(input);
-div.appendChild(remove);
-
-box.appendChild(div);
-
-});
-
-updateTotals();
-
-}
-
-
-function changeCartQty(
-index,
-value
-){
-
-if(!cart[index]){
-return;
-}
-
-const qty =
-Number(value);
-
-const product =
-allProducts.find(
-p =>
-String(p.id) ===
-String(cart[index].id)
-);
-
-if(!product){
-return;
-}
-
-const stock =
-Number(product.stock || 0);
-
-if(qty < 1){
-
-cart[index].qty = 1;
-
-}
-else if(qty > stock){
-
-cart[index].qty = stock;
-
-showMessage(
-"الكمية أكبر من المخزون",
-"error"
-);
-
-}
-else{
-
-cart[index].qty = qty;
-
-}
-
-renderCart();
-
-}
-
-
-function removeFromCart(index){
-
-cart.splice(index,1);
-
-renderCart();
-
-}
-
-
-/* =========================
-   TOTALS
-========================= */
-
-function updateTotals(){
-
-const service =
-Number(
-document.getElementById(
-"servicePrice"
-).value || 0
-);
-
-const products =
-cart.reduce(
-(sum,item)=>
-sum +
-Number(item.price || 0) *
-Number(item.qty || 0),
-0
-);
-
-const total =
-service + products;
-
-document.getElementById(
-"serviceTotalDisplay"
-).innerText =
-service;
-
-document.getElementById(
-"productsTotalDisplay"
-).innerText =
-products;
-
-document.getElementById(
-"invoiceTotalDisplay"
-).innerText =
-total;
-
-}
-
-
-document.addEventListener(
-"input",
-function(e){
-
-if(
-e.target.id === "servicePrice"
-){
-
-updateTotals();
-
-}
-
-}
-);
-
-
-/* =========================
-   CREATE INVOICE
-========================= */
-
-async function createInvoice(){
-
-try{
-
-const phone =
-document.getElementById(
-"phone"
-).value.trim();
-
-const customerName =
-document.getElementById(
-"customerName"
-).value.trim();
-
-const service =
-document.getElementById(
-"service"
-).value;
-
-const servicePrice =
-Number(
-document.getElementById(
-"servicePrice"
-).value || 0
-);
-
-if(!phone){
-
-showMessage(
-"اكتب رقم التليفون",
-"error"
-);
-
-return;
-
-}
-
-if(!service){
-
-showMessage(
-"اختر نوع الخدمة",
-"error"
-);
-
-return;
-
-}
-
-if(servicePrice < 0){
-
-showMessage(
-"مبلغ الخدمة غير صحيح",
-"error"
-);
-
-return;
-
-}
-
-const result =
-await api(
-"createInvoice",
-{
-
-phone,
-
-customerName,
-
-service,
-
-servicePrice,
-
-products:cart
-
-}
-);
-
-if(!result.success){
-
-throw new Error(
-result.message ||
-"تعذر حفظ الفاتورة"
-);
-
-}
-
-showMessage(
-"تم حفظ الفاتورة بنجاح ✅"
-);
-
-cart = [];
-
-renderCart();
-
-await loadProducts();
-
-await loadDashboard();
-
-setTimeout(
-goHome,
-800
-);
-
-}
-catch(error){
-
-console.error(error);
-
-showMessage(
-error.message,
-"error"
-);
-
-}
-
-}
-
-
-/* =========================
-   SALES
-========================= */
-
-async function openSalesPage(){
-
-openPage("salesPage");
-
-try{
-
-const result =
-await api(
-"getInvoices"
-);
-
-if(!result.success){
-
-throw new Error(
-result.message ||
-"تعذر تحميل الفواتير"
-);
-
-}
-
-const invoices =
-result.data || [];
-
-const today =
-getToday();
-
-const data =
-invoices.filter(
-invoice =>
-getDateOnly(invoice.date) ===
-today
-);
-
-const sales =
-data.reduce(
-(sum,item)=>
-sum +
-Number(item.total || 0),
-0
-);
-
-document.getElementById(
-"salesInvoiceCount"
-).innerText =
-data.length;
-
-document.getElementById(
-"salesTodayTotal"
-).innerText =
-sales;
-
-const table =
-document.getElementById(
-"salesTable"
-);
-
-table.innerHTML = "";
-
-data.forEach(
-item=>{
-
-let products = "-";
-
-if(
-Array.isArray(item.products) &&
-item.products.length
-){
-
-products =
-item.products
-.map(
-p =>
-`${escapeHtml(p.name)} × ${p.qty}`
-)
-.join("<br>");
-
-}
-
-table.innerHTML += `
-<tr>
-
-<td>
-${formatDate(item.date)}
-</td>
-
-<td>
-${escapeHtml(
-item.customerName || ""
-)}
-</td>
-
-<td>
-${escapeHtml(
-item.phone || ""
-)}
-</td>
-
-<td>
-${escapeHtml(
-item.service || ""
-)}
-<br>
-${Number(item.servicePrice || 0)} جنيه
-</td>
-
-<td>
-${products}
-</td>
-
-<td>
-<strong>
-${Number(item.total || 0)}
-</strong>
-جنيه
-</td>
-
-</tr>
-`;
-
-});
-
-if(!data.length){
-
-table.innerHTML = `
-<tr>
-<td colspan="6">
-لا توجد فواتير اليوم
-</td>
-</tr>
-`;
-
-}
-
-}
-catch(error){
-
-showMessage(
-error.message,
-"error"
-);
-
-}
-
-}
-
-
-/* =========================
-   EXPENSES
-========================= */
-
-async function openExpensesPage(){
-
-openPage("expensesPage");
-
-await loadExpenses();
-
-}
-
-
-async function addExpense(){
-
-try{
-
-const name =
-document.getElementById(
-"expenseName"
-).value.trim();
-
-const amount =
-Number(
-document.getElementById(
-"expenseAmount"
-).value || 0
-);
-
-if(!name || amount <= 0){
-
-showMessage(
-"اكتب اسم المصروف والمبلغ",
-"error"
-);
-
-return;
-
-}
-
-const result =
-await api(
-"addExpense",
-{
-name,
-amount
-}
-);
-
-if(!result.success){
-
-throw new Error(
-result.message
-);
-
-}
-
-document.getElementById(
-"expenseName"
-).value = "";
-
-document.getElementById(
-"expenseAmount"
-).value = "";
-
-showMessage(
-"تم إضافة المصروف ✅"
-);
-
-await loadExpenses();
-
-await loadDashboard();
-
-}
-catch(error){
-
-showMessage(
-error.message,
-"error"
-);
-
-}
-
-}
-
-
-async function loadExpenses(){
-
-try{
-
-const result =
-await api(
-"getExpenses"
-);
-
-if(!result.success){
-
-throw new Error(
-result.message
-);
-
-}
-
-const expenses =
-result.data || [];
-
-const today =
-getToday();
-
-const data =
-expenses.filter(
-expense =>
-getDateOnly(expense.date) ===
-today
-);
-
-const total =
-data.reduce(
-(sum,item)=>
-sum +
-Number(item.amount || 0),
-0
-);
-
-document.getElementById(
-"todayExpensesTotal"
-).innerText =
-total;
-
-const table =
-document.getElementById(
-"expenseTable"
-);
-
-table.innerHTML = "";
-
-data.forEach(
-item=>{
-
-table.innerHTML += `
-<tr>
-
-<td>
-${formatDate(item.date)}
-</td>
-
-<td>
-${escapeHtml(item.name)}
-</td>
-
-<td>
-${Number(item.amount || 0)} جنيه
-</td>
-
-</tr>
-`;
-
-});
-
-if(!data.length){
-
-table.innerHTML = `
-<tr>
-<td colspan="3">
-لا توجد مصروفات اليوم
-</td>
-</tr>
-`;
-
-}
-
-}
-catch(error){
-
-showMessage(
-error.message,
-"error"
-);
-
-}
-
-}
-
-
-/* =========================
-   CUSTOMERS
-========================= */
-
-function openCustomersPage(){
-
-openPage(
-"customersPage"
-);
-
-}
-
-
-async function searchCustomer(){
-
-try{
-
-const phone =
-document.getElementById(
-"searchPhone"
-).value.trim();
-
-if(!phone){
-
-showMessage(
-"اكتب رقم التليفون",
-"error"
-);
-
-return;
-
-}
-
-const result =
-await api(
-"getCustomerHistory",
-{phone}
-);
-
-if(!result.success){
-
-throw new Error(
-result.message
-);
-
-}
-
-const data =
-result.data || [];
-
-const box =
-document.getElementById(
-"customerResult"
-);
-
-if(!data.length){
-
-box.innerHTML =
-"<p>لا يوجد سجل لهذا العميل.</p>";
-
-return;
-
-}
-
-const total =
-data.reduce(
-(sum,item)=>
-sum +
-Number(item.total || 0),
-0
-);
-
-let html = `
-
-<div class="summary">
-
-<div class="summary-box">
-عدد الزيارات
-<strong>${data.length}</strong>
-</div>
-
-<div class="summary-box">
-إجمالي المدفوع
-<strong>${total}</strong>
-جنيه
-</div>
-
-</div>
-
-<table>
-
-<thead>
-
-<tr>
-<th>التاريخ</th>
-<th>الخدمة</th>
-<th>المنتجات</th>
-<th>الإجمالي</th>
-</tr>
-
-</thead>
-
-<tbody>
-`;
-
-data.forEach(
-item=>{
-
-let products = "-";
-
-if(
-Array.isArray(item.products) &&
-item.products.length
-){
-
-products =
-item.products
-.map(
-p =>
-`${escapeHtml(p.name)} × ${p.qty}`
-)
-.join("<br>");
-
-}
-
-html += `
-
-<tr>
-
-<td>
-${formatDate(item.date)}
-</td>
-
-<td>
-${escapeHtml(item.service || "")}
-</td>
-
-<td>
-${products}
-</td>
-
-<td>
-${Number(item.total || 0)} جنيه
-</td>
-
-</tr>
-
-`;
-
-});
-
-html += `
-</tbody>
-</table>
-`;
-
-box.innerHTML =
-html;
-
-}
-catch(error){
-
-showMessage(
-error.message,
-"error"
-);
-
-}
-
-}
-
-
-/* =========================
-   STOCK
-========================= */
-
-async function openStockPage(){
-
-openPage(
-"stockPage"
-);
-
-await loadStock();
-
-}
-
-
-async function loadStock(){
-
-try{
-
-const result =
-await api(
-"getProducts"
-);
-
-if(!result.success){
-
-throw new Error(
-result.message
-);
-
-}
-
-allProducts =
-result.data || [];
-
-const table =
-document.getElementById(
-"stockTable"
-);
-
-table.innerHTML = "";
-
-allProducts.forEach(
-product=>{
-
-table.innerHTML += `
-
-<tr>
-
-<td>
-${escapeHtml(product.name)}
-</td>
-
-<td>
-${escapeHtml(
-product.category || "أخرى"
-)}
-</td>
-
-<td>
-
-<input
-class="price-input"
-type="number"
-min="0"
-data-id="${escapeHtml(product.id)}"
-data-field="price"
-value="${Number(product.price || 0)}"
->
-
-</td>
-
-<td>
-
-<input
-class="stock-input"
-type="number"
-min="0"
-data-id="${escapeHtml(product.id)}"
-data-field="stock"
-value="${Number(product.stock || 0)}"
->
-
-</td>
-
-</tr>
-`;
-
-});
-
-if(!allProducts.length){
-
-table.innerHTML = `
-<tr>
-<td colspan="4">
-لا توجد منتجات
-</td>
-</tr>
-`;
-
-}
-
-}
-catch(error){
-
-showMessage(
-error.message,
-"error"
-);
-
-}
+  }
 
 }
 
 
 async function saveStock(){
 
-try{
+  const products =
+    state.products.map(product=>{
 
-const rows =
-document.querySelectorAll(
-"#stockTable tr"
-);
+      const priceInput =
+        document.querySelector(
+          `.stock-price[data-id="${CSS.escape(String(product.id))}"]`
+        );
 
-const products = [];
+      const qtyInput =
+        document.querySelector(
+          `.stock-qty[data-id="${CSS.escape(String(product.id))}"]`
+        );
 
-rows.forEach(
-row=>{
+      const categoryInput =
+        document.querySelector(
+          `.stock-category[data-id="${CSS.escape(String(product.id))}"]`
+        );
 
-const priceInput =
-row.querySelector(
-".price-input"
-);
+      return {
 
-const stockInput =
-row.querySelector(
-".stock-input"
-);
+        id:product.id,
 
-if(
-!priceInput ||
-!stockInput
-){
+        price:
+          Number(
+            priceInput?.value || 0
+          ),
 
-return;
+        stock:
+          Number(
+            qtyInput?.value || 0
+          ),
 
-}
+        category:
+          categoryInput?.value ||
+          "أخرى"
 
-products.push({
+      };
 
-id:priceInput.dataset.id,
+    });
 
-price:
-Number(
-priceInput.value || 0
-),
+  try{
 
-stock:
-Number(
-stockInput.value || 0
-)
+    showLoading();
 
-});
+    const result =
+      await api(
+        "saveStock",
+        {products}
+      );
 
-});
+    if(!result.success){
+      throw new Error(result.message);
+    }
 
-const result =
-await api(
-"saveStock",
-{products}
-);
+    toast(result.message);
 
-if(!result.success){
+    await loadProducts();
 
-throw new Error(
-result.message
-);
+  }catch(error){
 
-}
+    toast(
+      error.message,
+      "error"
+    );
 
-showMessage(
-"تم حفظ الأسعار والكميات ✅"
-);
+  }finally{
 
-await loadStock();
+    showLoading(false);
 
-}
-catch(error){
-
-showMessage(
-error.message,
-"error"
-);
-
-}
+  }
 
 }
 
 
-/* =========================
-   ADD PRODUCT
-========================= */
+/* =========================================================
+   INVOICE
+========================================================= */
 
-async function addProduct(){
+async function loadInvoiceData(){
 
-try{
+  if(!state.products.length){
+    await loadProducts();
+  }
 
-const name =
-document.getElementById(
-"newProductName"
-).value.trim();
+  if(!state.services.length){
+    await loadServices();
+  }
 
-const price =
-Number(
-document.getElementById(
-"newProductPrice"
-).value || 0
-);
-
-const stock =
-Number(
-document.getElementById(
-"newProductStock"
-).value || 0
-);
-
-const category =
-document.getElementById(
-"newProductCategory"
-).value;
-
-if(!name){
-
-showMessage(
-"اكتب اسم المنتج",
-"error"
-);
-
-return;
-
-}
-
-if(price < 0 || stock < 0){
-
-showMessage(
-"السعر أو الكمية غير صحيحة",
-"error"
-);
-
-return;
-
-}
-
-const result =
-await api(
-"addProduct",
-{
-name,
-price,
-stock,
-category
-}
-);
-
-if(!result.success){
-
-throw new Error(
-result.message
-);
-
-}
-
-document.getElementById(
-"newProductName"
-).value = "";
-
-document.getElementById(
-"newProductPrice"
-).value = "";
-
-document.getElementById(
-"newProductStock"
-).value = "";
-
-showMessage(
-"تم إضافة المنتج ✅"
-);
-
-await loadStock();
-
-}
-catch(error){
-
-showMessage(
-error.message,
-"error"
-);
-
-}
-
+  renderServices();
 }
 
 
-/* =========================
+function addInvoiceProduct(){
+
+  const container =
+    $("invoiceProducts");
+
+  const row =
+    document.createElement("div");
+
+  row.className =
+    "product-row";
+
+  row.innerHTML = `
+
+    <select class="invoice-product"
+      onchange="calculateInvoice()">
+
+      <option value="">
+        اختر المنتج
+      </option>
+
+      ${state.products.map(product=>`
+
+        <option value="${escapeAttr(product.id)}">
+
+          ${escapeHtml(product.name)}
+          — متاح ${Number(product.stock || 0)}
+
+        </option>
+
+      `).join("")}
+
+    </select>
+
+    <input
+      class="invoice-qty"
+      type="number"
+      min="1"
+      value="1"
+      onchange="calculateInvoice()"
+    >
+
+    <input
+      class="invoice-price"
+      type="number"
+      readonly
+      value="0"
+    >
+
+    <button
+      class="remove-product"
+      onclick="this.parentElement.remove();calculateInvoice()">
+      ×
+    </button>
+
+  `;
+
+  container.appendChild(row);
+
+  row
+    .querySelector(".invoice-product")
+    .addEventListener(
+      "change",
+      function(){
+
+        const product =
+          state.products.find(
+            p =>
+              String(p.id) ===
+              String(this.value)
+          );
+
+        row.querySelector(
+          ".invoice-price"
+        ).value =
+          product
+            ? Number(product.price || 0)
+            : 0;
+
+        calculateInvoice();
+
+      }
+    );
+
+}
+
+
+function calculateInvoice(){
+
+  let total = 0;
+
+  document
+    .querySelectorAll(".product-row")
+    .forEach(row=>{
+
+      const select =
+        row.querySelector(
+          ".invoice-product"
+        );
+
+      const qty =
+        Number(
+          row.querySelector(
+            ".invoice-qty"
+          )?.value || 0
+        );
+
+      const product =
+        state.products.find(
+          p =>
+            String(p.id) ===
+            String(select?.value)
+        );
+
+      const price =
+        product
+          ? Number(product.price || 0)
+          : 0;
+
+      row.querySelector(
+        ".invoice-price"
+      ).value =
+        price;
+
+      total +=
+        price * qty;
+
+    });
+
+  const servicePrice =
+    Number(
+      $("invoiceServicePrice").value || 0
+    );
+
+  $("invoiceProductTotal")
+    .textContent =
+    money(total);
+
+  $("invoiceTotal")
+    .textContent =
+    money(
+      total +
+      servicePrice
+    );
+
+}
+
+
+$("invoiceServicePrice")
+.addEventListener(
+  "input",
+  calculateInvoice
+);
+
+
+async function saveInvoice(){
+
+  const phone =
+    $("invoicePhone")
+      .value
+      .trim();
+
+  const customerName =
+    $("invoiceCustomerName")
+      .value
+      .trim();
+
+  const service =
+    $("invoiceService")
+      .value;
+
+  const servicePrice =
+    Number(
+      $("invoiceServicePrice")
+        .value || 0
+    );
+
+  if(!phone){
+    toast(
+      "رقم التليفون مطلوب",
+      "error"
+    );
+    return;
+  }
+
+  if(!service){
+    toast(
+      "اختر نوع الخدمة",
+      "error"
+    );
+    return;
+  }
+
+  const products = [];
+
+  document
+    .querySelectorAll(".product-row")
+    .forEach(row=>{
+
+      const id =
+        row.querySelector(
+          ".invoice-product"
+        )?.value;
+
+      const qty =
+        Number(
+          row.querySelector(
+            ".invoice-qty"
+          )?.value || 0
+        );
+
+      if(id && qty > 0){
+
+        const product =
+          state.products.find(
+            p =>
+              String(p.id) ===
+              String(id)
+          );
+
+        products.push({
+
+          id:id,
+
+          name:
+            product?.name || "",
+
+          qty:qty
+
+        });
+
+      }
+
+    });
+
+  try{
+
+    showLoading();
+
+    const result =
+      await api(
+        "createInvoice",
+        {
+          phone,
+          customerName,
+          service,
+          servicePrice,
+          products
+        }
+      );
+
+    if(!result.success){
+      throw new Error(result.message);
+    }
+
+    toast(
+      "تم حفظ الفاتورة بنجاح"
+    );
+
+    resetInvoice();
+
+    await loadProducts();
+
+    await loadDashboard();
+
+  }catch(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+}
+
+
+function resetInvoice(){
+
+  $("invoicePhone").value="";
+  $("invoiceCustomerName").value="";
+  $("invoiceService").value="";
+  $("invoiceServicePrice").value="";
+
+  $("invoiceProducts").innerHTML="";
+
+  $("invoiceProductTotal")
+    .textContent="0";
+
+  $("invoiceTotal")
+    .textContent="0";
+
+}
+
+
+/* =========================================================
+   INVOICES
+========================================================= */
+
+async function loadInvoices(){
+
+  try{
+
+    showLoading();
+
+    const result =
+      await api("getInvoices");
+
+    if(!result.success){
+      throw new Error(result.message);
+    }
+
+    state.invoices =
+      result.data || [];
+
+    renderInvoices();
+
+  }catch(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+}
+
+
+function renderInvoices(){
+
+  const search =
+    $("invoiceSearch")
+      .value
+      .trim()
+      .toLowerCase();
+
+  const tbody =
+    $("invoicesTable");
+
+  tbody.innerHTML="";
+
+  state.invoices
+    .filter(invoice=>{
+
+      if(!search){
+        return true;
+      }
+
+      return (
+
+        String(invoice.customerName || "")
+          .toLowerCase()
+          .includes(search)
+
+        ||
+
+        String(invoice.phone || "")
+          .toLowerCase()
+          .includes(search)
+
+      );
+
+    })
+    .forEach(invoice=>{
+
+      const tr =
+        document.createElement("tr");
+
+      tr.innerHTML=`
+
+        <td>${escapeHtml(invoice.id)}</td>
+
+        <td>${formatDate(invoice.date)}</td>
+
+        <td>${escapeHtml(invoice.customerName || "-")}</td>
+
+        <td>${escapeHtml(invoice.phone || "-")}</td>
+
+        <td>${escapeHtml(invoice.service || "-")}</td>
+
+        <td>${money(invoice.productTotal)}</td>
+
+        <td>
+          <strong>
+            ${money(invoice.total)}
+          </strong>
+        </td>
+
+      `;
+
+      tbody.appendChild(tr);
+
+    });
+
+}
+
+
+/* =========================================================
+   CUSTOMER
+========================================================= */
+
+async function searchCustomer(){
+
+  const phone =
+    $("customerPhone")
+      .value
+      .trim();
+
+  if(!phone){
+    toast(
+      "اكتب رقم الهاتف",
+      "error"
+    );
+    return;
+  }
+
+  try{
+
+    showLoading();
+
+    const result =
+      await api(
+        "getCustomerHistory",
+        {phone}
+      );
+
+    if(!result.success){
+      throw new Error(result.message);
+    }
+
+    const invoices =
+      result.data || [];
+
+    if(!invoices.length){
+
+      $("customerResult").innerHTML =
+        "لا توجد فواتير لهذا العميل.";
+
+      return;
+
+    }
+
+    let total=0;
+
+    invoices.forEach(
+      invoice=>{
+        total +=
+          Number(invoice.total || 0);
+      }
+    );
+
+    $("customerResult").innerHTML = `
+
+      <div class="grid">
+
+        <div class="card">
+          <div class="stat-title">
+            عدد الزيارات
+          </div>
+
+          <div class="stat-value blue">
+            ${invoices.length}
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="stat-title">
+            إجمالي الإنفاق
+          </div>
+
+          <div class="stat-value green">
+            ${money(total)}
+          </div>
+        </div>
+
+      </div>
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>التاريخ</th>
+              <th>الخدمة</th>
+              <th>المنتجات</th>
+              <th>الإجمالي</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            ${invoices.map(invoice=>`
+
+              <tr>
+
+                <td>
+                  ${formatDate(invoice.date)}
+                </td>
+
+                <td>
+                  ${escapeHtml(invoice.service)}
+                </td>
+
+                <td>
+                  ${money(invoice.productTotal)}
+                </td>
+
+                <td>
+                  <strong>
+                    ${money(invoice.total)}
+                  </strong>
+                </td>
+
+              </tr>
+
+            `).join("")}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    `;
+
+  }catch(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+}
+
+
+/* =========================================================
    SUPPLIERS
-========================= */
-
-async function openSuppliersPage(){
-
-openPage(
-"suppliersPage"
-);
-
-await loadSuppliers();
-
-await preparePurchaseForm();
-
-}
-
-
-async function addSupplier(){
-
-try{
-
-const name =
-document.getElementById(
-"supplierName"
-).value.trim();
-
-const phone =
-document.getElementById(
-"supplierPhone"
-).value.trim();
-
-const notes =
-document.getElementById(
-"supplierNotes"
-).value.trim();
-
-if(!name){
-
-showMessage(
-"اكتب اسم المورد",
-"error"
-);
-
-return;
-
-}
-
-const result =
-await api(
-"addSupplier",
-{
-name,
-phone,
-notes
-}
-);
-
-if(!result.success){
-
-throw new Error(
-result.message
-);
-
-}
-
-document.getElementById(
-"supplierName"
-).value = "";
-
-document.getElementById(
-"supplierPhone"
-).value = "";
-
-document.getElementById(
-"supplierNotes"
-).value = "";
-
-showMessage(
-"تم إضافة المورد ✅"
-);
-
-await loadSuppliers();
-
-await preparePurchaseForm();
-
-}
-catch(error){
-
-showMessage(
-error.message,
-"error"
-);
-
-}
-
-}
-
+========================================================= */
 
 async function loadSuppliers(){
 
-try{
+  const result =
+    await api("getSuppliers");
 
-const result =
-await api(
-"getSuppliers"
-);
+  if(!result.success){
+    throw new Error(result.message);
+  }
 
-if(!result.success){
+  state.suppliers =
+    result.data || [];
 
-throw new Error(
-result.message
-);
-
-}
-
-const suppliers =
-result.data || [];
-
-const table =
-document.getElementById(
-"suppliersTable"
-);
-
-table.innerHTML = "";
-
-suppliers.forEach(
-item=>{
-
-table.innerHTML += `
-
-<tr>
-
-<td>
-${escapeHtml(item.name)}
-</td>
-
-<td>
-${escapeHtml(item.phone || "")}
-</td>
-
-<td>
-${escapeHtml(item.notes || "")}
-</td>
-
-</tr>
-`;
-
-});
-
-if(!suppliers.length){
-
-table.innerHTML = `
-<tr>
-<td colspan="3">
-لا يوجد موردين
-</td>
-</tr>
-`;
-
-}
-
-}
-catch(error){
-
-showMessage(
-error.message,
-"error"
-);
-
-}
+  renderSuppliers();
 
 }
 
 
-/* =========================
-   PURCHASE FORM
-========================= */
+function renderSuppliers(){
 
-async function preparePurchaseForm(){
+  const tbody =
+    $("suppliersTable");
 
-try{
+  if(!tbody){
+    return;
+  }
 
-const productsResult =
-await api(
-"getProducts"
-);
+  tbody.innerHTML="";
 
-if(
-!productsResult.success
-){
+  state.suppliers.forEach(supplier=>{
 
-throw new Error(
-productsResult.message
-);
+    const tr =
+      document.createElement("tr");
 
-}
+    tr.innerHTML=`
 
-allProducts =
-productsResult.data || [];
+      <td>${escapeHtml(supplier.id)}</td>
 
-const productSelect =
-document.getElementById(
-"purchaseProduct"
-);
+      <td>${escapeHtml(supplier.name || "")}</td>
 
-productSelect.innerHTML =
-'<option value="">اختر المنتج</option>';
+      <td>${escapeHtml(supplier.phone || "")}</td>
 
-allProducts.forEach(
-product=>{
+      <td>${escapeHtml(supplier.notes || "")}</td>
 
-productSelect.innerHTML += `
+    `;
 
-<option value="${escapeHtml(product.id)}">
-${escapeHtml(product.name)}
-</option>
-`;
+    tbody.appendChild(tr);
 
-});
-
-
-const suppliersResult =
-await api(
-"getSuppliers"
-);
-
-if(
-!suppliersResult.success
-){
-
-throw new Error(
-suppliersResult.message
-);
-
-}
-
-const suppliers =
-suppliersResult.data || [];
-
-const supplierSelect =
-document.getElementById(
-"purchaseSupplier"
-);
-
-supplierSelect.innerHTML =
-'<option value="">اختر المورد</option>';
-
-suppliers.forEach(
-supplier=>{
-
-supplierSelect.innerHTML += `
-
-<option value="${escapeHtml(supplier.id)}">
-${escapeHtml(supplier.name)}
-</option>
-`;
-
-});
-
-}
-catch(error){
-
-showMessage(
-error.message,
-"error"
-);
-
-}
+  });
 
 }
 
 
-/* =========================
-   PURCHASE
-========================= */
+async function saveSupplier(){
 
-async function addPurchase(){
+  const name =
+    $("supplierName")
+      .value
+      .trim();
 
-try{
+  const phone =
+    $("supplierPhone")
+      .value
+      .trim();
 
-const productId =
-document.getElementById(
-"purchaseProduct"
-).value;
+  const notes =
+    $("supplierNotes")
+      .value
+      .trim();
 
-const supplierId =
-document.getElementById(
-"purchaseSupplier"
-).value;
+  if(!name){
 
-const quantity =
-Number(
-document.getElementById(
-"purchaseQuantity"
-).value || 0
-);
+    toast(
+      "اسم المورد مطلوب",
+      "error"
+    );
 
-const unitPrice =
-Number(
-document.getElementById(
-"purchaseUnitPrice"
-).value || 0
-);
+    return;
 
-if(!productId){
+  }
 
-showMessage(
-"اختر المنتج",
-"error"
-);
+  try{
 
-return;
+    showLoading();
 
-}
+    const result =
+      await api(
+        "addSupplier",
+        {
+          name,
+          phone,
+          notes
+        }
+      );
 
-if(quantity <= 0){
+    if(!result.success){
+      throw new Error(result.message);
+    }
 
-showMessage(
-"اكتب الكمية",
-"error"
-);
+    toast(result.message);
 
-return;
+    $("supplierName").value="";
+    $("supplierPhone").value="";
+    $("supplierNotes").value="";
 
-}
+    await loadSuppliers();
 
-if(unitPrice < 0){
+  }catch(error){
 
-showMessage(
-"سعر الشراء غير صحيح",
-"error"
-);
+    toast(
+      error.message,
+      "error"
+    );
 
-return;
+  }finally{
 
-}
+    showLoading(false);
 
-const product =
-allProducts.find(
-p =>
-String(p.id) ===
-String(productId)
-);
-
-const supplierSelect =
-document.getElementById(
-"purchaseSupplier"
-);
-
-const supplierName =
-supplierSelect
-.options[
-supplierSelect.selectedIndex
-]
-?.text || "";
-
-const result =
-await api(
-"addPurchase",
-{
-
-productId,
-
-product:
-product?.name || "",
-
-supplierId,
-
-supplier:
-supplierName,
-
-quantity,
-
-unitPrice
-
-}
-);
-
-if(!result.success){
-
-throw new Error(
-result.message
-);
-
-}
-
-showMessage(
-"تم تسجيل الشراء وزيادة المخزون ✅"
-);
-
-document.getElementById(
-"purchaseQuantity"
-).value = "";
-
-document.getElementById(
-"purchaseUnitPrice"
-).value = "";
-
-await preparePurchaseForm();
-
-}
-catch(error){
-
-showMessage(
-error.message,
-"error"
-);
-
-}
+  }
 
 }
 
 
-/* =========================
+/* =========================================================
+   PURCHASES
+========================================================= */
+
+async function loadPurchaseData(){
+
+  if(!state.products.length){
+    await loadProducts();
+  }
+
+  if(!state.suppliers.length){
+    await loadSuppliers();
+  }
+
+  const productSelect =
+    $("purchaseProduct");
+
+  productSelect.innerHTML =
+    '<option value="">اختر المنتج</option>';
+
+  state.products.forEach(product=>{
+
+    const option =
+      document.createElement("option");
+
+    option.value =
+      product.id;
+
+    option.textContent =
+      product.name;
+
+    productSelect.appendChild(option);
+
+  });
+
+  const supplierSelect =
+    $("purchaseSupplier");
+
+  supplierSelect.innerHTML =
+    '<option value="">اختر المورد</option>';
+
+  state.suppliers.forEach(supplier=>{
+
+    const option =
+      document.createElement("option");
+
+    option.value =
+      supplier.id;
+
+    option.textContent =
+      supplier.name;
+
+    supplierSelect.appendChild(option);
+
+  });
+
+}
+
+
+async function savePurchase(){
+
+  const productId =
+    $("purchaseProduct")
+      .value;
+
+  const supplierId =
+    $("purchaseSupplier")
+      .value;
+
+  const quantity =
+    Number(
+      $("purchaseQuantity")
+        .value || 0
+    );
+
+  const unitPrice =
+    Number(
+      $("purchaseUnitPrice")
+        .value || 0
+    );
+
+  const product =
+    state.products.find(
+      p =>
+        String(p.id) ===
+        String(productId)
+    );
+
+  const supplier =
+    state.suppliers.find(
+      s =>
+        String(s.id) ===
+        String(supplierId)
+    );
+
+  if(!productId){
+
+    toast(
+      "اختر المنتج",
+      "error"
+    );
+
+    return;
+
+  }
+
+  if(quantity<=0){
+
+    toast(
+      "الكمية غير صحيحة",
+      "error"
+    );
+
+    return;
+
+  }
+
+  try{
+
+    showLoading();
+
+    const result =
+      await api(
+        "addPurchase",
+        {
+
+          productId,
+
+          product:
+            product?.name || "",
+
+          supplierId,
+
+          supplier:
+            supplier?.name || "",
+
+          quantity,
+
+          unitPrice
+
+        }
+      );
+
+    if(!result.success){
+      throw new Error(result.message);
+    }
+
+    toast(result.message);
+
+    $("purchaseQuantity").value="";
+    $("purchaseUnitPrice").value="";
+
+    await loadProducts();
+
+  }catch(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+}
+
+
+/* =========================================================
+   EXPENSES
+========================================================= */
+
+async function loadExpenses(){
+
+  try{
+
+    showLoading();
+
+    const result =
+      await api("getExpenses");
+
+    if(!result.success){
+      throw new Error(result.message);
+    }
+
+    state.expenses =
+      result.data || [];
+
+    renderExpenses();
+
+  }catch(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+}
+
+
+function renderExpenses(){
+
+  const tbody =
+    $("expensesTable");
+
+  tbody.innerHTML="";
+
+  state.expenses.forEach(expense=>{
+
+    const tr =
+      document.createElement("tr");
+
+    tr.innerHTML=`
+
+      <td>
+        ${formatDate(expense.date)}
+      </td>
+
+      <td>
+        ${escapeHtml(expense.name || "")}
+      </td>
+
+      <td>
+        ${escapeHtml(expense.category || "")}
+      </td>
+
+      <td>
+        <strong>
+          ${money(expense.amount)}
+        </strong>
+      </td>
+
+      <td>
+        ${escapeHtml(expense.notes || "")}
+      </td>
+
+    `;
+
+    tbody.appendChild(tr);
+
+  });
+
+}
+
+
+async function saveExpense(){
+
+  const name =
+    $("expenseName")
+      .value
+      .trim();
+
+  const amount =
+    Number(
+      $("expenseAmount")
+        .value || 0
+    );
+
+  const category =
+    $("expenseCategory")
+      .value
+      .trim();
+
+  const notes =
+    $("expenseNotes")
+      .value
+      .trim();
+
+  if(!name){
+
+    toast(
+      "اسم المصروف مطلوب",
+      "error"
+    );
+
+    return;
+
+  }
+
+  if(amount<=0){
+
+    toast(
+      "المبلغ غير صحيح",
+      "error"
+    );
+
+    return;
+
+  }
+
+  try{
+
+    showLoading();
+
+    const result =
+      await api(
+        "addExpense",
+        {
+          name,
+          amount,
+          category,
+          notes
+        }
+      );
+
+    if(!result.success){
+      throw new Error(result.message);
+    }
+
+    toast(result.message);
+
+    $("expenseName").value="";
+    $("expenseAmount").value="";
+    $("expenseCategory").value="";
+    $("expenseNotes").value="";
+
+    await loadExpenses();
+    await loadDashboard();
+
+  }catch(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+async function loadDashboard(){
+
+  try{
+
+    const result =
+      await api("getDashboard");
+
+    if(!result.success){
+      throw new Error(result.message);
+    }
+
+    const data =
+      result.data || {};
+
+    $("dashInvoices")
+      .textContent =
+      money(data.invoiceCount);
+
+    $("dashSales")
+      .textContent =
+      money(data.sales);
+
+    $("dashExpenses")
+      .textContent =
+      money(data.expenses);
+
+    $("dashNet")
+      .textContent =
+      money(data.net);
+
+    await loadDayStatus();
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+
+}
+
+
+/* =========================================================
+   DAY
+========================================================= */
+
+async function loadDayStatus(){
+
+  try{
+
+    const result =
+      await api("getDayStatus");
+
+    if(!result.success){
+      return;
+    }
+
+    const finished =
+      result.data?.finished;
+
+    $("dayStatus").innerHTML =
+      finished
+        ? '<span class="badge red">تم إنهاء اليوم</span>'
+        : '<span class="badge green">اليوم مفتوح</span>';
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+
+}
+
+
+async function finishDay(){
+
+  if(
+    !confirm(
+      "هل أنت متأكد من إنهاء اليوم؟"
+    )
+  ){
+    return;
+  }
+
+  try{
+
+    showLoading();
+
+    const result =
+      await api("finishDay");
+
+    if(!result.success){
+      throw new Error(result.message);
+    }
+
+    toast(result.message);
+
+    await loadDayStatus();
+
+  }catch(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+}
+
+
+/* =========================================================
    REPORTS
-========================= */
+========================================================= */
 
-async function openReportsPage(){
+function setDefaultReportDates(){
 
-openPage(
-"reportsPage"
-);
+  const today =
+    new Date();
 
-const today =
-getToday();
+  const date =
+    today.toISOString()
+      .slice(0,10);
 
-document.getElementById(
-"reportFrom"
-).value =
-today;
+  if(!$("reportFrom").value){
+    $("reportFrom").value =
+      date;
+  }
 
-document.getElementById(
-"reportTo"
-).value =
-today;
-
-await loadReport();
+  if(!$("reportTo").value){
+    $("reportTo").value =
+      date;
+  }
 
 }
 
 
 async function loadReport(){
 
-try{
+  const from =
+    $("reportFrom").value;
 
-const from =
-document.getElementById(
-"reportFrom"
-).value;
+  const to =
+    $("reportTo").value;
 
-const to =
-document.getElementById(
-"reportTo"
-).value;
+  if(!from || !to){
 
-if(!from || !to){
+    toast(
+      "اختر الفترة",
+      "error"
+    );
 
-showMessage(
-"اختار التاريخ",
-"error"
-);
+    return;
 
-return;
+  }
 
-}
+  if(from > to){
 
-if(from > to){
+    toast(
+      "تاريخ البداية أكبر من تاريخ النهاية",
+      "error"
+    );
 
-showMessage(
-"تاريخ البداية أكبر من النهاية",
-"error"
-);
+    return;
 
-return;
+  }
 
-}
+  try{
 
-const invoicesResult =
-await api(
-"getInvoices"
-);
+    showLoading();
 
-const expensesResult =
-await api(
-"getExpenses"
-);
+    /*
+      الـ Backend الحالي لا يحتوي Action
+      باسم getReport، لذلك نستخدم getInvoices
+      و getExpenses ونحسب التقرير هنا.
+    */
 
-if(
-!invoicesResult.success
-){
+    const [
+      invoiceResult,
+      expenseResult
+    ] = await Promise.all([
 
-throw new Error(
-invoicesResult.message
-);
+      api("getInvoices"),
 
-}
+      api("getExpenses")
 
-if(
-!expensesResult.success
-){
+    ]);
 
-throw new Error(
-expensesResult.message
-);
+    if(!invoiceResult.success){
+      throw new Error(
+        invoiceResult.message
+      );
+    }
 
-}
+    if(!expenseResult.success){
+      throw new Error(
+        expenseResult.message
+      );
+    }
 
-const invoices =
-invoicesResult.data || [];
+    const invoices =
+      invoiceResult.data || [];
 
-const expenses =
-expensesResult.data || [];
+    const expenses =
+      expenseResult.data || [];
 
-const filteredInvoices =
-invoices.filter(
-item=>{
+    const filteredInvoices =
+      invoices.filter(item=>{
 
-const date =
-getDateOnly(item.date);
+        const date =
+          dateKey(item.date);
 
-return (
-date >= from &&
-date <= to
-);
+        return (
+          date >= from &&
+          date <= to
+        );
 
-});
+      });
 
-const filteredExpenses =
-expenses.filter(
-item=>{
+    const filteredExpenses =
+      expenses.filter(item=>{
 
-const date =
-getDateOnly(item.date);
+        const date =
+          dateKey(item.date);
 
-return (
-date >= from &&
-date <= to
-);
+        return (
+          date >= from &&
+          date <= to
+        );
 
-});
+      });
 
-const sales =
-filteredInvoices.reduce(
-(sum,item)=>
-sum +
-Number(item.total || 0),
-0
-);
+    const sales =
+      filteredInvoices.reduce(
+        (sum,item)=>
+          sum +
+          Number(item.total || 0),
+        0
+      );
 
-const expenseTotal =
-filteredExpenses.reduce(
-(sum,item)=>
-sum +
-Number(item.amount || 0),
-0
-);
+    const expenseTotal =
+      filteredExpenses.reduce(
+        (sum,item)=>
+          sum +
+          Number(item.amount || 0),
+        0
+      );
 
-document.getElementById(
-"reportInvoices"
-).innerText =
-filteredInvoices.length;
+    $("reportInvoices")
+      .textContent =
+      money(
+        filteredInvoices.length
+      );
 
-document.getElementById(
-"reportSales"
-).innerText =
-sales;
+    $("reportSales")
+      .textContent =
+      money(sales);
 
-document.getElementById(
-"reportExpenses"
-).innerText =
-expenseTotal;
+    $("reportExpenses")
+      .textContent =
+      money(expenseTotal);
 
-document.getElementById(
-"reportNet"
-).innerText =
-sales - expenseTotal;
+    $("reportNet")
+      .textContent =
+      money(
+        sales -
+        expenseTotal
+      );
 
-}
-catch(error){
+  }catch(error){
 
-showMessage(
-error.message,
-"error"
-);
+    toast(
+      error.message,
+      "error"
+    );
 
-}
+  }finally{
 
-}
+    showLoading(false);
 
-
-/* =========================
-   FINISH DAY
-========================= */
-
-async function confirmFinishDay(){
-
-try{
-
-const status =
-await api(
-"getDayStatus"
-);
-
-if(
-status.success &&
-status.data &&
-status.data.finished
-){
-
-showMessage(
-"اليوم تم إنهاؤه بالفعل",
-"error"
-);
-
-return;
-
-}
-
-const confirmed =
-confirm(
-"⚠️ هل أنت متأكد من إنهاء اليوم؟\n\nسيتم اعتبار اليوم مغلقًا."
-);
-
-if(!confirmed){
-
-return;
-
-}
-
-const result =
-await api(
-"finishDay"
-);
-
-if(!result.success){
-
-throw new Error(
-result.message
-);
-
-}
-
-alert(
-"تم إنهاء اليوم بنجاح ✅"
-);
-
-await loadDashboard();
-
-}
-catch(error){
-
-showMessage(
-error.message,
-"error"
-);
-
-}
+  }
 
 }
 
 
-/* =========================
+/* =========================================================
    DATE
-========================= */
+========================================================= */
 
-function getToday(){
+function dateKey(value){
 
-const d =
-new Date();
+  if(!value){
+    return "";
+  }
 
-return (
-d.getFullYear() +
-"-" +
-String(
-d.getMonth()+1
-).padStart(2,"0") +
-"-" +
-String(
-d.getDate()
-).padStart(2,"0")
-);
+  const date =
+    new Date(value);
 
-}
+  if(isNaN(date.getTime())){
+    return "";
+  }
 
+  const y =
+    date.getFullYear();
 
-function getDateOnly(value){
+  const m =
+    String(
+      date.getMonth()+1
+    ).padStart(2,"0");
 
-if(!value){
+  const d =
+    String(
+      date.getDate()
+    ).padStart(2,"0");
 
-return "";
-
-}
-
-const d =
-new Date(value);
-
-if(
-isNaN(
-d.getTime()
-)
-){
-
-return "";
-
-}
-
-return (
-d.getFullYear() +
-"-" +
-String(
-d.getMonth()+1
-).padStart(2,"0") +
-"-" +
-String(
-d.getDate()
-).padStart(2,"0")
-);
+  return `${y}-${m}-${d}`;
 
 }
 
 
 function formatDate(value){
 
-if(!value){
+  if(!value){
+    return "-";
+  }
 
-return "";
+  const date =
+    new Date(value);
 
-}
+  if(isNaN(date.getTime())){
+    return String(value);
+  }
 
-const d =
-new Date(value);
-
-if(
-isNaN(
-d.getTime()
-)
-){
-
-return value;
-
-}
-
-return d.toLocaleString(
-"ar-EG"
-);
+  return date.toLocaleDateString(
+    "ar-EG",
+    {
+      year:"numeric",
+      month:"2-digit",
+      day:"2-digit"
+    }
+  );
 
 }
 
 
-/* =========================
-   ESCAPE HTML
-========================= */
+/* =========================================================
+   SECURITY / HTML
+========================================================= */
 
 function escapeHtml(value){
 
-return String(
-value ?? ""
-)
-.replace(
-/&/g,
-"&amp;"
-)
-.replace(
-/</g,
-"&lt;"
-)
-.replace(
-/>/g,
-"&gt;"
-)
-.replace(
-/"/g,
-"&quot;"
-)
-.replace(
-/'/g,
-"&#039;"
-);
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 
 }
 
 
-/* =========================
+function escapeAttr(value){
+
+  return escapeHtml(value);
+
+}
+
+
+/* =========================================================
    START
-========================= */
+========================================================= */
 
 document.addEventListener(
-"DOMContentLoaded",
-async function(){
-
-await loadDashboard();
-
-}
+  "DOMContentLoaded",
+  init
 );
 
 </script>
