@@ -95,6 +95,7 @@ header p {
 
 .menu-button:hover {
   transform: translateY(-3px);
+  box-shadow: 0 5px 15px #0002;
 }
 
 .menu-icon {
@@ -316,7 +317,7 @@ th {
   color: white;
 }
 
-/* ================= MESSAGES ================= */
+/* ================= MESSAGE ================= */
 
 .success,
 .error {
@@ -417,9 +418,11 @@ th {
 }
 
 </style>
+
 </head>
 
 <body>
+
 
 <header>
 
@@ -435,7 +438,9 @@ th {
 <div id="message"></div>
 
 
-<!-- ================= HOME ================= -->
+<!-- =====================================================
+HOME
+===================================================== -->
 
 <div id="homePage" class="page active">
 
@@ -447,17 +452,20 @@ th {
 <small>فاتورة</small>
 </div>
 
+
 <div class="card">
 <h3>مبيعات اليوم</h3>
 <div class="number" id="salesTotal">0</div>
 <small>جنيه</small>
 </div>
 
+
 <div class="card">
 <h3>مصروفات اليوم</h3>
 <div class="number" id="expenseTotal">0</div>
 <small>جنيه</small>
 </div>
+
 
 <div class="card">
 <h3>صافي اليوم</h3>
@@ -470,7 +478,9 @@ th {
 
 <div class="menu">
 
-<button class="menu-button"
+
+<button
+class="menu-button"
 onclick="openPage('invoicePage')">
 
 <div class="menu-icon">🧾</div>
@@ -486,7 +496,8 @@ onclick="openPage('invoicePage')">
 </button>
 
 
-<button class="menu-button"
+<button
+class="menu-button"
 onclick="openSalesPage()">
 
 <div class="menu-icon">📊</div>
@@ -502,7 +513,8 @@ onclick="openSalesPage()">
 </button>
 
 
-<button class="menu-button"
+<button
+class="menu-button"
 onclick="openExpensesPage()">
 
 <div class="menu-icon">💰</div>
@@ -518,7 +530,8 @@ onclick="openExpensesPage()">
 </button>
 
 
-<button class="menu-button"
+<button
+class="menu-button"
 onclick="openPage('customersPage')">
 
 <div class="menu-icon">👤</div>
@@ -534,7 +547,8 @@ onclick="openPage('customersPage')">
 </button>
 
 
-<button class="menu-button"
+<button
+class="menu-button"
 onclick="openReportsPage()">
 
 <div class="menu-icon">📈</div>
@@ -549,18 +563,25 @@ onclick="openReportsPage()">
 
 </button>
 
-</div>
 
 </div>
 
+</div>
 
-<!-- ================= NEW INVOICE ================= -->
+
+<!-- =====================================================
+NEW INVOICE
+===================================================== -->
 
 <div id="invoicePage" class="page">
 
-<button class="back-button"
+
+<button
+class="back-button"
 onclick="goHome()">
+
 ← الرئيسية
+
 </button>
 
 
@@ -569,7 +590,9 @@ onclick="goHome()">
 <h2>🧾 فاتورة جديدة</h2>
 
 
-<label>اسم العميل</label>
+<label>
+اسم العميل
+</label>
 
 <input
 type="text"
@@ -577,7 +600,9 @@ id="customerName"
 placeholder="اكتب اسم العميل">
 
 
-<label>رقم التليفون</label>
+<label>
+رقم التليفون
+</label>
 
 <input
 type="tel"
@@ -585,7 +610,9 @@ id="phone"
 placeholder="01xxxxxxxxx">
 
 
-<label>نوع الخدمة</label>
+<label>
+نوع الخدمة
+</label>
 
 <select id="service">
 
@@ -616,33 +643,41 @@ placeholder="01xxxxxxxxx">
 </select>
 
 
-<label>💵 مبلغ الخدمة</label>
+<label>
+💵 مبلغ الخدمة
+</label>
 
 <input
 type="number"
 id="servicePrice"
 placeholder="اكتب مبلغ الخدمة"
 min="0"
-step="0.01">
-
+step="0.01"
+oninput="updateTotals()">
 
 </div>
 
 
-<!-- ================= PRODUCTS ================= -->
+<!-- =====================================================
+PRODUCTS
+===================================================== -->
 
 <div class="section">
 
-<h2>🛒 شراء منتجات</h2>
+<h2>
+🛒 شراء منتجات
+</h2>
 
 <p>
-اختار التصنيف ثم المنتج لإضافته إلى الفاتورة
+اختار التصنيف ثم اضغط على المنتج لإضافته إلى السلة.
 </p>
 
 
 <div class="category-buttons">
 
+
 <button
+type="button"
 class="category-button active"
 id="catPerfumes"
 onclick="showCategory('perfumes')">
@@ -653,6 +688,7 @@ onclick="showCategory('perfumes')">
 
 
 <button
+type="button"
 class="category-button"
 id="catCare"
 onclick="showCategory('care')">
@@ -663,6 +699,7 @@ onclick="showCategory('care')">
 
 
 <button
+type="button"
 class="category-button"
 id="catAccessories"
 onclick="showCategory('accessories')">
@@ -671,17 +708,22 @@ onclick="showCategory('accessories')">
 
 </button>
 
+
 </div>
 
 
-<div id="productList"
+<div
+id="productList"
 class="product-list">
 </div>
 
 
 <div class="cart">
 
-<h3>🛒 سلة المنتجات</h3>
+<h3>
+🛒 سلة المنتجات
+</h3>
+
 
 <div id="cartItems">
 
@@ -694,9 +736,12 @@ class="product-list">
 
 <div class="total-box">
 
+
 <div class="total-row">
 
-<span>إجمالي الخدمة</span>
+<span>
+إجمالي الخدمة
+</span>
 
 <strong id="serviceTotal">
 0 جنيه
@@ -707,7 +752,9 @@ class="product-list">
 
 <div class="total-row">
 
-<span>إجمالي المنتجات</span>
+<span>
+إجمالي المنتجات
+</span>
 
 <strong id="productsTotal">
 0 جنيه
@@ -718,13 +765,16 @@ class="product-list">
 
 <div class="total-row total-final">
 
-<span>إجمالي الفاتورة</span>
+<span>
+إجمالي الفاتورة
+</span>
 
 <strong id="invoiceTotal">
 0 جنيه
 </strong>
 
 </div>
+
 
 </div>
 
@@ -735,7 +785,9 @@ class="product-list">
 
 <div class="section">
 
-<button onclick="createInvoice()">
+<button
+type="button"
+onclick="createInvoice()">
 
 💾 حفظ الفاتورة
 
@@ -743,12 +795,16 @@ class="product-list">
 
 </div>
 
+
 </div>
 
 
-<!-- ================= SALES ================= -->
+<!-- =====================================================
+SALES
+===================================================== -->
 
 <div id="salesPage" class="page">
+
 
 <button
 class="back-button"
@@ -761,22 +817,37 @@ onclick="goHome()">
 
 <div class="section">
 
-<h2>📊 مبيعات اليوم</h2>
+<h2>
+📊 مبيعات اليوم
+</h2>
 
 
 <div class="today-summary">
 
+
 <div class="summary-box">
+
 عدد الفواتير
-<strong id="salesInvoiceCount">0</strong>
+
+<strong id="salesInvoiceCount">
+0
+</strong>
+
 </div>
 
 
 <div class="summary-box">
+
 إجمالي المبيعات
-<strong id="salesTodayTotal">0</strong>
+
+<strong id="salesTodayTotal">
+0
+</strong>
+
 جنيه
+
 </div>
+
 
 </div>
 
@@ -785,7 +856,9 @@ onclick="goHome()">
 
 <div class="section">
 
-<h2>🧾 فواتير اليوم</h2>
+<h2>
+🧾 فواتير اليوم
+</h2>
 
 
 <table>
@@ -794,19 +867,37 @@ onclick="goHome()">
 
 <tr>
 
-<th>التاريخ</th>
-<th>العميل</th>
-<th>التليفون</th>
-<th>الخدمة</th>
-<th>المنتجات</th>
-<th>الإجمالي</th>
+<th>
+التاريخ
+</th>
+
+<th>
+العميل
+</th>
+
+<th>
+التليفون
+</th>
+
+<th>
+الخدمة
+</th>
+
+<th>
+المنتجات
+</th>
+
+<th>
+الإجمالي
+</th>
 
 </tr>
 
 </thead>
 
 
-<tbody id="salesTable"></tbody>
+<tbody id="salesTable">
+</tbody>
 
 </table>
 
@@ -815,9 +906,12 @@ onclick="goHome()">
 </div>
 
 
-<!-- ================= EXPENSES ================= -->
+<!-- =====================================================
+EXPENSES
+===================================================== -->
 
 <div id="expensesPage" class="page">
+
 
 <button
 class="back-button"
@@ -830,7 +924,9 @@ onclick="goHome()">
 
 <div class="section">
 
-<h2>💰 إضافة مصروف</h2>
+<h2>
+💰 إضافة مصروف
+</h2>
 
 
 <input
@@ -845,7 +941,9 @@ id="expenseAmount"
 placeholder="المبلغ">
 
 
-<button onclick="addExpense()">
+<button
+type="button"
+onclick="addExpense()">
 
 إضافة المصروف
 
@@ -856,7 +954,9 @@ placeholder="المبلغ">
 
 <div class="section">
 
-<h2>📊 مصروفات اليوم</h2>
+<h2>
+📊 مصروفات اليوم
+</h2>
 
 
 <div class="summary-box">
@@ -877,15 +977,26 @@ placeholder="المبلغ">
 <thead>
 
 <tr>
-<th>التاريخ</th>
-<th>المصروف</th>
-<th>المبلغ</th>
+
+<th>
+التاريخ
+</th>
+
+<th>
+المصروف
+</th>
+
+<th>
+المبلغ
+</th>
+
 </tr>
 
 </thead>
 
 
-<tbody id="expenseTable"></tbody>
+<tbody id="expenseTable">
+</tbody>
 
 </table>
 
@@ -894,9 +1005,12 @@ placeholder="المبلغ">
 </div>
 
 
-<!-- ================= CUSTOMERS ================= -->
+<!-- =====================================================
+CUSTOMERS
+===================================================== -->
 
 <div id="customersPage" class="page">
+
 
 <button
 class="back-button"
@@ -909,7 +1023,9 @@ onclick="goHome()">
 
 <div class="section">
 
-<h2>👤 سجل العميل</h2>
+<h2>
+👤 سجل العميل
+</h2>
 
 
 <input
@@ -918,23 +1034,29 @@ id="searchPhone"
 placeholder="اكتب رقم تليفون العميل">
 
 
-<button onclick="searchCustomer()">
+<button
+type="button"
+onclick="searchCustomer()">
 
 بحث
 
 </button>
 
 
-<div id="customerResult"></div>
-
+<div id="customerResult">
 </div>
 
 </div>
 
+</div>
 
-<!-- ================= REPORTS ================= -->
+
+<!-- =====================================================
+REPORTS
+===================================================== -->
 
 <div id="reportsPage" class="page">
+
 
 <button
 class="back-button"
@@ -947,10 +1069,13 @@ onclick="goHome()">
 
 <div class="section">
 
-<h2>📈 التقارير</h2>
+<h2>
+📈 التقارير
+</h2>
 
 
 <div class="today-summary">
+
 
 <div class="summary-box">
 
@@ -1001,6 +1126,7 @@ onclick="goHome()">
 
 </div>
 
+
 </div>
 
 </div>
@@ -1013,1414 +1139,1750 @@ onclick="goHome()">
 
 <script>
 
-/* ===============================
-   GOOGLE SHEETS API
-================================ */
+/* =====================================================
+GOOGLE APPS SCRIPT API
+===================================================== */
 
 const API_URL =
 "https://script.google.com/macros/s/AKfycbzNoSKZeYqTSWBNeJeCM1PK90i8Q3Vx0xXEiwMDmoiaKzHxupT92OfzJUAKivP5EqE3Ew/exec";
 
 
-/* ===============================
-   PRODUCTS
-================================ */
+/* =====================================================
+PRODUCT DATABASE
+===================================================== */
 
 const products = {
 
-perfumes: [
+  perfumes: [
 
-{
-name: "معطر كارت 25 جنيه — شجرة ص",
-price: 25
-},
+    {
+      name: "معطر كارت 25 جنيه — شجرة ص",
+      price: 25
+    },
 
-{
-name: "معطر كارت 50 جنيه — شجرة كبير",
-price: 50
-},
+    {
+      name: "معطر كارت 50 جنيه — شجرة كبير",
+      price: 50
+    },
 
-{
-name: "معطر كارت 50 جنيه — إكس فاشون",
-price: 50
-},
+    {
+      name: "معطر كارت 50 جنيه — إكس فاشون",
+      price: 50
+    },
 
-{
-name: "معطر كارت 40 جنيه — إكس عادي",
-price: 40
-},
+    {
+      name: "معطر كارت 40 جنيه — إكس عادي",
+      price: 40
+    },
 
-{
-name: "معطر كارت 50 جنيه — دمعة",
-price: 50
-},
+    {
+      name: "معطر كارت 50 جنيه — دمعة",
+      price: 50
+    },
 
-{
-name: "معطر رش سمارت",
-price: 65
-},
+    {
+      name: "معطر رش سمارت",
+      price: 65
+    },
 
-{
-name: "معطر رش جولد",
-price: 75
-},
+    {
+      name: "معطر رش جولد",
+      price: 75
+    },
 
-{
-name: "معطر رش روزيرا",
-price: 170
-},
+    {
+      name: "معطر رش روزيرا",
+      price: 170
+    },
 
-{
-name: "كانز خشب",
-price: 170
-},
+    {
+      name: "كانز خشب",
+      price: 170
+    },
 
-{
-name: "معطر تكييف",
-price: 150
-},
+    {
+      name: "معطر تكييف",
+      price: 150
+    },
 
-{
-name: "ملمع تابلوه — 40 جنيه",
-price: 40
-},
+    {
+      name: "ملمع تابلوه — 40 جنيه",
+      price: 40
+    },
 
-{
-name: "ملمع تابلوه — 75 جنيه",
-price: 75
-},
+    {
+      name: "ملمع تابلوه — 75 جنيه",
+      price: 75
+    },
 
-{
-name: "معطر مرايا",
-price: 90
-},
+    {
+      name: "معطر مرايا",
+      price: 90
+    },
 
-{
-name: "معطر حبيبات",
-price: 100
-}
+    {
+      name: "معطر حبيبات",
+      price: 100
+    }
 
-],
+  ],
 
-care: [],
+  care: [],
 
-accessories: []
+  accessories: []
 
 };
 
 
+/* =====================================================
+CART
+===================================================== */
+
 let cart = [];
 
 
-/* ===============================
-   PAGES
-================================ */
+/* =====================================================
+PAGE FUNCTIONS
+===================================================== */
 
 function openPage(pageId) {
 
-document
-.querySelectorAll(".page")
-.forEach(page => {
+  document
+    .querySelectorAll(".page")
+    .forEach(page => {
 
-page.classList.remove("active");
+      page.classList.remove("active");
 
-});
-
-
-document
-.getElementById(pageId)
-.classList.add("active");
+    });
 
 
-window.scrollTo(0, 0);
+  const page =
+    document.getElementById(pageId);
+
+
+  if (page) {
+
+    page.classList.add("active");
+
+  }
+
+
+  window.scrollTo(0, 0);
 
 }
 
 
 function goHome() {
 
-openPage("homePage");
+  openPage("homePage");
 
-loadDashboard();
+  loadDashboard();
 
 }
 
 
 async function openSalesPage() {
 
-openPage("salesPage");
+  openPage("salesPage");
 
-await loadSalesPage();
+  await loadSalesPage();
 
 }
 
 
 async function openExpensesPage() {
 
-openPage("expensesPage");
+  openPage("expensesPage");
 
-await loadExpenses();
-
-}
-
-
-/* ===============================
-   MESSAGE
-================================ */
-
-function showMessage(text, type = "success") {
-
-const box =
-document.getElementById("message");
-
-box.innerHTML =
-`<div class="${type}">${text}</div>`;
-
-setTimeout(() => {
-
-box.innerHTML = "";
-
-}, 4000);
+  await loadExpenses();
 
 }
 
 
-/* ===============================
-   API
-================================ */
+/* =====================================================
+MESSAGE
+===================================================== */
 
-async function api(action, data = {}) {
+function showMessage(
+  text,
+  type = "success"
+) {
 
-const url =
-new URL(API_URL);
-
-url.searchParams.set(
-"action",
-action
-);
+  const box =
+    document.getElementById("message");
 
 
-Object.keys(data).forEach(key => {
-
-url.searchParams.set(
-key,
-data[key]
-);
-
-});
+  box.innerHTML =
+    `<div class="${type}">${text}</div>`;
 
 
-const response =
-await fetch(url.toString());
+  setTimeout(() => {
 
+    box.innerHTML = "";
 
-return response.json();
+  }, 4000);
 
 }
 
 
-/* ===============================
-   PRODUCTS
-================================ */
+/* =====================================================
+API
+===================================================== */
+
+async function api(
+  action,
+  data = {}
+) {
+
+  const url =
+    new URL(API_URL);
+
+
+  url.searchParams.set(
+    "action",
+    action
+  );
+
+
+  Object.keys(data)
+    .forEach(key => {
+
+      let value =
+        data[key];
+
+
+      if (
+        typeof value === "object"
+      ) {
+
+        value =
+          JSON.stringify(value);
+
+      }
+
+
+      url.searchParams.set(
+        key,
+        value
+      );
+
+    });
+
+
+  const response =
+    await fetch(
+      url.toString()
+    );
+
+
+  if (!response.ok) {
+
+    throw new Error(
+      "خطأ في الاتصال بالسيرفر"
+    );
+
+  }
+
+
+  return response.json();
+
+}
+
+
+/* =====================================================
+SHOW CATEGORY
+===================================================== */
 
 function showCategory(category) {
 
-document
-.querySelectorAll(".category-button")
-.forEach(button => {
+  document
+    .querySelectorAll(".category-button")
+    .forEach(button => {
 
-button.classList.remove("active");
+      button.classList.remove("active");
 
-});
-
-
-if (category === "perfumes") {
-
-document
-.getElementById("catPerfumes")
-.classList.add("active");
-
-}
-
-if (category === "care") {
-
-document
-.getElementById("catCare")
-.classList.add("active");
-
-}
-
-if (category === "accessories") {
-
-document
-.getElementById("catAccessories")
-.classList.add("active");
-
-}
+    });
 
 
-const list =
-document.getElementById("productList");
+  if (
+    category === "perfumes"
+  ) {
+
+    document
+      .getElementById("catPerfumes")
+      .classList.add("active");
+
+  }
 
 
-const items =
-products[category] || [];
+  if (
+    category === "care"
+  ) {
+
+    document
+      .getElementById("catCare")
+      .classList.add("active");
+
+  }
 
 
-list.innerHTML = "";
+  if (
+    category === "accessories"
+  ) {
+
+    document
+      .getElementById("catAccessories")
+      .classList.add("active");
+
+  }
 
 
-if (!items.length) {
-
-list.innerHTML = `
-
-<div class="product-card">
-
-<strong>
-لا توجد منتجات حاليًا
-</strong>
-
-<p>
-يمكن إضافة المنتجات والأسعار لاحقًا.
-</p>
-
-</div>
-
-`;
-
-return;
-
-}
+  const list =
+    document.getElementById(
+      "productList"
+    );
 
 
-items.forEach((product, index) => {
-
-list.innerHTML += `
-
-<div class="product-card">
-
-<strong>
-${product.name}
-</strong>
-
-<div class="product-price">
-${product.price} جنيه
-</div>
-
-<button
-onclick="addProduct(${JSON.stringify(category)}, ${index})">
-
-إضافة للسلة
-
-</button>
-
-</div>
-
-`;
-
-});
-
-}
+  const items =
+    products[category] || [];
 
 
-/* ===============================
-   ADD PRODUCT
-================================ */
-
-function addProduct(category, index) {
-
-const product =
-products[category][index];
+  list.innerHTML = "";
 
 
-const existing =
-cart.find(item =>
-item.name === product.name &&
-item.price === product.price
-);
+  if (!items.length) {
+
+    list.innerHTML = `
+
+      <div class="product-card">
+
+        <strong>
+          لا توجد منتجات حاليًا
+        </strong>
+
+        <p>
+          يمكن إضافة المنتجات والأسعار لاحقًا.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
 
 
-if (existing) {
+  items.forEach(
+    (product, index) => {
 
-existing.quantity++;
+      list.innerHTML += `
 
-}
+        <div class="product-card">
 
-else {
+          <strong>
+            ${product.name}
+          </strong>
 
-cart.push({
+          <div class="product-price">
+            ${product.price} جنيه
+          </div>
 
-name: product.name,
+          <button
+            type="button"
+            onclick="addProduct('${category}', ${index})">
 
-price: product.price,
+            إضافة للسلة 🛒
 
-quantity: 1
+          </button>
 
-});
+        </div>
+
+      `;
+
+    }
+  );
 
 }
 
 
-renderCart();
+/* =====================================================
+ADD PRODUCT
+===================================================== */
 
-showMessage(
-`تم إضافة ${product.name} إلى السلة 🛒`
-);
+function addProduct(
+  category,
+  index
+) {
+
+  console.log(
+    "Adding product:",
+    category,
+    index
+  );
+
+
+  if (
+    !products[category]
+  ) {
+
+    showMessage(
+      "التصنيف غير موجود",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const product =
+    products[category][index];
+
+
+  if (!product) {
+
+    showMessage(
+      "المنتج غير موجود",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const existing =
+    cart.find(item =>
+
+      item.name ===
+      product.name
+
+    );
+
+
+  if (existing) {
+
+    existing.quantity++;
+
+  }
+
+  else {
+
+    cart.push({
+
+      name:
+        product.name,
+
+      price:
+        Number(product.price),
+
+      quantity:
+        1
+
+    });
+
+  }
+
+
+  renderCart();
+
+
+  showMessage(
+    `تم إضافة ${product.name} إلى السلة 🛒`
+  );
 
 }
 
 
-/* ===============================
-   CHANGE QUANTITY
-================================ */
+/* =====================================================
+CHANGE QUANTITY
+===================================================== */
 
-function changeQuantity(index, change) {
+function changeQuantity(
+  index,
+  change
+) {
 
-if (!cart[index]) return;
+  if (!cart[index]) {
+    return;
+  }
 
 
-cart[index].quantity += change;
+  cart[index].quantity +=
+    change;
 
 
-if (cart[index].quantity <= 0) {
+  if (
+    cart[index].quantity <= 0
+  ) {
 
-cart.splice(index, 1);
+    cart.splice(index, 1);
+
+  }
+
+
+  renderCart();
 
 }
 
 
-renderCart();
-
-}
-
-
-/* ===============================
-   REMOVE PRODUCT
-================================ */
+/* =====================================================
+REMOVE
+===================================================== */
 
 function removeProduct(index) {
 
-cart.splice(index, 1);
+  if (!cart[index]) {
+    return;
+  }
 
-renderCart();
+
+  cart.splice(index, 1);
+
+
+  renderCart();
 
 }
 
 
-/* ===============================
-   CART
-================================ */
+/* =====================================================
+RENDER CART
+===================================================== */
 
 function renderCart() {
 
-const box =
-document.getElementById("cartItems");
+  const box =
+    document.getElementById(
+      "cartItems"
+    );
 
 
-if (!cart.length) {
+  if (!cart.length) {
 
-box.innerHTML =
-"<p>لم يتم إضافة منتجات بعد.</p>";
+    box.innerHTML =
+      "<p>لم يتم إضافة منتجات بعد.</p>";
+
+  }
+
+  else {
+
+    box.innerHTML = "";
+
+
+    cart.forEach(
+      (item, index) => {
+
+        const itemTotal =
+          item.price *
+          item.quantity;
+
+
+        box.innerHTML += `
+
+          <div class="cart-item">
+
+            <div class="cart-item-info">
+
+              <div class="cart-item-name">
+                ${item.name}
+              </div>
+
+              <div class="cart-item-price">
+                ${item.price} جنيه ×
+                ${item.quantity}
+                =
+                ${itemTotal} جنيه
+              </div>
+
+            </div>
+
+
+            <div class="qty-box">
+
+              <button
+                type="button"
+                onclick="changeQuantity(${index}, 1)">
+
+                +
+
+              </button>
+
+
+              <span class="qty">
+                ${item.quantity}
+              </span>
+
+
+              <button
+                type="button"
+                onclick="changeQuantity(${index}, -1)">
+
+                −
+
+              </button>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="remove-button"
+              onclick="removeProduct(${index})">
+
+              ×
+
+            </button>
+
+          </div>
+
+        `;
+
+      }
+    );
+
+  }
+
+
+  updateTotals();
 
 }
-else {
-
-box.innerHTML = "";
 
 
-cart.forEach((item, index) => {
-
-const itemTotal =
-item.price * item.quantity;
-
-
-box.innerHTML += `
-
-<div class="cart-item">
-
-<div class="cart-item-info">
-
-<div class="cart-item-name">
-${item.name}
-</div>
-
-<div class="cart-item-price">
-${item.price} جنيه × ${item.quantity}
-=
-${itemTotal} جنيه
-</div>
-
-</div>
-
-
-<div class="qty-box">
-
-<button
-onclick="changeQuantity(${index}, -1)">
-−
-</button>
-
-<span class="qty">
-${item.quantity}
-</span>
-
-<button
-onclick="changeQuantity(${index}, 1)">
-+
-</button>
-
-</div>
-
-
-<button
-class="remove-button"
-onclick="removeProduct(${index})">
-
-×
-</button>
-
-</div>
-
-`;
-
-});
-
-}
-
-
-updateTotals();
-
-}
-
-
-/* ===============================
-   TOTALS
-================================ */
+/* =====================================================
+TOTALS
+===================================================== */
 
 function updateTotals() {
 
-const servicePrice =
-Number(
-document
-.getElementById("servicePrice")
-.value
-) || 0;
+  const servicePrice =
+    Number(
+      document
+        .getElementById(
+          "servicePrice"
+        )
+        .value
+    ) || 0;
 
 
-const productsTotal =
-cart.reduce(
-(sum, item) =>
-sum + (item.price * item.quantity),
-0
-);
+  const productsTotal =
+    cart.reduce(
+      (
+        sum,
+        item
+      ) => {
+
+        return sum +
+          (
+            Number(item.price) *
+            Number(item.quantity)
+          );
+
+      },
+      0
+    );
 
 
-const invoiceTotal =
-servicePrice + productsTotal;
+  const invoiceTotal =
+    servicePrice +
+    productsTotal;
 
 
-document
-.getElementById("serviceTotal")
-.innerText =
-servicePrice + " جنيه";
+  document
+    .getElementById(
+      "serviceTotal"
+    )
+    .innerText =
+      servicePrice +
+      " جنيه";
 
 
-document
-.getElementById("productsTotal")
-.innerText =
-productsTotal + " جنيه";
+  document
+    .getElementById(
+      "productsTotal"
+    )
+    .innerText =
+      productsTotal +
+      " جنيه";
 
 
-document
-.getElementById("invoiceTotal")
-.innerText =
-invoiceTotal + " جنيه";
+  document
+    .getElementById(
+      "invoiceTotal"
+    )
+    .innerText =
+      invoiceTotal +
+      " جنيه";
 
 }
 
 
-document
-.getElementById("servicePrice")
-.addEventListener(
-"input",
-updateTotals
-);
-
-
-/* ===============================
-   CREATE INVOICE
-================================ */
+/* =====================================================
+CREATE INVOICE
+===================================================== */
 
 async function createInvoice() {
 
-try {
+  try {
 
-const customerName =
-document
-.getElementById("customerName")
-.value
-.trim();
-
-
-const phone =
-document
-.getElementById("phone")
-.value
-.trim();
+    const customerName =
+      document
+        .getElementById(
+          "customerName"
+        )
+        .value
+        .trim();
 
 
-const service =
-document
-.getElementById("service")
-.value;
+    const phone =
+      document
+        .getElementById(
+          "phone"
+        )
+        .value
+        .trim();
 
 
-const servicePrice =
-Number(
-document
-.getElementById("servicePrice")
-.value
-) || 0;
+    const service =
+      document
+        .getElementById(
+          "service"
+        )
+        .value;
 
 
-if (!customerName) {
+    const servicePrice =
+      Number(
+        document
+          .getElementById(
+            "servicePrice"
+          )
+          .value
+      ) || 0;
 
-showMessage(
-"من فضلك اكتب اسم العميل",
-"error"
-);
 
-return;
+    if (!customerName) {
+
+      showMessage(
+        "من فضلك اكتب اسم العميل",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    if (!phone) {
+
+      showMessage(
+        "من فضلك اكتب رقم التليفون",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    if (!service) {
+
+      showMessage(
+        "من فضلك اختر نوع الخدمة",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    if (
+      servicePrice <= 0
+    ) {
+
+      showMessage(
+        "من فضلك اكتب مبلغ الخدمة",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    const productsTotal =
+      cart.reduce(
+        (
+          sum,
+          item
+        ) =>
+          sum +
+          (
+            item.price *
+            item.quantity
+          ),
+        0
+      );
+
+
+    const total =
+      servicePrice +
+      productsTotal;
+
+
+    const result =
+      await api(
+        "createInvoice",
+        {
+
+          customerName:
+            customerName,
+
+          phone:
+            phone,
+
+          service:
+            service,
+
+          servicePrice:
+            servicePrice,
+
+          products:
+            JSON.stringify(cart),
+
+          productsTotal:
+            productsTotal,
+
+          total:
+            total
+
+        }
+      );
+
+
+    if (
+      !result.success
+    ) {
+
+      throw new Error(
+        result.message ||
+        "فشل حفظ الفاتورة"
+      );
+
+    }
+
+
+    document
+      .getElementById(
+        "customerName"
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        "phone"
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        "service"
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        "servicePrice"
+      )
+      .value = "";
+
+
+    cart = [];
+
+
+    renderCart();
+
+
+    showMessage(
+      "تم حفظ الفاتورة بنجاح ✅"
+    );
+
+
+    await loadDashboard();
+
+
+    setTimeout(
+      () => {
+
+        goHome();
+
+      },
+      1000
+    );
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+
+    showMessage(
+      error.message ||
+      "حدث خطأ أثناء حفظ الفاتورة",
+      "error"
+    );
+
+  }
 
 }
 
 
-if (!phone) {
-
-showMessage(
-"من فضلك اكتب رقم تليفون العميل",
-"error"
-);
-
-return;
-
-}
-
-
-if (!service) {
-
-showMessage(
-"من فضلك اختر نوع الخدمة",
-"error"
-);
-
-return;
-
-}
-
-
-if (servicePrice <= 0) {
-
-showMessage(
-"من فضلك اكتب مبلغ الخدمة",
-"error"
-);
-
-return;
-
-}
-
-
-const productsTotal =
-cart.reduce(
-(sum, item) =>
-sum + (item.price * item.quantity),
-0
-);
-
-
-const total =
-servicePrice + productsTotal;
-
-
-/*
-  المنتجات يتم إرسالها كـ JSON
-  حتى يستطيع Google Apps Script
-  حفظ أكثر من منتج في الفاتورة.
-*/
-
-const productsJSON =
-JSON.stringify(cart);
-
-
-const result =
-await api(
-"createInvoice",
-{
-
-customerName: customerName,
-
-phone: phone,
-
-service: service,
-
-servicePrice: servicePrice,
-
-products: productsJSON,
-
-productsTotal: productsTotal,
-
-total: total
-
-}
-);
-
-
-if (!result.success) {
-
-throw new Error(
-result.message ||
-"فشل حفظ الفاتورة"
-);
-
-}
-
-
-/* تنظيف الفاتورة */
-
-document
-.getElementById("customerName")
-.value = "";
-
-
-document
-.getElementById("phone")
-.value = "";
-
-
-document
-.getElementById("service")
-.value = "";
-
-
-document
-.getElementById("servicePrice")
-.value = "";
-
-
-cart = [];
-
-renderCart();
-
-
-showMessage(
-"تم حفظ الفاتورة بنجاح ✅"
-);
-
-
-await loadDashboard();
-
-
-setTimeout(() => {
-
-goHome();
-
-}, 1000);
-
-}
-
-catch (error) {
-
-console.error(error);
-
-showMessage(
-error.message ||
-"حدث خطأ أثناء حفظ الفاتورة",
-"error"
-);
-
-}
-
-}
-
-
-/* ===============================
-   SALES
-================================ */
+/* =====================================================
+SALES
+===================================================== */
 
 async function loadSalesPage() {
 
-try {
+  try {
 
-const result =
-await api("getInvoices");
-
-
-if (!result.success) return;
-
-
-const allInvoices =
-result.data || [];
+    const result =
+      await api(
+        "getInvoices"
+      );
 
 
-const today =
-new Date()
-.toISOString()
-.slice(0, 10);
+    if (
+      !result.success
+    ) {
+
+      return;
+
+    }
 
 
-const todayInvoices =
-allInvoices.filter(item => {
-
-return getDateOnly(item.date) === today;
-
-});
+    const allInvoices =
+      result.data || [];
 
 
-const sales =
-todayInvoices.reduce(
-(sum, item) =>
-sum + Number(item.total || 0),
-0
-);
+    const today =
+      new Date()
+        .toISOString()
+        .slice(
+          0,
+          10
+        );
 
 
-document
-.getElementById("salesInvoiceCount")
-.innerText =
-todayInvoices.length;
+    const todayInvoices =
+      allInvoices.filter(
+        item => {
+
+          return (
+            getDateOnly(
+              item.date
+            ) === today
+          );
+
+        }
+      );
 
 
-document
-.getElementById("salesTodayTotal")
-.innerText =
-sales;
+    const sales =
+      todayInvoices.reduce(
+        (
+          sum,
+          item
+        ) => {
+
+          return sum +
+            Number(
+              item.total || 0
+            );
+
+        },
+        0
+      );
 
 
-const table =
-document.getElementById("salesTable");
+    document
+      .getElementById(
+        "salesInvoiceCount"
+      )
+      .innerText =
+        todayInvoices.length;
 
 
-table.innerHTML = "";
+    document
+      .getElementById(
+        "salesTodayTotal"
+      )
+      .innerText =
+        sales;
 
 
-todayInvoices.forEach(item => {
-
-let productsText = "-";
-
-
-if (item.products) {
-
-try {
-
-const items =
-typeof item.products === "string"
-? JSON.parse(item.products)
-: item.products;
+    const table =
+      document.getElementById(
+        "salesTable"
+      );
 
 
-productsText =
-items.map(product =>
-`${product.name} × ${product.quantity}`
-).join("<br>");
+    table.innerHTML = "";
+
+
+    todayInvoices.forEach(
+      item => {
+
+        let productsText =
+          "-";
+
+
+        if (
+          item.products &&
+          item.products.length
+        ) {
+
+          productsText =
+            item.products
+              .map(
+                product =>
+                  `${product.name} × ${product.quantity}`
+              )
+              .join("<br>");
+
+        }
+
+
+        else if (
+          item.product
+        ) {
+
+          productsText =
+            item.product;
+
+        }
+
+
+        table.innerHTML += `
+
+          <tr>
+
+            <td>
+              ${formatDate(item.date)}
+            </td>
+
+            <td>
+              ${item.customerName || "-"}
+            </td>
+
+            <td>
+              ${item.phone || ""}
+            </td>
+
+            <td>
+              ${item.service || ""}
+            </td>
+
+            <td>
+              ${productsText}
+            </td>
+
+            <td>
+              ${item.total || 0}
+              جنيه
+            </td>
+
+          </tr>
+
+        `;
+
+      }
+    );
+
+
+    if (
+      !todayInvoices.length
+    ) {
+
+      table.innerHTML = `
+
+        <tr>
+
+          <td colspan="6">
+            لا توجد مبيعات اليوم
+          </td>
+
+        </tr>
+
+      `;
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+  }
 
 }
-catch(e) {
-
-productsText =
-item.products;
-
-}
-
-}
 
 
-table.innerHTML += `
-
-<tr>
-
-<td>
-${formatDate(item.date)}
-</td>
-
-<td>
-${item.customerName || "-"}
-</td>
-
-<td>
-${item.phone || ""}
-</td>
-
-<td>
-${item.service || ""}
-</td>
-
-<td>
-${productsText}
-</td>
-
-<td>
-${item.total || 0}
-جنيه
-</td>
-
-</tr>
-
-`;
-
-});
-
-
-if (!todayInvoices.length) {
-
-table.innerHTML = `
-
-<tr>
-
-<td colspan="6">
-لا توجد مبيعات اليوم
-</td>
-
-</tr>
-
-`;
-
-}
-
-}
-
-catch (error) {
-
-console.error(error);
-
-}
-
-}
-
-
-/* ===============================
-   EXPENSE
-================================ */
+/* =====================================================
+EXPENSE
+===================================================== */
 
 async function addExpense() {
 
-try {
+  try {
 
-const name =
-document
-.getElementById("expenseName")
-.value
-.trim();
-
-
-const amount =
-document
-.getElementById("expenseAmount")
-.value;
+    const name =
+      document
+        .getElementById(
+          "expenseName"
+        )
+        .value
+        .trim();
 
 
-if (!name || !amount) {
+    const amount =
+      document
+        .getElementById(
+          "expenseAmount"
+        )
+        .value;
 
-showMessage(
-"اكتب اسم المصروف والمبلغ",
-"error"
-);
 
-return;
+    if (
+      !name ||
+      !amount
+    ) {
+
+      showMessage(
+        "اكتب اسم المصروف والمبلغ",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    const result =
+      await api(
+        "addExpense",
+        {
+
+          name:
+            name,
+
+          amount:
+            amount
+
+        }
+      );
+
+
+    if (
+      !result.success
+    ) {
+
+      throw new Error(
+        result.message
+      );
+
+    }
+
+
+    document
+      .getElementById(
+        "expenseName"
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        "expenseAmount"
+      )
+      .value = "";
+
+
+    showMessage(
+      "تم إضافة المصروف بنجاح ✅"
+    );
+
+
+    await loadExpenses();
+
+
+    await loadDashboard();
+
+  }
+
+  catch (error) {
+
+    showMessage(
+      error.message ||
+      "حدث خطأ",
+      "error"
+    );
+
+  }
 
 }
 
 
-const result =
-await api(
-"addExpense",
-{
-
-name: name,
-
-amount: amount
-
-}
-);
-
-
-if (!result.success) {
-
-throw new Error(
-result.message
-);
-
-}
-
-
-document
-.getElementById("expenseName")
-.value = "";
-
-
-document
-.getElementById("expenseAmount")
-.value = "";
-
-
-showMessage(
-"تم إضافة المصروف بنجاح ✅"
-);
-
-
-await loadExpenses();
-
-await loadDashboard();
-
-}
-
-catch (error) {
-
-showMessage(
-error.message ||
-"حدث خطأ",
-"error"
-);
-
-}
-
-}
-
-
-/* ===============================
-   LOAD EXPENSES
-================================ */
+/* =====================================================
+EXPENSES
+===================================================== */
 
 async function loadExpenses() {
 
-try {
+  try {
 
-const result =
-await api("getExpenses");
-
-
-if (!result.success) return;
-
-
-const allExpenses =
-result.data || [];
+    const result =
+      await api(
+        "getExpenses"
+      );
 
 
-const today =
-new Date()
-.toISOString()
-.slice(0, 10);
+    if (
+      !result.success
+    ) {
+
+      return;
+
+    }
 
 
-const todayExpenses =
-allExpenses.filter(item =>
-getDateOnly(item.date) === today
-);
+    const allExpenses =
+      result.data || [];
 
 
-const total =
-todayExpenses.reduce(
-(sum, item) =>
-sum + Number(item.amount || 0),
-0
-);
+    const today =
+      new Date()
+        .toISOString()
+        .slice(
+          0,
+          10
+        );
 
 
-document
-.getElementById("todayExpensesTotal")
-.innerText =
-total;
+    const todayExpenses =
+      allExpenses.filter(
+        item =>
+          getDateOnly(
+            item.date
+          ) === today
+      );
 
 
-const table =
-document.getElementById("expenseTable");
+    const total =
+      todayExpenses.reduce(
+        (
+          sum,
+          item
+        ) =>
+          sum +
+          Number(
+            item.amount || 0
+          ),
+        0
+      );
 
 
-table.innerHTML = "";
+    document
+      .getElementById(
+        "todayExpensesTotal"
+      )
+      .innerText =
+        total;
 
 
-todayExpenses.forEach(item => {
-
-table.innerHTML += `
-
-<tr>
-
-<td>
-${formatDate(item.date)}
-</td>
-
-<td>
-${item.name || ""}
-</td>
-
-<td>
-${item.amount || 0}
-جنيه
-</td>
-
-</tr>
-
-`;
-
-});
+    const table =
+      document.getElementById(
+        "expenseTable"
+      );
 
 
-if (!todayExpenses.length) {
+    table.innerHTML = "";
 
-table.innerHTML = `
 
-<tr>
+    todayExpenses.forEach(
+      item => {
 
-<td colspan="3">
-لا توجد مصروفات اليوم
-</td>
+        table.innerHTML += `
 
-</tr>
+          <tr>
 
-`;
+            <td>
+              ${formatDate(item.date)}
+            </td>
+
+            <td>
+              ${item.name || ""}
+            </td>
+
+            <td>
+              ${item.amount || 0}
+              جنيه
+            </td>
+
+          </tr>
+
+        `;
+
+      }
+    );
+
+
+    if (
+      !todayExpenses.length
+    ) {
+
+      table.innerHTML = `
+
+        <tr>
+
+          <td colspan="3">
+            لا توجد مصروفات اليوم
+          </td>
+
+        </tr>
+
+      `;
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+  }
 
 }
 
-}
 
-catch (error) {
-
-console.error(error);
-
-}
-
-}
-
-
-/* ===============================
-   CUSTOMER SEARCH
-================================ */
+/* =====================================================
+CUSTOMER SEARCH
+===================================================== */
 
 async function searchCustomer() {
 
-try {
+  try {
 
-const phone =
-document
-.getElementById("searchPhone")
-.value
-.trim();
+    const phone =
+      document
+        .getElementById(
+          "searchPhone"
+        )
+        .value
+        .trim();
 
 
-if (!phone) {
+    if (!phone) {
 
-showMessage(
-"اكتب رقم التليفون",
-"error"
-);
+      showMessage(
+        "اكتب رقم التليفون",
+        "error"
+      );
 
-return;
+      return;
+
+    }
+
+
+    const result =
+      await api(
+        "getCustomerHistory",
+        {
+
+          phone:
+            phone
+
+        }
+      );
+
+
+    const data =
+      result.data || [];
+
+
+    const box =
+      document.getElementById(
+        "customerResult"
+      );
+
+
+    if (
+      !data.length
+    ) {
+
+      box.innerHTML =
+        "<p>لا يوجد سجل لهذا العميل.</p>";
+
+      return;
+
+    }
+
+
+    const total =
+      data.reduce(
+        (
+          sum,
+          item
+        ) =>
+          sum +
+          Number(
+            item.total || 0
+          ),
+        0
+      );
+
+
+    let html = `
+
+      <div class="today-summary">
+
+        <div class="summary-box">
+
+          عدد الزيارات
+
+          <strong>
+            ${data.length}
+          </strong>
+
+        </div>
+
+
+        <div class="summary-box">
+
+          إجمالي المدفوع
+
+          <strong>
+            ${total}
+          </strong>
+
+          جنيه
+
+        </div>
+
+      </div>
+
+
+      <table>
+
+        <tr>
+
+          <th>
+            التاريخ
+          </th>
+
+          <th>
+            الخدمة
+          </th>
+
+          <th>
+            المنتجات
+          </th>
+
+          <th>
+            الإجمالي
+          </th>
+
+        </tr>
+
+    `;
+
+
+    data.forEach(
+      item => {
+
+        let productsText =
+          "-";
+
+
+        if (
+          item.products &&
+          item.products.length
+        ) {
+
+          productsText =
+            item.products
+              .map(
+                product =>
+                  `${product.name} × ${product.quantity}`
+              )
+              .join("<br>");
+
+        }
+
+        else if (
+          item.product
+        ) {
+
+          productsText =
+            item.product;
+
+        }
+
+
+        html += `
+
+          <tr>
+
+            <td>
+              ${formatDate(item.date)}
+            </td>
+
+            <td>
+
+              ${item.service || "-"}
+
+              <br>
+
+              ${item.servicePrice || 0}
+              جنيه
+
+            </td>
+
+            <td>
+              ${productsText}
+            </td>
+
+            <td>
+
+              ${item.total || 0}
+
+              جنيه
+
+            </td>
+
+          </tr>
+
+        `;
+
+      }
+    );
+
+
+    html += "</table>";
+
+
+    box.innerHTML =
+      html;
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+    showMessage(
+      "حدث خطأ أثناء البحث",
+      "error"
+    );
+
+  }
 
 }
 
 
-const result =
-await api(
-"getCustomerHistory",
-{
-phone: phone
-}
-);
-
-
-const data =
-result.data || [];
-
-
-const box =
-document.getElementById(
-"customerResult"
-);
-
-
-if (!data.length) {
-
-box.innerHTML =
-"<p>لا يوجد سجل لهذا العميل.</p>";
-
-return;
-
-}
-
-
-const total =
-data.reduce(
-(sum, item) =>
-sum + Number(item.total || 0),
-0
-);
-
-
-let html = `
-
-<div class="today-summary">
-
-<div class="summary-box">
-
-عدد الزيارات
-
-<strong>
-${data.length}
-</strong>
-
-</div>
-
-
-<div class="summary-box">
-
-إجمالي المدفوع
-
-<strong>
-${total}
-</strong>
-
-جنيه
-
-</div>
-
-</div>
-
-
-<table>
-
-<tr>
-
-<th>التاريخ</th>
-<th>الخدمة</th>
-<th>المنتجات</th>
-<th>الإجمالي</th>
-
-</tr>
-
-`;
-
-
-data.forEach(item => {
-
-let productsText = "-";
-
-
-if (item.products) {
-
-try {
-
-const items =
-typeof item.products === "string"
-? JSON.parse(item.products)
-: item.products;
-
-
-productsText =
-items.map(product =>
-`${product.name} × ${product.quantity}`
-).join("<br>");
-
-}
-catch(e) {
-
-productsText =
-item.products;
-
-}
-
-}
-
-
-html += `
-
-<tr>
-
-<td>
-${formatDate(item.date)}
-</td>
-
-<td>
-${item.service || "-"}
-<br>
-${item.servicePrice || 0} جنيه
-</td>
-
-<td>
-${productsText}
-</td>
-
-<td>
-${item.total || 0}
-جنيه
-</td>
-
-</tr>
-
-`;
-
-});
-
-
-html += "</table>";
-
-
-box.innerHTML = html;
-
-}
-
-catch (error) {
-
-showMessage(
-"حدث خطأ أثناء البحث",
-"error"
-);
-
-}
-
-}
-
-
-/* ===============================
-   DASHBOARD
-================================ */
+/* =====================================================
+DASHBOARD
+===================================================== */
 
 async function loadDashboard() {
 
-try {
+  try {
 
-const result =
-await api("getDashboard");
-
-
-if (!result.success) return;
-
-
-const data =
-result.data;
+    const result =
+      await api(
+        "getDashboard"
+      );
 
 
-document
-.getElementById("invoiceCount")
-.innerText =
-data.invoiceCount || 0;
+    if (
+      !result.success
+    ) {
+
+      return;
+
+    }
 
 
-document
-.getElementById("salesTotal")
-.innerText =
-data.sales || 0;
+    const data =
+      result.data;
 
 
-document
-.getElementById("expenseTotal")
-.innerText =
-data.expenses || 0;
+    document
+      .getElementById(
+        "invoiceCount"
+      )
+      .innerText =
+        data.invoiceCount || 0;
 
 
-document
-.getElementById("netTotal")
-.innerText =
-data.net || 0;
+    document
+      .getElementById(
+        "salesTotal"
+      )
+      .innerText =
+        data.sales || 0;
 
 
-document
-.getElementById("reportInvoices")
-.innerText =
-data.invoiceCount || 0;
+    document
+      .getElementById(
+        "expenseTotal"
+      )
+      .innerText =
+        data.expenses || 0;
 
 
-document
-.getElementById("reportSales")
-.innerText =
-data.sales || 0;
+    document
+      .getElementById(
+        "netTotal"
+      )
+      .innerText =
+        data.net || 0;
 
 
-document
-.getElementById("reportExpenses")
-.innerText =
-data.expenses || 0;
+    document
+      .getElementById(
+        "reportInvoices"
+      )
+      .innerText =
+        data.invoiceCount || 0;
 
 
-document
-.getElementById("reportNet")
-.innerText =
-data.net || 0;
+    document
+      .getElementById(
+        "reportSales"
+      )
+      .innerText =
+        data.sales || 0;
+
+
+    document
+      .getElementById(
+        "reportExpenses"
+      )
+      .innerText =
+        data.expenses || 0;
+
+
+    document
+      .getElementById(
+        "reportNet"
+      )
+      .innerText =
+        data.net || 0;
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+  }
 
 }
 
-catch (error) {
 
-console.error(error);
-
-}
-
-}
-
-
-/* ===============================
-   REPORTS
-================================ */
+/* =====================================================
+REPORTS
+===================================================== */
 
 async function openReportsPage() {
 
-await loadDashboard();
+  await loadDashboard();
 
-openPage("reportsPage");
+  openPage(
+    "reportsPage"
+  );
 
 }
 
 
-/* ===============================
-   DATE
-================================ */
+/* =====================================================
+DATE
+===================================================== */
 
 function getDateOnly(value) {
 
-if (!value) return "";
+  if (!value) {
 
-try {
+    return "";
 
-return new Date(value)
-.toISOString()
-.slice(0, 10);
+  }
 
-}
 
-catch(error) {
+  try {
 
-return "";
+    return new Date(value)
+      .toISOString()
+      .slice(
+        0,
+        10
+      );
 
-}
+  }
+
+  catch (error) {
+
+    return "";
+
+  }
 
 }
 
 
 function formatDate(value) {
 
-if (!value) return "";
+  if (!value) {
 
-try {
+    return "";
 
-return new Date(value)
-.toLocaleString("ar-EG");
+  }
+
+
+  try {
+
+    return new Date(value)
+      .toLocaleString(
+        "ar-EG"
+      );
+
+  }
+
+  catch (error) {
+
+    return value;
+
+  }
 
 }
 
-catch(error) {
 
-return value;
+/* =====================================================
+START
+===================================================== */
 
-}
+showCategory(
+  "perfumes"
+);
 
-}
-
-
-/* ===============================
-   START
-================================ */
-
-showCategory("perfumes");
 
 renderCart();
+
 
 loadDashboard();
 
