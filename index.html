@@ -266,6 +266,44 @@ padding:10px 15px;
 background:#111;
 }
 
+
+/* =========================
+   SERVICE BUTTONS
+========================= */
+
+.service-buttons{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+gap:10px;
+margin:10px 0 15px;
+}
+
+.service-button{
+background:white;
+color:#222;
+border:2px solid #ddd;
+padding:15px 10px;
+border-radius:10px;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+transition:0.2s;
+margin:0;
+width:100%;
+}
+
+.service-button:hover{
+background:#fff5ed;
+border-color:#ff7a00;
+transform:translateY(-2px);
+}
+
+.service-button.active{
+background:#111;
+color:white;
+border-color:#ff7a00;
+}
+
 table{
 width:100%;
 border-collapse:collapse;
@@ -365,6 +403,15 @@ align-items:stretch;
 
 .report-filters{
 grid-template-columns:1fr;
+}
+
+.service-buttons{
+grid-template-columns:repeat(2,1fr);
+}
+
+.service-button{
+padding:13px 8px;
+font-size:14px;
 }
 
 }
@@ -502,9 +549,22 @@ placeholder="01xxxxxxxxx"
 
 <label>نوع الخدمة</label>
 
-<select id="service">
-<option value="">جاري تحميل الخدمات...</option>
-</select>
+<!-- أزرار الخدمات -->
+
+<div id="serviceButtons" class="service-buttons">
+
+<div class="loading">
+جاري تحميل الخدمات...
+</div>
+
+</div>
+
+<!-- نخزن اسم الخدمة المختارة هنا -->
+
+<input
+type="hidden"
+id="service"
+>
 
 <label>مبلغ الخدمة</label>
 
@@ -1229,40 +1289,81 @@ result.message ||
 allServices =
 result.data || [];
 
-const select =
+const container =
 document.getElementById(
-"service"
+"serviceButtons"
 );
 
-select.innerHTML =
-'<option value="">اختر الخدمة</option>';
+container.innerHTML = "";
+
+if(!allServices.length){
+
+container.innerHTML =
+"<p>لا توجد خدمات متاحة.</p>";
+
+return;
+
+}
 
 allServices.forEach(
 service=>{
 
-const option =
-document.createElement(
-"option"
-);
+const button =
+document.createElement("button");
 
-option.value =
+button.type =
+"button";
+
+button.className =
+"service-button";
+
+/* اسم الخدمة فقط */
+button.textContent =
 service.name;
 
-/*
-السعر يظل محفوظًا داخل option
-حتى يتم وضعه تلقائيًا في خانة مبلغ الخدمة،
-لكن لا يتم عرضه داخل قائمة نوع الخدمة.
-*/
+/* السعر محفوظ داخلياً فقط */
+button.dataset.name =
+service.name;
 
-option.dataset.price =
+button.dataset.price =
 Number(service.price || 0);
 
-/* عرض اسم الخدمة فقط */
-option.textContent =
-service.name;
+button.onclick =
+function(){
 
-select.appendChild(
-option
+/* إزالة التحديد من جميع الأزرار */
+document
+.querySelectorAll(
+".service-button"
+)
+.forEach(
+btn=>{
+btn.classList.remove("active");
+}
+);
+
+/* تحديد الخدمة */
+this.classList.add("active");
+
+/* حفظ اسم الخدمة */
+document.getElementById(
+"service"
+).value =
+this.dataset.name;
+
+/* وضع السعر تلقائياً */
+document.getElementById(
+"servicePrice"
+).value =
+this.dataset.price;
+
+/* تحديث الإجمالي */
+updateTotals();
+
+};
+
+container.appendChild(
+button
 );
 
 });
@@ -1272,13 +1373,13 @@ catch(error){
 
 console.error(error);
 
-const select =
+const container =
 document.getElementById(
-"service"
+"serviceButtons"
 );
 
-select.innerHTML =
-'<option value="">تعذر تحميل الخدمات</option>';
+container.innerHTML =
+"<p>تعذر تحميل الخدمات</p>";
 
 showMessage(
 error.message,
@@ -1288,43 +1389,6 @@ error.message,
 }
 
 }
-
-
-/* =========================
-   اختيار الخدمة
-========================= */
-
-document.addEventListener(
-"change",
-function(e){
-
-if(
-e.target.id === "service"
-){
-
-const option =
-e.target.options[
-e.target.selectedIndex
-];
-
-if(
-option &&
-option.dataset.price
-){
-
-document.getElementById(
-"servicePrice"
-).value =
-option.dataset.price;
-
-updateTotals();
-
-}
-
-}
-
-}
-);
 
 
 /* =========================
@@ -1348,6 +1412,21 @@ document.getElementById(
 document.getElementById(
 "servicePrice"
 ).value = "";
+
+document.getElementById(
+"service"
+).value = "";
+
+/* إزالة تحديد الخدمة */
+document
+.querySelectorAll(
+".service-button"
+)
+.forEach(
+button=>{
+button.classList.remove("active");
+}
+);
 
 await Promise.all([
 loadServices(),
