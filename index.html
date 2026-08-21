@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Auto Mood Car Care</title>
+  <title>AUTO MOOD - Car Care Management System</title>
 
   <style>
+
     * {
       box-sizing: border-box;
       font-family: Arial, sans-serif;
@@ -28,6 +30,12 @@
     header h1 {
       margin: 0;
       color: #ff7a00;
+      font-size: 32px;
+    }
+
+    header p {
+      margin-bottom: 0;
+      color: #ddd;
     }
 
     .container {
@@ -36,6 +44,8 @@
       padding: 15px;
     }
 
+    /* Dashboard */
+
     .cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -43,22 +53,91 @@
       margin-bottom: 25px;
     }
 
-    .card,
-    .section {
+    .card {
       background: white;
-      padding: 20px;
+      padding: 25px 20px;
       border-radius: 12px;
       box-shadow: 0 2px 8px #0001;
+      text-align: center;
     }
 
-    .section {
-      margin-bottom: 20px;
+    .card h3 {
+      margin-top: 0;
+      font-size: 18px;
     }
 
     .number {
-      font-size: 30px;
+      font-size: 32px;
       font-weight: bold;
       color: #ff7a00;
+      margin: 12px 0;
+    }
+
+    /* Menu */
+
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .menu-button {
+      background: white;
+      border: none;
+      border-radius: 14px;
+      padding: 30px 20px;
+      box-shadow: 0 2px 10px #0002;
+      cursor: pointer;
+      color: #222;
+      transition: 0.2s;
+    }
+
+    .menu-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px #0002;
+    }
+
+    .menu-icon {
+      font-size: 45px;
+      margin-bottom: 12px;
+    }
+
+    .menu-title {
+      font-size: 22px;
+      font-weight: bold;
+      color: #ff7a00;
+    }
+
+    .menu-desc {
+      color: #777;
+      margin-top: 8px;
+      font-size: 14px;
+    }
+
+    /* Pages */
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .section {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px #0001;
+    }
+
+    .back-button {
+      width: auto;
+      background: #111;
+      padding: 12px 22px;
+      margin-bottom: 20px;
     }
 
     input,
@@ -66,7 +145,8 @@
     button {
       width: 100%;
       padding: 12px;
-      margin: 8px 0 12px;
+      margin-top: 8px;
+      margin-bottom: 12px;
       border-radius: 8px;
       border: 1px solid #ddd;
       font-size: 16px;
@@ -75,9 +155,13 @@
     button {
       background: #ff7a00;
       color: white;
-      border: 0;
+      border: none;
       cursor: pointer;
       font-weight: bold;
+    }
+
+    button:hover {
+      background: #e66c00;
     }
 
     table {
@@ -88,8 +172,8 @@
 
     th,
     td {
-      padding: 10px;
       border-bottom: 1px solid #eee;
+      padding: 12px;
       text-align: center;
     }
 
@@ -115,168 +199,627 @@
       color: #b00020;
     }
 
-    @media (max-width: 600px) {
+    .today-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+    }
+
+    .summary-box {
+      background: #f7f7f7;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .summary-box strong {
+      display: block;
+      font-size: 28px;
+      color: #ff7a00;
+      margin-top: 10px;
+    }
+
+    @media(max-width: 600px) {
+
       .container {
-        padding: 8px;
+        padding: 10px;
+      }
+
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .card {
+        padding: 18px 10px;
+      }
+
+      .card h3 {
+        font-size: 15px;
+      }
+
+      .number {
+        font-size: 26px;
+      }
+
+      .menu {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .menu-button {
+        padding: 22px 10px;
+      }
+
+      .menu-title {
+        font-size: 17px;
+      }
+
+      .menu-icon {
+        font-size: 35px;
       }
 
       table {
         font-size: 12px;
       }
+
+      th,
+      td {
+        padding: 8px 4px;
+      }
+
     }
+
   </style>
+
 </head>
 
 <body>
 
+
 <header>
+
   <h1>AUTO MOOD</h1>
+
   <p>Car Care Management System</p>
+
 </header>
+
 
 <div class="container">
 
+
   <div id="message"></div>
 
-  <div class="cards">
-    <div class="card">
-      <h3>فواتير اليوم</h3>
-      <div class="number" id="invoiceCount">0</div>
+
+  <!-- ================= HOME PAGE ================= -->
+
+  <div id="homePage" class="page active">
+
+
+    <!-- Dashboard -->
+
+    <div class="cards">
+
+      <div class="card">
+        <h3>فواتير اليوم</h3>
+        <div class="number" id="invoiceCount">0</div>
+        <small>فاتورة</small>
+      </div>
+
+
+      <div class="card">
+        <h3>مبيعات اليوم</h3>
+        <div class="number" id="salesTotal">0</div>
+        <small>جنيه</small>
+      </div>
+
+
+      <div class="card">
+        <h3>مصروفات اليوم</h3>
+        <div class="number" id="expenseTotal">0</div>
+        <small>جنيه</small>
+      </div>
+
+
+      <div class="card">
+        <h3>صافي اليوم</h3>
+        <div class="number" id="netTotal">0</div>
+        <small>جنيه</small>
+      </div>
+
     </div>
 
-    <div class="card">
-      <h3>مبيعات اليوم</h3>
-      <div class="number" id="salesTotal">0</div>
-      <small>جنيه</small>
+
+    <!-- Main Menu -->
+
+    <div class="menu">
+
+
+      <button
+        class="menu-button"
+        onclick="openPage('invoicePage')"
+      >
+
+        <div class="menu-icon">🧾</div>
+
+        <div class="menu-title">
+          فاتورة جديدة
+        </div>
+
+        <div class="menu-desc">
+          إنشاء فاتورة للعميل
+        </div>
+
+      </button>
+
+
+      <button
+        class="menu-button"
+        onclick="openSalesPage()"
+      >
+
+        <div class="menu-icon">📊</div>
+
+        <div class="menu-title">
+          مبيعات اليوم
+        </div>
+
+        <div class="menu-desc">
+          عرض فواتير ومبيعات اليوم
+        </div>
+
+      </button>
+
+
+      <button
+        class="menu-button"
+        onclick="openExpensesPage()"
+      >
+
+        <div class="menu-icon">💰</div>
+
+        <div class="menu-title">
+          مصروفات اليوم
+        </div>
+
+        <div class="menu-desc">
+          إضافة وعرض المصروفات
+        </div>
+
+      </button>
+
+
+      <button
+        class="menu-button"
+        onclick="openPage('customersPage')"
+      >
+
+        <div class="menu-icon">👤</div>
+
+        <div class="menu-title">
+          العملاء
+        </div>
+
+        <div class="menu-desc">
+          البحث في سجل العميل
+        </div>
+
+      </button>
+
+
+      <button
+        class="menu-button"
+        onclick="openReportsPage()"
+      >
+
+        <div class="menu-icon">📈</div>
+
+        <div class="menu-title">
+          التقارير
+        </div>
+
+        <div class="menu-desc">
+          تقارير المبيعات والمصروفات
+        </div>
+
+      </button>
+
+
     </div>
 
-    <div class="card">
-      <h3>مصروفات اليوم</h3>
-      <div class="number" id="expenseTotal">0</div>
-      <small>جنيه</small>
+  </div>
+
+
+  <!-- ================= NEW INVOICE ================= -->
+
+  <div id="invoicePage" class="page">
+
+    <button
+      class="back-button"
+      onclick="goHome()"
+    >
+      ← الرئيسية
+    </button>
+
+
+    <div class="section">
+
+      <h2>🧾 فاتورة جديدة</h2>
+
+
+      <label>رقم تليفون العميل</label>
+
+      <input
+        type="tel"
+        id="phone"
+        placeholder="01xxxxxxxxx"
+      >
+
+
+      <label>نوع الغسيل</label>
+
+      <select id="service">
+
+        <option value="غسيل عادي|130">
+          غسيل عادي - 130 جنيه
+        </option>
+
+        <option value="غسيل كيماوي|250">
+          غسيل كيماوي - 250 جنيه
+        </option>
+
+        <option value="غسيل كامل|150">
+          غسيل كامل - 150 جنيه
+        </option>
+
+        <option value="تلميع|200">
+          تلميع - 200 جنيه
+        </option>
+
+      </select>
+
+
+      <label>إضافة</label>
+
+      <select id="product">
+
+        <option value="0">
+          بدون إضافة
+        </option>
+
+        <option value="فواحة|50">
+          فواحة - 50 جنيه
+        </option>
+
+        <option value="ملمع تابلوه|50">
+          ملمع تابلوه - 50 جنيه
+        </option>
+
+        <option value="معطر|60">
+          معطر - 60 جنيه
+        </option>
+
+      </select>
+
+
+      <button onclick="createInvoice()">
+        حفظ الفاتورة
+      </button>
+
     </div>
 
-    <div class="card">
-      <h3>صافي اليوم</h3>
-      <div class="number" id="netTotal">0</div>
-      <small>جنيه</small>
+  </div>
+
+
+  <!-- ================= SALES ================= -->
+
+  <div id="salesPage" class="page">
+
+    <button
+      class="back-button"
+      onclick="goHome()"
+    >
+      ← الرئيسية
+    </button>
+
+
+    <div class="section">
+
+      <h2>📊 مبيعات اليوم</h2>
+
+
+      <div class="today-summary">
+
+        <div class="summary-box">
+          عدد الفواتير
+          <strong id="salesInvoiceCount">0</strong>
+        </div>
+
+
+        <div class="summary-box">
+          إجمالي المبيعات
+          <strong id="salesTodayTotal">0</strong>
+          جنيه
+        </div>
+
+      </div>
+
     </div>
-  </div>
 
 
-  <div class="section">
+    <div class="section">
 
-    <h2>🧾 فاتورة جديدة</h2>
-
-    <label>رقم تليفون العميل</label>
-    <input type="tel" id="phone" placeholder="01xxxxxxxxx">
-
-    <label>نوع الغسيل</label>
-    <select id="service">
-      <option value="غسيل عادي|130">غسيل عادي - 130 جنيه</option>
-      <option value="غسيل كيماوي|250">غسيل كيماوي - 250 جنيه</option>
-      <option value="غسيل كامل|150">غسيل كامل - 150 جنيه</option>
-      <option value="تلميع|200">تلميع - 200 جنيه</option>
-    </select>
-
-    <label>إضافة</label>
-    <select id="product">
-      <option value="0">بدون إضافة</option>
-      <option value="فواحة|50">فواحة - 50 جنيه</option>
-      <option value="ملمع تابلوه|50">ملمع تابلوه - 50 جنيه</option>
-      <option value="معطر|60">معطر - 60 جنيه</option>
-    </select>
-
-    <button onclick="createInvoice()">حفظ الفاتورة</button>
-
-  </div>
+      <h2>🧾 فواتير اليوم</h2>
 
 
-  <div class="section">
+      <table>
 
-    <h2>👤 سجل العميل</h2>
+        <thead>
 
-    <input type="tel" id="searchPhone" placeholder="اكتب رقم تليفون العميل">
+          <tr>
+            <th>التاريخ</th>
+            <th>التليفون</th>
+            <th>الخدمة</th>
+            <th>الإضافة</th>
+            <th>الإجمالي</th>
+          </tr>
 
-    <button onclick="searchCustomer()">بحث</button>
+        </thead>
 
-    <div id="customerResult"></div>
+
+        <tbody id="salesTable"></tbody>
+
+      </table>
+
+    </div>
 
   </div>
 
 
-  <div class="section">
+  <!-- ================= EXPENSES ================= -->
 
-    <h2>💰 إضافة مصروف</h2>
+  <div id="expensesPage" class="page">
 
-    <input type="text" id="expenseName" placeholder="اسم المصروف">
+    <button
+      class="back-button"
+      onclick="goHome()"
+    >
+      ← الرئيسية
+    </button>
 
-    <input type="number" id="expenseAmount" placeholder="المبلغ">
 
-    <button onclick="addExpense()">إضافة المصروف</button>
+    <div class="section">
+
+      <h2>💰 إضافة مصروف</h2>
+
+
+      <input
+        type="text"
+        id="expenseName"
+        placeholder="اسم المصروف - مثال: كهرباء"
+      >
+
+
+      <input
+        type="number"
+        id="expenseAmount"
+        placeholder="المبلغ"
+      >
+
+
+      <button onclick="addExpense()">
+        إضافة المصروف
+      </button>
+
+    </div>
+
+
+    <div class="section">
+
+      <h2>📊 مصروفات اليوم</h2>
+
+
+      <div class="summary-box">
+        إجمالي مصروفات اليوم
+        <strong id="todayExpensesTotal">0</strong>
+        جنيه
+      </div>
+
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>التاريخ</th>
+            <th>المصروف</th>
+            <th>المبلغ</th>
+          </tr>
+
+        </thead>
+
+
+        <tbody id="expenseTable"></tbody>
+
+      </table>
+
+    </div>
 
   </div>
 
 
-  <div class="section">
+  <!-- ================= CUSTOMERS ================= -->
 
-    <h2>📋 آخر الفواتير</h2>
+  <div id="customersPage" class="page">
 
-    <table>
-      <thead>
-        <tr>
-          <th>التاريخ</th>
-          <th>التليفون</th>
-          <th>الخدمة</th>
-          <th>الإضافة</th>
-          <th>الإجمالي</th>
-        </tr>
-      </thead>
+    <button
+      class="back-button"
+      onclick="goHome()"
+    >
+      ← الرئيسية
+    </button>
 
-      <tbody id="invoiceTable"></tbody>
-    </table>
+
+    <div class="section">
+
+      <h2>👤 سجل العميل</h2>
+
+
+      <input
+        type="tel"
+        id="searchPhone"
+        placeholder="اكتب رقم تليفون العميل"
+      >
+
+
+      <button onclick="searchCustomer()">
+        بحث
+      </button>
+
+
+      <div id="customerResult"></div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================= REPORTS ================= -->
+
+  <div id="reportsPage" class="page">
+
+    <button
+      class="back-button"
+      onclick="goHome()"
+    >
+      ← الرئيسية
+    </button>
+
+
+    <div class="section">
+
+      <h2>📈 التقارير</h2>
+
+
+      <div class="today-summary">
+
+        <div class="summary-box">
+          فواتير اليوم
+          <strong id="reportInvoices">0</strong>
+        </div>
+
+
+        <div class="summary-box">
+          مبيعات اليوم
+          <strong id="reportSales">0</strong>
+          جنيه
+        </div>
+
+
+        <div class="summary-box">
+          مصروفات اليوم
+          <strong id="reportExpenses">0</strong>
+          جنيه
+        </div>
+
+
+        <div class="summary-box">
+          صافي اليوم
+          <strong id="reportNet">0</strong>
+          جنيه
+        </div>
+
+      </div>
+
+    </div>
 
   </div>
 
-
-  <div class="section">
-
-    <h2>📊 آخر المصروفات</h2>
-
-    <table>
-      <thead>
-        <tr>
-          <th>التاريخ</th>
-          <th>المصروف</th>
-          <th>المبلغ</th>
-        </tr>
-      </thead>
-
-      <tbody id="expenseTable"></tbody>
-    </table>
-
-  </div>
 
 </div>
 
 
 <script>
 
+
+/* ===============================
+   GOOGLE SHEETS API
+================================ */
+
 const API_URL =
   "https://script.google.com/macros/s/AKfycbzNoSKZeYqTSWBNeJeCM1PK90i8Q3Vx0xXEiwMDmoiaKzHxupT92OfzJUAKivP5EqE3Ew/exec";
 
 
+/* ===============================
+   PAGES
+================================ */
+
+function openPage(pageId) {
+
+  document.querySelectorAll(".page")
+    .forEach(page => {
+      page.classList.remove("active");
+    });
+
+  document
+    .getElementById(pageId)
+    .classList.add("active");
+
+  window.scrollTo(0, 0);
+
+}
+
+
+function goHome() {
+
+  openPage("homePage");
+
+  loadDashboard();
+
+}
+
+
+async function openSalesPage() {
+
+  openPage("salesPage");
+
+  await loadSalesPage();
+
+}
+
+
+async function openExpensesPage() {
+
+  openPage("expensesPage");
+
+  await loadExpenses();
+
+}
+
+
+/* ===============================
+   MESSAGE
+================================ */
+
 function showMessage(text, type = "success") {
 
-  document.getElementById("message").innerHTML =
+  const box =
+    document.getElementById("message");
+
+  box.innerHTML =
     `<div class="${type}">${text}</div>`;
 
   setTimeout(() => {
-    document.getElementById("message").innerHTML = "";
+
+    box.innerHTML = "";
+
   }, 4000);
 
 }
 
+
+/* ===============================
+   API
+================================ */
 
 async function api(action, data = {}) {
 
@@ -289,47 +832,72 @@ async function api(action, data = {}) {
   );
 
   Object.keys(data).forEach(key => {
+
     url.searchParams.set(
       key,
       data[key]
     );
+
   });
 
+
   const response =
-    await fetch(url.toString());
+    await fetch(
+      url.toString()
+    );
+
 
   return response.json();
 
 }
 
 
+/* ===============================
+   CREATE INVOICE
+================================ */
+
 async function createInvoice() {
 
   try {
 
     const phone =
-      document.getElementById("phone").value.trim();
+      document
+        .getElementById("phone")
+        .value
+        .trim();
+
 
     if (!phone) {
+
       showMessage(
         "من فضلك اكتب رقم تليفون العميل",
         "error"
       );
+
       return;
+
     }
 
 
     const service =
-      document.getElementById("service").value.split("|");
+      document
+        .getElementById("service")
+        .value
+        .split("|");
+
 
     const product =
-      document.getElementById("product").value.split("|");
+      document
+        .getElementById("product")
+        .value
+        .split("|");
 
 
     const result =
       await api(
         "createInvoice",
         {
+
           phone: phone,
 
           service: service[0],
@@ -345,22 +913,38 @@ async function createInvoice() {
             product.length > 1
               ? product[1]
               : 0
+
         }
       );
 
 
     if (!result.success) {
-      throw new Error(result.message);
+
+      throw new Error(
+        result.message
+      );
+
     }
 
 
-    document.getElementById("phone").value = "";
+    document
+      .getElementById("phone")
+      .value = "";
+
 
     showMessage(
       "تم حفظ الفاتورة بنجاح ✅"
     );
 
-    loadAll();
+
+    await loadDashboard();
+
+
+    setTimeout(() => {
+
+      goHome();
+
+    }, 1000);
 
   }
 
@@ -379,15 +963,169 @@ async function createInvoice() {
 }
 
 
+/* ===============================
+   SALES PAGE
+================================ */
+
+async function loadSalesPage() {
+
+  try {
+
+    const result =
+      await api("getInvoices");
+
+
+    if (!result.success) {
+
+      return;
+
+    }
+
+
+    const allInvoices =
+      result.data || [];
+
+
+    const today =
+      new Date()
+        .toISOString()
+        .slice(0, 10);
+
+
+    const todayInvoices =
+      allInvoices.filter(item => {
+
+        return getDateOnly(
+          item.date
+        ) === today;
+
+      });
+
+
+    const sales =
+      todayInvoices.reduce(
+        (sum, item) => {
+
+          return sum +
+            Number(item.total || 0);
+
+        },
+        0
+      );
+
+
+    document
+      .getElementById(
+        "salesInvoiceCount"
+      )
+      .innerText =
+        todayInvoices.length;
+
+
+    document
+      .getElementById(
+        "salesTodayTotal"
+      )
+      .innerText =
+        sales;
+
+
+    const table =
+      document.getElementById(
+        "salesTable"
+      );
+
+
+    table.innerHTML = "";
+
+
+    todayInvoices.forEach(item => {
+
+      table.innerHTML += `
+
+        <tr>
+
+          <td>
+            ${formatDate(item.date)}
+          </td>
+
+          <td>
+            ${item.phone || ""}
+          </td>
+
+          <td>
+            ${item.service || ""}
+          </td>
+
+          <td>
+            ${item.product || ""}
+          </td>
+
+          <td>
+            ${item.total || 0}
+            جنيه
+          </td>
+
+        </tr>
+
+      `;
+
+    });
+
+
+    if (todayInvoices.length === 0) {
+
+      table.innerHTML =
+        `<tr>
+          <td colspan="5">
+            لا توجد مبيعات اليوم
+          </td>
+        </tr>`;
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+  }
+
+}
+
+
+/* ===============================
+   ADD EXPENSE
+================================ */
+
 async function addExpense() {
 
   try {
 
     const name =
-      document.getElementById("expenseName").value.trim();
+      document
+        .getElementById("expenseName")
+        .value
+        .trim();
+
 
     const amount =
-      document.getElementById("expenseAmount").value;
+      document
+        .getElementById("expenseAmount")
+        .value;
+
+
+    if (!name || !amount) {
+
+      showMessage(
+        "اكتب اسم المصروف والمبلغ",
+        "error"
+      );
+
+      return;
+
+    }
 
 
     const result =
@@ -401,18 +1139,32 @@ async function addExpense() {
 
 
     if (!result.success) {
-      throw new Error(result.message);
+
+      throw new Error(
+        result.message
+      );
+
     }
 
 
-    document.getElementById("expenseName").value = "";
-    document.getElementById("expenseAmount").value = "";
+    document
+      .getElementById("expenseName")
+      .value = "";
+
+
+    document
+      .getElementById("expenseAmount")
+      .value = "";
+
 
     showMessage(
       "تم إضافة المصروف بنجاح ✅"
     );
 
-    loadAll();
+
+    await loadExpenses();
+
+    await loadDashboard();
 
   }
 
@@ -429,20 +1181,146 @@ async function addExpense() {
 }
 
 
+/* ===============================
+   EXPENSES
+================================ */
+
+async function loadExpenses() {
+
+  try {
+
+    const result =
+      await api("getExpenses");
+
+
+    if (!result.success) {
+
+      return;
+
+    }
+
+
+    const allExpenses =
+      result.data || [];
+
+
+    const today =
+      new Date()
+        .toISOString()
+        .slice(0, 10);
+
+
+    const todayExpenses =
+      allExpenses.filter(item => {
+
+        return getDateOnly(
+          item.date
+        ) === today;
+
+      });
+
+
+    const total =
+      todayExpenses.reduce(
+        (sum, item) => {
+
+          return sum +
+            Number(item.amount || 0);
+
+        },
+        0
+      );
+
+
+    document
+      .getElementById(
+        "todayExpensesTotal"
+      )
+      .innerText =
+        total;
+
+
+    const table =
+      document.getElementById(
+        "expenseTable"
+      );
+
+
+    table.innerHTML = "";
+
+
+    todayExpenses.forEach(item => {
+
+      table.innerHTML += `
+
+        <tr>
+
+          <td>
+            ${formatDate(item.date)}
+          </td>
+
+          <td>
+            ${item.name || ""}
+          </td>
+
+          <td>
+            ${item.amount || 0}
+            جنيه
+          </td>
+
+        </tr>
+
+      `;
+
+    });
+
+
+    if (todayExpenses.length === 0) {
+
+      table.innerHTML =
+        `<tr>
+          <td colspan="3">
+            لا توجد مصروفات اليوم
+          </td>
+        </tr>`;
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+  }
+
+}
+
+
+/* ===============================
+   CUSTOMER SEARCH
+================================ */
+
 async function searchCustomer() {
 
   try {
 
     const phone =
-      document.getElementById("searchPhone").value.trim();
+      document
+        .getElementById("searchPhone")
+        .value
+        .trim();
 
 
     if (!phone) {
+
       showMessage(
         "اكتب رقم التليفون",
         "error"
       );
+
       return;
+
     }
 
 
@@ -460,7 +1338,9 @@ async function searchCustomer() {
 
 
     const box =
-      document.getElementById("customerResult");
+      document.getElementById(
+        "customerResult"
+      );
 
 
     if (!data.length) {
@@ -475,33 +1355,53 @@ async function searchCustomer() {
 
     const total =
       data.reduce(
-        (sum, item) =>
-          sum + Number(item.total || 0),
+        (sum, item) => {
+
+          return sum +
+            Number(item.total || 0);
+
+        },
         0
       );
 
 
     let html = `
-      <h3>عدد الزيارات: ${data.length}</h3>
-      <p>
-        إجمالي المدفوع:
-        <strong>${total} جنيه</strong>
-      </p>
+
+      <div class="today-summary">
+
+        <div class="summary-box">
+          عدد الزيارات
+          <strong>${data.length}</strong>
+        </div>
+
+        <div class="summary-box">
+          إجمالي المدفوع
+          <strong>${total}</strong>
+          جنيه
+        </div>
+
+      </div>
 
       <table>
+
         <tr>
+
           <th>التاريخ</th>
           <th>الخدمة</th>
           <th>الإضافة</th>
           <th>الإجمالي</th>
+
         </tr>
+
     `;
 
 
     data.forEach(item => {
 
       html += `
+
         <tr>
+
           <td>
             ${formatDate(item.date)}
           </td>
@@ -515,15 +1415,19 @@ async function searchCustomer() {
           </td>
 
           <td>
-            ${item.total} جنيه
+            ${item.total || 0}
+            جنيه
           </td>
+
         </tr>
+
       `;
 
     });
 
 
     html += "</table>";
+
 
     box.innerHTML = html;
 
@@ -541,115 +1445,93 @@ async function searchCustomer() {
 }
 
 
+/* ===============================
+   DASHBOARD
+================================ */
+
 async function loadDashboard() {
 
-  const result =
-    await api("getDashboard");
-
-  if (!result.success) return;
-
-  const data =
-    result.data;
-
-
-  document.getElementById("invoiceCount").innerText =
-    data.invoiceCount || 0;
-
-  document.getElementById("salesTotal").innerText =
-    data.sales || 0;
-
-  document.getElementById("expenseTotal").innerText =
-    data.expenses || 0;
-
-  document.getElementById("netTotal").innerText =
-    data.net || 0;
-
-}
-
-
-async function loadInvoices() {
-
-  const result =
-    await api("getInvoices");
-
-  if (!result.success) return;
-
-  const table =
-    document.getElementById("invoiceTable");
-
-  table.innerHTML = "";
-
-
-  (result.data || []).slice(0, 50).forEach(item => {
-
-    table.innerHTML += `
-      <tr>
-        <td>${formatDate(item.date)}</td>
-        <td>${item.phone || ""}</td>
-        <td>${item.service || ""}</td>
-        <td>${item.product || ""}</td>
-        <td>${item.total || 0} جنيه</td>
-      </tr>
-    `;
-
-  });
-
-}
-
-
-async function loadExpenses() {
-
-  const result =
-    await api("getExpenses");
-
-  if (!result.success) return;
-
-  const table =
-    document.getElementById("expenseTable");
-
-  table.innerHTML = "";
-
-
-  (result.data || []).slice(0, 50).forEach(item => {
-
-    table.innerHTML += `
-      <tr>
-        <td>${formatDate(item.date)}</td>
-        <td>${item.name || ""}</td>
-        <td>${item.amount || 0} جنيه</td>
-      </tr>
-    `;
-
-  });
-
-}
-
-
-function formatDate(value) {
-
-  if (!value) return "";
-
-  try {
-    return new Date(value).toLocaleString(
-      "ar-EG"
-    );
-  }
-  catch (error) {
-    return value;
-  }
-
-}
-
-
-async function loadAll() {
-
   try {
 
-    await Promise.all([
-      loadDashboard(),
-      loadInvoices(),
-      loadExpenses()
-    ]);
+    const result =
+      await api("getDashboard");
+
+
+    if (!result.success) {
+
+      return;
+
+    }
+
+
+    const data =
+      result.data;
+
+
+    document
+      .getElementById(
+        "invoiceCount"
+      )
+      .innerText =
+        data.invoiceCount || 0;
+
+
+    document
+      .getElementById(
+        "salesTotal"
+      )
+      .innerText =
+        data.sales || 0;
+
+
+    document
+      .getElementById(
+        "expenseTotal"
+      )
+      .innerText =
+        data.expenses || 0;
+
+
+    document
+      .getElementById(
+        "netTotal"
+      )
+      .innerText =
+        data.net || 0;
+
+
+    /* Reports */
+
+    document
+      .getElementById(
+        "reportInvoices"
+      )
+      .innerText =
+        data.invoiceCount || 0;
+
+
+    document
+      .getElementById(
+        "reportSales"
+      )
+      .innerText =
+        data.sales || 0;
+
+
+    document
+      .getElementById(
+        "reportExpenses"
+      )
+      .innerText =
+        data.expenses || 0;
+
+
+    document
+      .getElementById(
+        "reportNet"
+      )
+      .innerText =
+        data.net || 0;
 
   }
 
@@ -662,9 +1544,84 @@ async function loadAll() {
 }
 
 
-loadAll();
+/* ===============================
+   REPORTS
+================================ */
+
+async function openReportsPage() {
+
+  await loadDashboard();
+
+  openPage("reportsPage");
+
+}
+
+
+/* ===============================
+   DATE
+================================ */
+
+function getDateOnly(value) {
+
+  if (!value) {
+
+    return "";
+
+  }
+
+  try {
+
+    return new Date(value)
+      .toISOString()
+      .slice(0, 10);
+
+  }
+
+  catch (error) {
+
+    return "";
+
+  }
+
+}
+
+
+function formatDate(value) {
+
+  if (!value) {
+
+    return "";
+
+  }
+
+  try {
+
+    return new Date(
+      value
+    ).toLocaleString(
+      "ar-EG"
+    );
+
+  }
+
+  catch (error) {
+
+    return value;
+
+  }
+
+}
+
+
+/* ===============================
+   START
+================================ */
+
+loadDashboard();
+
 
 </script>
 
 </body>
+
 </html>
