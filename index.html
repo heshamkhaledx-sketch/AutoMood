@@ -2,12 +2,8 @@
 <html lang="ar" dir="rtl">
 
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <title>AUTO MOOD</title>
 
@@ -98,6 +94,7 @@ gap:15px;
 border:0;
 padding:25px 15px;
 cursor:pointer;
+color:#222;
 }
 
 .menu-button:hover{
@@ -146,6 +143,11 @@ cursor:pointer;
 
 button:hover{
 background:#e66c00;
+}
+
+button:disabled{
+background:#aaa;
+cursor:not-allowed;
 }
 
 .back-button{
@@ -268,6 +270,7 @@ table{
 width:100%;
 border-collapse:collapse;
 margin-top:15px;
+background:white;
 }
 
 th,
@@ -318,6 +321,12 @@ grid-template-columns:1fr 1fr;
 gap:10px;
 }
 
+.loading{
+text-align:center;
+padding:20px;
+color:#777;
+}
+
 @media(max-width:600px){
 
 .cards{
@@ -361,7 +370,6 @@ grid-template-columns:1fr;
 }
 
 </style>
-
 </head>
 
 <body>
@@ -379,7 +387,7 @@ grid-template-columns:1fr;
 <div id="message"></div>
 
 
-<!-- HOME -->
+<!-- ================= HOME ================= -->
 
 <div id="homePage" class="page active">
 
@@ -410,94 +418,54 @@ grid-template-columns:1fr;
 
 </div>
 
-
 <div class="menu">
 
-<button
-class="menu-button"
-onclick="openInvoicePage()">
-
+<button class="menu-button" onclick="openInvoicePage()">
 <div class="menu-icon">🧾</div>
 <div class="menu-title">فاتورة جديدة</div>
 <div class="menu-desc">إنشاء فاتورة للعميل</div>
-
 </button>
 
-
-<button
-class="menu-button"
-onclick="openSalesPage()">
-
+<button class="menu-button" onclick="openSalesPage()">
 <div class="menu-icon">📊</div>
 <div class="menu-title">مبيعات اليوم</div>
 <div class="menu-desc">عرض الفواتير</div>
-
 </button>
 
-
-<button
-class="menu-button"
-onclick="openExpensesPage()">
-
+<button class="menu-button" onclick="openExpensesPage()">
 <div class="menu-icon">💰</div>
 <div class="menu-title">المصروفات</div>
 <div class="menu-desc">إضافة ومتابعة المصروفات</div>
-
 </button>
 
-
-<button
-class="menu-button"
-onclick="openCustomersPage()">
-
+<button class="menu-button" onclick="openCustomersPage()">
 <div class="menu-icon">👤</div>
 <div class="menu-title">العملاء</div>
 <div class="menu-desc">سجل العميل</div>
-
 </button>
 
-
-<button
-class="menu-button"
-onclick="openStockPage()">
-
+<button class="menu-button" onclick="openStockPage()">
 <div class="menu-icon">📦</div>
 <div class="menu-title">المخزن</div>
 <div class="menu-desc">الأسعار والكميات</div>
-
 </button>
 
-
-<button
-class="menu-button"
-onclick="openSuppliersPage()">
-
+<button class="menu-button" onclick="openSuppliersPage()">
 <div class="menu-icon">🏪</div>
 <div class="menu-title">الموردين</div>
 <div class="menu-desc">الموردين والمشتريات</div>
-
 </button>
 
-
-<button
-class="menu-button"
-onclick="openReportsPage()">
-
+<button class="menu-button" onclick="openReportsPage()">
 <div class="menu-icon">📈</div>
 <div class="menu-title">التقارير</div>
 <div class="menu-desc">اختيار فترة زمنية</div>
-
 </button>
 
-
-<button
-class="menu-button"
-onclick="confirmFinishDay()">
-
+<button class="menu-button" onclick="confirmFinishDay()">
 <div class="menu-icon">🔴</div>
 <div class="menu-title">إنهاء اليوم</div>
 <div class="menu-desc">إغلاق يوم العمل</div>
-
 </button>
 
 </div>
@@ -505,13 +473,11 @@ onclick="confirmFinishDay()">
 </div>
 
 
-<!-- INVOICE -->
+<!-- ================= INVOICE ================= -->
 
 <div id="invoicePage" class="page">
 
-<button
-class="back-button"
-onclick="goHome()">
+<button class="back-button" onclick="goHome()">
 ← الرئيسية
 </button>
 
@@ -523,25 +489,21 @@ onclick="goHome()">
 
 <input
 id="customerName"
-placeholder="اسم العميل">
+placeholder="اسم العميل"
+>
 
 <label>رقم التليفون</label>
 
 <input
 id="phone"
 type="tel"
-placeholder="01xxxxxxxxx">
+placeholder="01xxxxxxxxx"
+>
 
 <label>نوع الخدمة</label>
 
 <select id="service">
-
-<option>غسيل عادي</option>
-<option>غسيل VIP</option>
-<option>غسيل خارجي</option>
-<option>غسيل موتوسيكل</option>
-<option>غسيل كيماوي</option>
-
+<option value="">جاري تحميل الخدمات...</option>
 </select>
 
 <label>مبلغ الخدمة</label>
@@ -549,7 +511,9 @@ placeholder="01xxxxxxxxx">
 <input
 id="servicePrice"
 type="number"
-placeholder="مبلغ الخدمة">
+min="0"
+placeholder="مبلغ الخدمة"
+>
 
 
 <h3>🛒 شراء منتجات</h3>
@@ -584,12 +548,8 @@ onclick="showProducts('أخرى',this)">
 
 </div>
 
-
-<div
-id="invoiceProducts"
-class="products-grid">
+<div id="invoiceProducts" class="products-grid">
 </div>
-
 
 <div class="cart">
 
@@ -603,9 +563,7 @@ class="products-grid">
 
 إجمالي الخدمة:
 
-<strong id="serviceTotalDisplay">
-0
-</strong>
+<strong id="serviceTotalDisplay">0</strong>
 
 جنيه
 
@@ -613,9 +571,7 @@ class="products-grid">
 
 إجمالي المنتجات:
 
-<strong id="productsTotalDisplay">
-0
-</strong>
+<strong id="productsTotalDisplay">0</strong>
 
 جنيه
 
@@ -623,16 +579,13 @@ class="products-grid">
 
 إجمالي الفاتورة:
 
-<strong id="invoiceTotalDisplay">
-0
-</strong>
+<strong id="invoiceTotalDisplay">0</strong>
 
 جنيه
 
 </div>
 
 </div>
-
 
 <button onclick="createInvoice()">
 حفظ الفاتورة
@@ -643,13 +596,11 @@ class="products-grid">
 </div>
 
 
-<!-- SALES -->
+<!-- ================= SALES ================= -->
 
 <div id="salesPage" class="page">
 
-<button
-class="back-button"
-onclick="goHome()">
+<button class="back-button" onclick="goHome()">
 ← الرئيسية
 </button>
 
@@ -696,13 +647,11 @@ onclick="goHome()">
 </div>
 
 
-<!-- EXPENSES -->
+<!-- ================= EXPENSES ================= -->
 
 <div id="expensesPage" class="page">
 
-<button
-class="back-button"
-onclick="goHome()">
+<button class="back-button" onclick="goHome()">
 ← الرئيسية
 </button>
 
@@ -712,19 +661,21 @@ onclick="goHome()">
 
 <input
 id="expenseName"
-placeholder="اسم المصروف">
+placeholder="اسم المصروف"
+>
 
 <input
 id="expenseAmount"
 type="number"
-placeholder="المبلغ">
+min="0"
+placeholder="المبلغ"
+>
 
 <button onclick="addExpense()">
 إضافة المصروف
 </button>
 
 </div>
-
 
 <div class="section">
 
@@ -734,9 +685,7 @@ placeholder="المبلغ">
 
 إجمالي المصروفات
 
-<strong id="todayExpensesTotal">
-0
-</strong>
+<strong id="todayExpensesTotal">0</strong>
 
 جنيه
 
@@ -763,13 +712,11 @@ placeholder="المبلغ">
 </div>
 
 
-<!-- CUSTOMERS -->
+<!-- ================= CUSTOMERS ================= -->
 
 <div id="customersPage" class="page">
 
-<button
-class="back-button"
-onclick="goHome()">
+<button class="back-button" onclick="goHome()">
 ← الرئيسية
 </button>
 
@@ -780,7 +727,8 @@ onclick="goHome()">
 <input
 id="searchPhone"
 type="tel"
-placeholder="رقم تليفون العميل">
+placeholder="رقم تليفون العميل"
+>
 
 <button onclick="searchCustomer()">
 بحث
@@ -793,13 +741,11 @@ placeholder="رقم تليفون العميل">
 </div>
 
 
-<!-- STOCK -->
+<!-- ================= STOCK ================= -->
 
 <div id="stockPage" class="page">
 
-<button
-class="back-button"
-onclick="goHome()">
+<button class="back-button" onclick="goHome()">
 ← الرئيسية
 </button>
 
@@ -819,22 +765,26 @@ onclick="goHome()">
 💾 حفظ الأسعار والكميات
 </button>
 
-
 <h3>➕ إضافة منتج جديد</h3>
 
 <input
 id="newProductName"
-placeholder="اسم المنتج">
+placeholder="اسم المنتج"
+>
 
 <input
 id="newProductPrice"
 type="number"
-placeholder="السعر">
+min="0"
+placeholder="السعر"
+>
 
 <input
 id="newProductStock"
 type="number"
-placeholder="الكمية">
+min="0"
+placeholder="الكمية"
+>
 
 <select id="newProductCategory">
 
@@ -860,7 +810,6 @@ Car Care
 إضافة المنتج
 </button>
 
-
 <table>
 
 <thead>
@@ -883,13 +832,11 @@ Car Care
 </div>
 
 
-<!-- SUPPLIERS -->
+<!-- ================= SUPPLIERS ================= -->
 
 <div id="suppliersPage" class="page">
 
-<button
-class="back-button"
-onclick="goHome()">
+<button class="back-button" onclick="goHome()">
 ← الرئيسية
 </button>
 
@@ -899,22 +846,24 @@ onclick="goHome()">
 
 <input
 id="supplierName"
-placeholder="اسم المورد">
+placeholder="اسم المورد"
+>
 
 <input
 id="supplierPhone"
-placeholder="رقم التليفون">
+placeholder="رقم التليفون"
+>
 
 <input
 id="supplierNotes"
-placeholder="ملاحظات">
+placeholder="ملاحظات"
+>
 
 <button onclick="addSupplier()">
 إضافة المورد
 </button>
 
 </div>
-
 
 <div class="section">
 
@@ -938,7 +887,6 @@ placeholder="ملاحظات">
 
 </div>
 
-
 <div class="section">
 
 <h2>📥 شراء منتجات</h2>
@@ -954,12 +902,16 @@ placeholder="ملاحظات">
 <input
 id="purchaseQuantity"
 type="number"
-placeholder="الكمية">
+min="1"
+placeholder="الكمية"
+>
 
 <input
 id="purchaseUnitPrice"
 type="number"
-placeholder="سعر الشراء">
+min="0"
+placeholder="سعر الشراء"
+>
 
 <button onclick="addPurchase()">
 تسجيل الشراء
@@ -970,13 +922,11 @@ placeholder="سعر الشراء">
 </div>
 
 
-<!-- REPORTS -->
+<!-- ================= REPORTS ================= -->
 
 <div id="reportsPage" class="page">
 
-<button
-class="back-button"
-onclick="goHome()">
+<button class="back-button" onclick="goHome()">
 ← الرئيسية
 </button>
 
@@ -992,7 +942,8 @@ onclick="goHome()">
 
 <input
 id="reportFrom"
-type="date">
+type="date"
+>
 
 </div>
 
@@ -1002,7 +953,8 @@ type="date">
 
 <input
 id="reportTo"
-type="date">
+type="date"
+>
 
 </div>
 
@@ -1011,7 +963,6 @@ type="date">
 <button onclick="loadReport()">
 🔍 عرض التقرير
 </button>
-
 
 <div class="summary">
 
@@ -1044,27 +995,33 @@ type="date">
 
 </div>
 
-
 </div>
 
 
 <script>
+
+/* =========================
+   API
+========================= */
 
 const API_URL =
 "https://script.google.com/macros/s/AKfycbzNoSKZeYqTSWBNeJeCM1PK90i8Q3Vx0xXEiwMDmoiaKzHxupT92OfzJUAKivP5EqE3Ew/exec";
 
 
 let allProducts = [];
-
+let allServices = [];
 let cart = [];
 
 
-/* API */
+/* =========================
+   API REQUEST
+========================= */
 
 async function api(action,data={}){
 
-const url =
-new URL(API_URL);
+try{
+
+const url = new URL(API_URL);
 
 url.searchParams.set(
 "action",
@@ -1073,13 +1030,14 @@ action
 
 Object.keys(data).forEach(key=>{
 
-let value=data[key];
+let value = data[key];
 
 if(
-typeof value==="object"
+typeof value === "object" &&
+value !== null
 ){
 
-value=JSON.stringify(value);
+value = JSON.stringify(value);
 
 }
 
@@ -1092,15 +1050,44 @@ value
 
 const response =
 await fetch(
-url.toString()
+url.toString(),
+{
+method:"GET",
+cache:"no-store"
+}
 );
 
-return await response.json();
+if(!response.ok){
+
+throw new Error(
+"فشل الاتصال بالسيرفر"
+);
+
+}
+
+const result =
+await response.json();
+
+return result;
+
+}
+catch(error){
+
+console.error(
+"API ERROR:",
+error
+);
+
+throw error;
+
+}
 
 }
 
 
-/* MESSAGE */
+/* =========================
+   MESSAGE
+========================= */
 
 function showMessage(
 text,
@@ -1124,21 +1111,33 @@ box.innerHTML="";
 }
 
 
-/* PAGE */
+/* =========================
+   PAGE
+========================= */
 
 function openPage(id){
 
 document
 .querySelectorAll(".page")
-.forEach(p=>
-p.classList.remove("active")
+.forEach(
+page=>{
+page.classList.remove("active");
+}
 );
 
-document
-.getElementById(id)
-.classList.add("active");
+const page =
+document.getElementById(id);
 
-window.scrollTo(0,0);
+if(page){
+
+page.classList.add("active");
+
+}
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
 
 }
 
@@ -1152,27 +1151,199 @@ loadDashboard();
 }
 
 
-/* INVOICE */
+/* =========================
+   HOME
+========================= */
+
+async function loadDashboard(){
+
+try{
+
+const result =
+await api("getDashboard");
+
+if(!result.success){
+
+return;
+
+}
+
+const data =
+result.data || {};
+
+document.getElementById(
+"invoiceCount"
+).innerText =
+Number(data.invoiceCount || 0);
+
+document.getElementById(
+"salesTotal"
+).innerText =
+Number(data.sales || 0);
+
+document.getElementById(
+"expenseTotal"
+).innerText =
+Number(data.expenses || 0);
+
+document.getElementById(
+"netTotal"
+).innerText =
+Number(data.net || 0);
+
+}
+catch(error){
+
+console.error(error);
+
+showMessage(
+"تعذر تحميل بيانات لوحة التحكم",
+"error"
+);
+
+}
+
+}
+
+
+/* =========================
+   SERVICES
+========================= */
+
+async function loadServices(){
+
+try{
+
+const result =
+await api("getServices");
+
+if(!result.success){
+
+throw new Error(
+result.message ||
+"تعذر تحميل الخدمات"
+);
+
+}
+
+allServices =
+result.data || [];
+
+const select =
+document.getElementById(
+"service"
+);
+
+select.innerHTML =
+'<option value="">اختر الخدمة</option>';
+
+allServices.forEach(
+service=>{
+
+const option =
+document.createElement(
+"option"
+);
+
+option.value =
+service.name;
+
+option.dataset.price =
+Number(service.price || 0);
+
+option.textContent =
+`${service.name} - ${Number(service.price || 0)} جنيه`;
+
+select.appendChild(
+option
+);
+
+});
+
+}
+catch(error){
+
+console.error(error);
+
+const select =
+document.getElementById(
+"service"
+);
+
+select.innerHTML =
+'<option value="">تعذر تحميل الخدمات</option>';
+
+showMessage(
+error.message,
+"error"
+);
+
+}
+
+}
+
+
+/* عند اختيار الخدمة يتم وضع السعر تلقائياً */
+
+document.addEventListener(
+"change",
+function(e){
+
+if(
+e.target.id === "service"
+){
+
+const option =
+e.target.options[
+e.target.selectedIndex
+];
+
+if(
+option &&
+option.dataset.price
+){
+
+document.getElementById(
+"servicePrice"
+).value =
+option.dataset.price;
+
+updateTotals();
+
+}
+
+}
+
+}
+);
+
+
+/* =========================
+   INVOICE
+========================= */
 
 async function openInvoicePage(){
 
 openPage("invoicePage");
 
-cart=[];
+cart = [];
 
 document.getElementById(
 "customerName"
-).value="";
+).value = "";
 
 document.getElementById(
 "phone"
-).value="";
+).value = "";
 
 document.getElementById(
 "servicePrice"
-).value="";
+).value = "";
 
-await loadProducts();
+await Promise.all([
+loadServices(),
+loadProducts()
+]);
 
 showProducts("all");
 
@@ -1181,9 +1352,13 @@ renderCart();
 }
 
 
-/* PRODUCTS */
+/* =========================
+   PRODUCTS
+========================= */
 
 async function loadProducts(){
+
+try{
 
 const result =
 await api("getProducts");
@@ -1191,13 +1366,28 @@ await api("getProducts");
 if(!result.success){
 
 throw new Error(
-result.message
+result.message ||
+"تعذر تحميل المنتجات"
 );
 
 }
 
 allProducts =
 result.data || [];
+
+}
+catch(error){
+
+console.error(error);
+
+allProducts = [];
+
+showMessage(
+error.message,
+"error"
+);
+
+}
 
 }
 
@@ -1214,7 +1404,9 @@ document
 ".category-buttons button"
 )
 .forEach(
-b=>b.classList.remove("active")
+b=>{
+b.classList.remove("active");
+}
 );
 
 button.classList.add("active");
@@ -1226,46 +1418,67 @@ document.getElementById(
 "invoiceProducts"
 );
 
-box.innerHTML="";
-
+box.innerHTML = "";
 
 const products =
 allProducts.filter(
-product =>
-category==="all" ||
-product.category===category
+product => {
+
+return (
+category === "all" ||
+product.category === category
 );
 
+}
+);
 
 if(!products.length){
 
-box.innerHTML=
-"<p>لا توجد منتجات.</p>";
+box.innerHTML =
+"<p>لا توجد منتجات في هذا التصنيف.</p>";
 
 return;
 
 }
 
-
 products.forEach(
 product=>{
 
 const stock =
-Number(product.stock||0);
+Number(product.stock || 0);
 
 const price =
-Number(product.price||0);
+Number(product.price || 0);
 
 const card =
 document.createElement(
 "div"
 );
 
-card.className=
+card.className =
 "product-card";
 
-card.innerHTML=`
+const button =
+document.createElement(
+"button"
+);
 
+button.textContent =
+stock <= 0
+? "نفد المخزون"
+: "إضافة للسلة";
+
+button.disabled =
+stock <= 0;
+
+button.onclick =
+function(){
+
+addToCart(product.id);
+
+};
+
+card.innerHTML = `
 <div class="product-name">
 ${escapeHtml(product.name)}
 </div>
@@ -1277,18 +1490,9 @@ ${price} جنيه
 <div class="product-stock">
 المتاح: ${stock}
 </div>
-
-<button
-onclick="addToCart('${product.id}')"
-${stock<=0?"disabled":""}>
-
-${stock<=0?
-"نفد المخزون":
-"إضافة للسلة"}
-
-</button>
-
 `;
+
+card.appendChild(button);
 
 box.appendChild(card);
 
@@ -1297,47 +1501,34 @@ box.appendChild(card);
 }
 
 
-/* CART */
+/* =========================
+   CART
+========================= */
 
 function addToCart(id){
 
 const product =
 allProducts.find(
-p=>String(p.id)===String(id)
+p =>
+String(p.id) ===
+String(id)
 );
 
 if(!product){
-return;
-}
-
-const existing =
-cart.find(
-p=>String(p.id)===String(id)
-);
-
-if(existing){
-
-if(
-existing.qty <
-Number(product.stock||0)
-){
-
-existing.qty++;
-
-}else{
 
 showMessage(
-"لا يمكن تجاوز المخزون",
+"المنتج غير موجود",
 "error"
 );
 
+return;
+
 }
 
-}else{
+const stock =
+Number(product.stock || 0);
 
-if(
-Number(product.stock||0)<=0
-){
+if(stock <= 0){
 
 showMessage(
 "المنتج غير متاح",
@@ -1348,13 +1539,41 @@ return;
 
 }
 
+const existing =
+cart.find(
+p =>
+String(p.id) ===
+String(id)
+);
+
+if(existing){
+
+if(
+existing.qty < stock
+){
+
+existing.qty++;
+
+}
+else{
+
+showMessage(
+"لا يمكن تجاوز المخزون",
+"error"
+);
+
+}
+
+}
+else{
+
 cart.push({
 
 id:product.id,
 
 name:product.name,
 
-price:Number(product.price||0),
+price:Number(product.price || 0),
 
 qty:1
 
@@ -1376,7 +1595,7 @@ document.getElementById(
 
 if(!cart.length){
 
-box.innerHTML=
+box.innerHTML =
 "لا توجد منتجات";
 
 updateTotals();
@@ -1385,8 +1604,7 @@ return;
 
 }
 
-box.innerHTML="";
-
+box.innerHTML = "";
 
 cart.forEach(
 (item,index)=>{
@@ -1396,44 +1614,67 @@ document.createElement(
 "div"
 );
 
-div.className=
+div.className =
 "cart-item";
 
-div.innerHTML=`
+const info =
+document.createElement(
+"div"
+);
 
-<div>
+info.innerHTML = `
 <strong>
 ${escapeHtml(item.name)}
 </strong>
-
 <br>
-
 ${item.price} جنيه
-
-</div>
-
-<input
-type="number"
-min="1"
-value="${item.qty}"
-onchange="
-changeCartQty(
-${index},
-this.value
-)
-">
-
-<button
-class="remove"
-onclick="
-removeFromCart(${index})
-">
-
-حذف
-
-</button>
-
 `;
+
+const input =
+document.createElement(
+"input"
+);
+
+input.type =
+"number";
+
+input.min =
+"1";
+
+input.value =
+item.qty;
+
+input.onchange =
+function(){
+
+changeCartQty(
+index,
+this.value
+);
+
+};
+
+const remove =
+document.createElement(
+"button"
+);
+
+remove.className =
+"remove";
+
+remove.textContent =
+"حذف";
+
+remove.onclick =
+function(){
+
+removeFromCart(index);
+
+};
+
+div.appendChild(info);
+div.appendChild(input);
+div.appendChild(remove);
 
 box.appendChild(div);
 
@@ -1449,12 +1690,17 @@ index,
 value
 ){
 
+if(!cart[index]){
+return;
+}
+
 const qty =
 Number(value);
 
 const product =
 allProducts.find(
-p=>String(p.id)===
+p =>
+String(p.id) ===
 String(cart[index].id)
 );
 
@@ -1462,25 +1708,27 @@ if(!product){
 return;
 }
 
-if(qty<1){
+const stock =
+Number(product.stock || 0);
 
-cart[index].qty=1;
+if(qty < 1){
 
-}else if(
-qty>Number(product.stock||0)
-){
+cart[index].qty = 1;
 
-cart[index].qty=
-Number(product.stock||0);
+}
+else if(qty > stock){
+
+cart[index].qty = stock;
 
 showMessage(
 "الكمية أكبر من المخزون",
 "error"
 );
 
-}else{
+}
+else{
 
-cart[index].qty=qty;
+cart[index].qty = qty;
 
 }
 
@@ -1498,7 +1746,9 @@ renderCart();
 }
 
 
-/* TOTAL */
+/* =========================
+   TOTALS
+========================= */
 
 function updateTotals(){
 
@@ -1506,51 +1756,58 @@ const service =
 Number(
 document.getElementById(
 "servicePrice"
-).value||0
+).value || 0
 );
 
 const products =
 cart.reduce(
 (sum,item)=>
-sum+
-item.price*item.qty,
+sum +
+Number(item.price || 0) *
+Number(item.qty || 0),
 0
 );
 
+const total =
+service + products;
+
 document.getElementById(
 "serviceTotalDisplay"
-).innerText=
+).innerText =
 service;
 
 document.getElementById(
 "productsTotalDisplay"
-).innerText=
+).innerText =
 products;
 
 document.getElementById(
 "invoiceTotalDisplay"
-).innerText=
-service+products;
+).innerText =
+total;
 
 }
 
 
 document.addEventListener(
 "input",
-e=>{
+function(e){
 
 if(
-e.target.id==="servicePrice"
+e.target.id === "servicePrice"
 ){
 
 updateTotals();
 
 }
 
-});
+}
+);
 
 
-/* CREATE INVOICE */
+/* =========================
+   CREATE INVOICE
+========================= */
 
 async function createInvoice(){
 
@@ -1575,9 +1832,8 @@ const servicePrice =
 Number(
 document.getElementById(
 "servicePrice"
-).value||0
+).value || 0
 );
-
 
 if(!phone){
 
@@ -1590,6 +1846,27 @@ return;
 
 }
 
+if(!service){
+
+showMessage(
+"اختر نوع الخدمة",
+"error"
+);
+
+return;
+
+}
+
+if(servicePrice < 0){
+
+showMessage(
+"مبلغ الخدمة غير صحيح",
+"error"
+);
+
+return;
+
+}
 
 const result =
 await api(
@@ -1609,21 +1886,24 @@ products:cart
 }
 );
 
-
 if(!result.success){
 
 throw new Error(
-result.message
+result.message ||
+"تعذر حفظ الفاتورة"
 );
 
 }
 
-
 showMessage(
-"تم حفظ الفاتورة ✅"
+"تم حفظ الفاتورة بنجاح ✅"
 );
 
-cart=[];
+cart = [];
+
+renderCart();
+
+await loadProducts();
 
 await loadDashboard();
 
@@ -1631,6 +1911,158 @@ setTimeout(
 goHome,
 800
 );
+
+}
+catch(error){
+
+console.error(error);
+
+showMessage(
+error.message,
+"error"
+);
+
+}
+
+}
+
+
+/* =========================
+   SALES
+========================= */
+
+async function openSalesPage(){
+
+openPage("salesPage");
+
+try{
+
+const result =
+await api(
+"getInvoices"
+);
+
+if(!result.success){
+
+throw new Error(
+result.message ||
+"تعذر تحميل الفواتير"
+);
+
+}
+
+const invoices =
+result.data || [];
+
+const today =
+getToday();
+
+const data =
+invoices.filter(
+invoice =>
+getDateOnly(invoice.date) ===
+today
+);
+
+const sales =
+data.reduce(
+(sum,item)=>
+sum +
+Number(item.total || 0),
+0
+);
+
+document.getElementById(
+"salesInvoiceCount"
+).innerText =
+data.length;
+
+document.getElementById(
+"salesTodayTotal"
+).innerText =
+sales;
+
+const table =
+document.getElementById(
+"salesTable"
+);
+
+table.innerHTML = "";
+
+data.forEach(
+item=>{
+
+let products = "-";
+
+if(
+Array.isArray(item.products) &&
+item.products.length
+){
+
+products =
+item.products
+.map(
+p =>
+`${escapeHtml(p.name)} × ${p.qty}`
+)
+.join("<br>");
+
+}
+
+table.innerHTML += `
+<tr>
+
+<td>
+${formatDate(item.date)}
+</td>
+
+<td>
+${escapeHtml(
+item.customerName || ""
+)}
+</td>
+
+<td>
+${escapeHtml(
+item.phone || ""
+)}
+</td>
+
+<td>
+${escapeHtml(
+item.service || ""
+)}
+<br>
+${Number(item.servicePrice || 0)} جنيه
+</td>
+
+<td>
+${products}
+</td>
+
+<td>
+<strong>
+${Number(item.total || 0)}
+</strong>
+جنيه
+</td>
+
+</tr>
+`;
+
+});
+
+if(!data.length){
+
+table.innerHTML = `
+<tr>
+<td colspan="6">
+لا توجد فواتير اليوم
+</td>
+</tr>
+`;
+
+}
 
 }
 catch(error){
@@ -1645,120 +2077,9 @@ error.message,
 }
 
 
-/* SALES */
-
-async function openSalesPage(){
-
-openPage("salesPage");
-
-const result =
-await api(
-"getInvoices"
-);
-
-const invoices =
-result.data||[];
-
-const today =
-getToday();
-
-const data =
-invoices.filter(
-i=>getDateOnly(i.date)===today
-);
-
-const sales =
-data.reduce(
-(s,i)=>s+Number(i.total||0),
-0
-);
-
-document.getElementById(
-"salesInvoiceCount"
-).innerText=
-data.length;
-
-document.getElementById(
-"salesTodayTotal"
-).innerText=
-sales;
-
-const table =
-document.getElementById(
-"salesTable"
-);
-
-table.innerHTML="";
-
-
-data.forEach(
-item=>{
-
-let products="-";
-
-if(
-item.products &&
-item.products.length
-){
-
-products=
-item.products
-.map(
-p=>
-`${escapeHtml(p.name)}
-× ${p.qty}`
-)
-.join("<br>");
-
-}
-
-table.innerHTML+=`
-
-<tr>
-
-<td>${formatDate(item.date)}</td>
-
-<td>${escapeHtml(item.customerName||"")}</td>
-
-<td>${escapeHtml(item.phone||"")}</td>
-
-<td>
-${escapeHtml(item.service||"")}
-<br>
-${item.servicePrice||0} جنيه
-</td>
-
-<td>${products}</td>
-
-<td>
-<strong>${item.total}</strong>
-جنيه
-</td>
-
-</tr>
-
-`;
-
-});
-
-
-if(!data.length){
-
-table.innerHTML=
-`
-<tr>
-<td colspan="6">
-لا توجد فواتير اليوم
-</td>
-</tr>
-`;
-
-}
-
-}
-
-
-/* EXPENSES */
+/* =========================
+   EXPENSES
+========================= */
 
 async function openExpensesPage(){
 
@@ -1771,6 +2092,8 @@ await loadExpenses();
 
 async function addExpense(){
 
+try{
+
 const name =
 document.getElementById(
 "expenseName"
@@ -1780,10 +2103,10 @@ const amount =
 Number(
 document.getElementById(
 "expenseAmount"
-).value||0
+).value || 0
 );
 
-if(!name||amount<=0){
+if(!name || amount <= 0){
 
 showMessage(
 "اكتب اسم المصروف والمبلغ",
@@ -1797,27 +2120,27 @@ return;
 const result =
 await api(
 "addExpense",
-{name,amount}
+{
+name,
+amount
+}
 );
 
 if(!result.success){
 
-showMessage(
-result.message,
-"error"
+throw new Error(
+result.message
 );
-
-return;
 
 }
 
 document.getElementById(
 "expenseName"
-).value="";
+).value = "";
 
 document.getElementById(
 "expenseAmount"
-).value="";
+).value = "";
 
 showMessage(
 "تم إضافة المصروف ✅"
@@ -1828,35 +2151,59 @@ await loadExpenses();
 await loadDashboard();
 
 }
+catch(error){
+
+showMessage(
+error.message,
+"error"
+);
+
+}
+
+}
 
 
 async function loadExpenses(){
+
+try{
 
 const result =
 await api(
 "getExpenses"
 );
 
+if(!result.success){
+
+throw new Error(
+result.message
+);
+
+}
+
 const expenses =
-result.data||[];
+result.data || [];
 
 const today =
 getToday();
 
 const data =
 expenses.filter(
-e=>getDateOnly(e.date)===today
+expense =>
+getDateOnly(expense.date) ===
+today
 );
 
 const total =
 data.reduce(
-(s,e)=>s+Number(e.amount||0),
+(sum,item)=>
+sum +
+Number(item.amount || 0),
 0
 );
 
 document.getElementById(
 "todayExpensesTotal"
-).innerText=
+).innerText =
 total;
 
 const table =
@@ -1864,31 +2211,34 @@ document.getElementById(
 "expenseTable"
 );
 
-table.innerHTML="";
+table.innerHTML = "";
 
 data.forEach(
 item=>{
 
-table.innerHTML+=`
-
+table.innerHTML += `
 <tr>
 
-<td>${formatDate(item.date)}</td>
+<td>
+${formatDate(item.date)}
+</td>
 
-<td>${escapeHtml(item.name)}</td>
+<td>
+${escapeHtml(item.name)}
+</td>
 
-<td>${item.amount} جنيه</td>
+<td>
+${Number(item.amount || 0)} جنيه
+</td>
 
 </tr>
-
 `;
 
 });
 
 if(!data.length){
 
-table.innerHTML=
-`
+table.innerHTML = `
 <tr>
 <td colspan="3">
 لا توجد مصروفات اليوم
@@ -1899,9 +2249,21 @@ table.innerHTML=
 }
 
 }
+catch(error){
+
+showMessage(
+error.message,
+"error"
+);
+
+}
+
+}
 
 
-/* CUSTOMERS */
+/* =========================
+   CUSTOMERS
+========================= */
 
 function openCustomersPage(){
 
@@ -1913,6 +2275,8 @@ openPage(
 
 
 async function searchCustomer(){
+
+try{
 
 const phone =
 document.getElementById(
@@ -1936,8 +2300,16 @@ await api(
 {phone}
 );
 
+if(!result.success){
+
+throw new Error(
+result.message
+);
+
+}
+
 const data =
-result.data||[];
+result.data || [];
 
 const box =
 document.getElementById(
@@ -1946,8 +2318,8 @@ document.getElementById(
 
 if(!data.length){
 
-box.innerHTML=
-"<p>لا يوجد سجل.</p>";
+box.innerHTML =
+"<p>لا يوجد سجل لهذا العميل.</p>";
 
 return;
 
@@ -1955,11 +2327,13 @@ return;
 
 const total =
 data.reduce(
-(s,i)=>s+Number(i.total||0),
+(sum,item)=>
+sum +
+Number(item.total || 0),
 0
 );
 
-let html=`
+let html = `
 
 <div class="summary">
 
@@ -1978,46 +2352,59 @@ let html=`
 
 <table>
 
+<thead>
+
 <tr>
 <th>التاريخ</th>
 <th>الخدمة</th>
 <th>المنتجات</th>
 <th>الإجمالي</th>
 </tr>
+
+</thead>
+
+<tbody>
 `;
 
 data.forEach(
 item=>{
 
-let products="-";
+let products = "-";
 
 if(
-item.products &&
+Array.isArray(item.products) &&
 item.products.length
 ){
 
-products=
+products =
 item.products
 .map(
-p=>
-`${escapeHtml(p.name)}
-× ${p.qty}`
+p =>
+`${escapeHtml(p.name)} × ${p.qty}`
 )
 .join("<br>");
 
 }
 
-html+=`
+html += `
 
 <tr>
 
-<td>${formatDate(item.date)}</td>
+<td>
+${formatDate(item.date)}
+</td>
 
-<td>${escapeHtml(item.service)}</td>
+<td>
+${escapeHtml(item.service || "")}
+</td>
 
-<td>${products}</td>
+<td>
+${products}
+</td>
 
-<td>${item.total} جنيه</td>
+<td>
+${Number(item.total || 0)} جنيه
+</td>
 
 </tr>
 
@@ -2025,15 +2412,30 @@ html+=`
 
 });
 
-html+="</table>";
+html += `
+</tbody>
+</table>
+`;
 
-box.innerHTML=
+box.innerHTML =
 html;
+
+}
+catch(error){
+
+showMessage(
+error.message,
+"error"
+);
+
+}
 
 }
 
 
-/* STOCK */
+/* =========================
+   STOCK
+========================= */
 
 async function openStockPage(){
 
@@ -2064,19 +2466,19 @@ result.message
 }
 
 allProducts =
-result.data||[];
+result.data || [];
 
 const table =
 document.getElementById(
 "stockTable"
 );
 
-table.innerHTML="";
+table.innerHTML = "";
 
 allProducts.forEach(
 product=>{
 
-table.innerHTML+=`
+table.innerHTML += `
 
 <tr>
 
@@ -2085,7 +2487,9 @@ ${escapeHtml(product.name)}
 </td>
 
 <td>
-${escapeHtml(product.category||"أخرى")}
+${escapeHtml(
+product.category || "أخرى"
+)}
 </td>
 
 <td>
@@ -2094,9 +2498,9 @@ ${escapeHtml(product.category||"أخرى")}
 class="price-input"
 type="number"
 min="0"
-data-id="${product.id}"
+data-id="${escapeHtml(product.id)}"
 data-field="price"
-value="${Number(product.price||0)}"
+value="${Number(product.price || 0)}"
 >
 
 </td>
@@ -2107,18 +2511,29 @@ value="${Number(product.price||0)}"
 class="stock-input"
 type="number"
 min="0"
-data-id="${product.id}"
+data-id="${escapeHtml(product.id)}"
 data-field="stock"
-value="${Number(product.stock||0)}"
+value="${Number(product.stock || 0)}"
 >
 
 </td>
 
 </tr>
-
 `;
 
 });
+
+if(!allProducts.length){
+
+table.innerHTML = `
+<tr>
+<td colspan="4">
+لا توجد منتجات
+</td>
+</tr>
+`;
+
+}
 
 }
 catch(error){
@@ -2135,12 +2550,14 @@ error.message,
 
 async function saveStock(){
 
+try{
+
 const rows =
 document.querySelectorAll(
 "#stockTable tr"
 );
 
-const products=[];
+const products = [];
 
 rows.forEach(
 row=>{
@@ -2155,26 +2572,32 @@ row.querySelector(
 ".stock-input"
 );
 
-if(!priceInput||!stockInput){
+if(
+!priceInput ||
+!stockInput
+){
+
 return;
+
 }
 
 products.push({
 
 id:priceInput.dataset.id,
 
-price:Number(
-priceInput.value||0
+price:
+Number(
+priceInput.value || 0
 ),
 
-stock:Number(
-stockInput.value||0
+stock:
+Number(
+stockInput.value || 0
 )
 
 });
 
 });
-
 
 const result =
 await api(
@@ -2184,12 +2607,9 @@ await api(
 
 if(!result.success){
 
-showMessage(
-result.message,
-"error"
+throw new Error(
+result.message
 );
-
-return;
 
 }
 
@@ -2200,11 +2620,25 @@ showMessage(
 await loadStock();
 
 }
+catch(error){
+
+showMessage(
+error.message,
+"error"
+);
+
+}
+
+}
 
 
-/* ADD PRODUCT */
+/* =========================
+   ADD PRODUCT
+========================= */
 
 async function addProduct(){
+
+try{
 
 const name =
 document.getElementById(
@@ -2215,14 +2649,14 @@ const price =
 Number(
 document.getElementById(
 "newProductPrice"
-).value||0
+).value || 0
 );
 
 const stock =
 Number(
 document.getElementById(
 "newProductStock"
-).value||0
+).value || 0
 );
 
 const category =
@@ -2234,6 +2668,17 @@ if(!name){
 
 showMessage(
 "اكتب اسم المنتج",
+"error"
+);
+
+return;
+
+}
+
+if(price < 0 || stock < 0){
+
+showMessage(
+"السعر أو الكمية غير صحيحة",
 "error"
 );
 
@@ -2254,26 +2699,23 @@ category
 
 if(!result.success){
 
-showMessage(
-result.message,
-"error"
+throw new Error(
+result.message
 );
-
-return;
 
 }
 
 document.getElementById(
 "newProductName"
-).value="";
+).value = "";
 
 document.getElementById(
 "newProductPrice"
-).value="";
+).value = "";
 
 document.getElementById(
 "newProductStock"
-).value="";
+).value = "";
 
 showMessage(
 "تم إضافة المنتج ✅"
@@ -2282,9 +2724,21 @@ showMessage(
 await loadStock();
 
 }
+catch(error){
+
+showMessage(
+error.message,
+"error"
+);
+
+}
+
+}
 
 
-/* SUPPLIERS */
+/* =========================
+   SUPPLIERS
+========================= */
 
 async function openSuppliersPage(){
 
@@ -2300,6 +2754,8 @@ await preparePurchaseForm();
 
 
 async function addSupplier(){
+
+try{
 
 const name =
 document.getElementById(
@@ -2339,26 +2795,23 @@ notes
 
 if(!result.success){
 
-showMessage(
-result.message,
-"error"
+throw new Error(
+result.message
 );
-
-return;
 
 }
 
 document.getElementById(
 "supplierName"
-).value="";
+).value = "";
 
 document.getElementById(
 "supplierPhone"
-).value="";
+).value = "";
 
 document.getElementById(
 "supplierNotes"
-).value="";
+).value = "";
 
 showMessage(
 "تم إضافة المورد ✅"
@@ -2369,48 +2822,72 @@ await loadSuppliers();
 await preparePurchaseForm();
 
 }
+catch(error){
+
+showMessage(
+error.message,
+"error"
+);
+
+}
+
+}
 
 
 async function loadSuppliers(){
+
+try{
 
 const result =
 await api(
 "getSuppliers"
 );
 
+if(!result.success){
+
+throw new Error(
+result.message
+);
+
+}
+
 const suppliers =
-result.data||[];
+result.data || [];
 
 const table =
 document.getElementById(
 "suppliersTable"
 );
 
-table.innerHTML="";
+table.innerHTML = "";
 
 suppliers.forEach(
 item=>{
 
-table.innerHTML+=`
+table.innerHTML += `
 
 <tr>
 
-<td>${escapeHtml(item.name)}</td>
+<td>
+${escapeHtml(item.name)}
+</td>
 
-<td>${escapeHtml(item.phone||"")}</td>
+<td>
+${escapeHtml(item.phone || "")}
+</td>
 
-<td>${escapeHtml(item.notes||"")}</td>
+<td>
+${escapeHtml(item.notes || "")}
+</td>
 
 </tr>
-
 `;
 
 });
 
 if(!suppliers.length){
 
-table.innerHTML=
-`
+table.innerHTML = `
 <tr>
 <td colspan="3">
 لا يوجد موردين
@@ -2421,32 +2898,58 @@ table.innerHTML=
 }
 
 }
+catch(error){
 
+showMessage(
+error.message,
+"error"
+);
+
+}
+
+}
+
+
+/* =========================
+   PURCHASE FORM
+========================= */
 
 async function preparePurchaseForm(){
+
+try{
 
 const productsResult =
 await api(
 "getProducts"
 );
 
+if(
+!productsResult.success
+){
+
+throw new Error(
+productsResult.message
+);
+
+}
+
 allProducts =
-productsResult.data||[];
+productsResult.data || [];
 
 const productSelect =
 document.getElementById(
 "purchaseProduct"
 );
 
-productSelect.innerHTML=
+productSelect.innerHTML =
 '<option value="">اختر المنتج</option>';
 
 allProducts.forEach(
 product=>{
 
-productSelect.innerHTML+=`
+productSelect.innerHTML += `
 
-<option value="${product.id}">
+<option value="${escapeHtml(product.id)}">
 ${escapeHtml(product.name)}
 </option>
 `;
@@ -2459,23 +2962,33 @@ await api(
 "getSuppliers"
 );
 
+if(
+!suppliersResult.success
+){
+
+throw new Error(
+suppliersResult.message
+);
+
+}
+
 const suppliers =
-suppliersResult.data||[];
+suppliersResult.data || [];
 
 const supplierSelect =
 document.getElementById(
 "purchaseSupplier"
 );
 
-supplierSelect.innerHTML=
+supplierSelect.innerHTML =
 '<option value="">اختر المورد</option>';
 
 suppliers.forEach(
 supplier=>{
 
-supplierSelect.innerHTML+=`
+supplierSelect.innerHTML += `
 
-<option value="${supplier.id}">
+<option value="${escapeHtml(supplier.id)}">
 ${escapeHtml(supplier.name)}
 </option>
 `;
@@ -2483,9 +2996,25 @@ ${escapeHtml(supplier.name)}
 });
 
 }
+catch(error){
 
+showMessage(
+error.message,
+"error"
+);
+
+}
+
+}
+
+
+/* =========================
+   PURCHASE
+========================= */
 
 async function addPurchase(){
+
+try{
 
 const productId =
 document.getElementById(
@@ -2501,14 +3030,14 @@ const quantity =
 Number(
 document.getElementById(
 "purchaseQuantity"
-).value||0
+).value || 0
 );
 
 const unitPrice =
 Number(
 document.getElementById(
 "purchaseUnitPrice"
-).value||0
+).value || 0
 );
 
 if(!productId){
@@ -2522,7 +3051,7 @@ return;
 
 }
 
-if(quantity<=0){
+if(quantity <= 0){
 
 showMessage(
 "اكتب الكمية",
@@ -2533,9 +3062,21 @@ return;
 
 }
 
+if(unitPrice < 0){
+
+showMessage(
+"سعر الشراء غير صحيح",
+"error"
+);
+
+return;
+
+}
+
 const product =
 allProducts.find(
-p=>String(p.id)===
+p =>
+String(p.id) ===
 String(productId)
 );
 
@@ -2548,7 +3089,8 @@ const supplierName =
 supplierSelect
 .options[
 supplierSelect.selectedIndex
-]?.text||"";
+]
+?.text || "";
 
 const result =
 await api(
@@ -2558,7 +3100,7 @@ await api(
 productId,
 
 product:
-product?.name||"",
+product?.name || "",
 
 supplierId,
 
@@ -2574,12 +3116,9 @@ unitPrice
 
 if(!result.success){
 
-showMessage(
-result.message,
-"error"
+throw new Error(
+result.message
 );
-
-return;
 
 }
 
@@ -2589,16 +3128,30 @@ showMessage(
 
 document.getElementById(
 "purchaseQuantity"
-).value="";
+).value = "";
 
 document.getElementById(
 "purchaseUnitPrice"
-).value="";
+).value = "";
+
+await preparePurchaseForm();
+
+}
+catch(error){
+
+showMessage(
+error.message,
+"error"
+);
+
+}
 
 }
 
 
-/* REPORTS */
+/* =========================
+   REPORTS
+========================= */
 
 async function openReportsPage(){
 
@@ -2611,11 +3164,13 @@ getToday();
 
 document.getElementById(
 "reportFrom"
-).value=today;
+).value =
+today;
 
 document.getElementById(
 "reportTo"
-).value=today;
+).value =
+today;
 
 await loadReport();
 
@@ -2623,6 +3178,8 @@ await loadReport();
 
 
 async function loadReport(){
+
+try{
 
 const from =
 document.getElementById(
@@ -2634,7 +3191,7 @@ document.getElementById(
 "reportTo"
 ).value;
 
-if(!from||!to){
+if(!from || !to){
 
 showMessage(
 "اختار التاريخ",
@@ -2645,7 +3202,7 @@ return;
 
 }
 
-if(from>to){
+if(from > to){
 
 showMessage(
 "تاريخ البداية أكبر من النهاية",
@@ -2655,12 +3212,6 @@ showMessage(
 return;
 
 }
-
-
-/*
- * هنا نستخدم البيانات الموجودة في الموقع
- * ونحسب التقرير حسب الفترة.
- */
 
 const invoicesResult =
 await api(
@@ -2672,11 +3223,31 @@ await api(
 "getExpenses"
 );
 
+if(
+!invoicesResult.success
+){
+
+throw new Error(
+invoicesResult.message
+);
+
+}
+
+if(
+!expensesResult.success
+){
+
+throw new Error(
+expensesResult.message
+);
+
+}
+
 const invoices =
-invoicesResult.data||[];
+invoicesResult.data || [];
 
 const expenses =
-expensesResult.data||[];
+expensesResult.data || [];
 
 const filteredInvoices =
 invoices.filter(
@@ -2685,7 +3256,10 @@ item=>{
 const date =
 getDateOnly(item.date);
 
-return date>=from&&date<=to;
+return (
+date >= from &&
+date <= to
+);
 
 });
 
@@ -2696,96 +3270,69 @@ item=>{
 const date =
 getDateOnly(item.date);
 
-return date>=from&&date<=to;
+return (
+date >= from &&
+date <= to
+);
 
 });
 
 const sales =
 filteredInvoices.reduce(
-(s,i)=>s+Number(i.total||0),
+(sum,item)=>
+sum +
+Number(item.total || 0),
 0
 );
 
 const expenseTotal =
 filteredExpenses.reduce(
-(s,i)=>s+Number(i.amount||0),
+(sum,item)=>
+sum +
+Number(item.amount || 0),
 0
 );
 
 document.getElementById(
 "reportInvoices"
-).innerText=
+).innerText =
 filteredInvoices.length;
 
 document.getElementById(
 "reportSales"
-).innerText=
+).innerText =
 sales;
 
 document.getElementById(
 "reportExpenses"
-).innerText=
+).innerText =
 expenseTotal;
 
 document.getElementById(
 "reportNet"
-).innerText=
-sales-expenseTotal;
-
-}
-
-
-/* DASHBOARD */
-
-async function loadDashboard(){
-
-try{
-
-const result =
-await api(
-"getDashboard"
-);
-
-if(!result.success){
-return;
-}
-
-const data =
-result.data||{};
-
-document.getElementById(
-"invoiceCount"
-).innerText=
-data.invoiceCount||0;
-
-document.getElementById(
-"salesTotal"
-).innerText=
-data.sales||0;
-
-document.getElementById(
-"expenseTotal"
-).innerText=
-data.expenses||0;
-
-document.getElementById(
-"netTotal"
-).innerText=
-data.net||0;
+).innerText =
+sales - expenseTotal;
 
 }
 catch(error){
 
-console.error(error);
+showMessage(
+error.message,
+"error"
+);
 
 }
 
 }
 
 
-/* FINISH DAY */
+/* =========================
+   FINISH DAY
+========================= */
 
 async function confirmFinishDay(){
+
+try{
 
 const status =
 await api(
@@ -2813,7 +3360,9 @@ confirm(
 );
 
 if(!confirmed){
+
 return;
+
 }
 
 const result =
@@ -2823,12 +3372,9 @@ await api(
 
 if(!result.success){
 
-showMessage(
-result.message,
-"error"
+throw new Error(
+result.message
 );
-
-return;
 
 }
 
@@ -2839,20 +3385,36 @@ alert(
 await loadDashboard();
 
 }
+catch(error){
+
+showMessage(
+error.message,
+"error"
+);
+
+}
 
 
-/* DATE */
+/* =========================
+   DATE
+========================= */
 
 function getToday(){
 
 const d =
 new Date();
 
-return `${d.getFullYear()}-${
-String(d.getMonth()+1).padStart(2,"0")
-}-${
-String(d.getDate()).padStart(2,"0")
-}`;
+return (
+d.getFullYear() +
+"-" +
+String(
+d.getMonth()+1
+).padStart(2,"0") +
+"-" +
+String(
+d.getDate()
+).padStart(2,"0")
+);
 
 }
 
@@ -2860,21 +3422,35 @@ String(d.getDate()).padStart(2,"0")
 function getDateOnly(value){
 
 if(!value){
+
 return "";
+
 }
 
 const d =
 new Date(value);
 
-if(isNaN(d.getTime())){
+if(
+isNaN(
+d.getTime()
+)
+){
+
 return "";
+
 }
 
-return `${d.getFullYear()}-${
-String(d.getMonth()+1).padStart(2,"0")
-}-${
-String(d.getDate()).padStart(2,"0")
-}`;
+return (
+d.getFullYear() +
+"-" +
+String(
+d.getMonth()+1
+).padStart(2,"0") +
+"-" +
+String(
+d.getDate()
+).padStart(2,"0")
+);
 
 }
 
@@ -2882,14 +3458,22 @@ String(d.getDate()).padStart(2,"0")
 function formatDate(value){
 
 if(!value){
+
 return "";
+
 }
 
 const d =
 new Date(value);
 
-if(isNaN(d.getTime())){
+if(
+isNaN(
+d.getTime()
+)
+){
+
 return value;
+
 }
 
 return d.toLocaleString(
@@ -2899,28 +3483,53 @@ return d.toLocaleString(
 }
 
 
-/* ESCAPE */
+/* =========================
+   ESCAPE HTML
+========================= */
 
 function escapeHtml(value){
 
 return String(
-value??""
+value ?? ""
 )
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
+.replace(
+/&/g,
+"&amp;"
+)
+.replace(
+/</g,
+"&lt;"
+)
+.replace(
+/>/g,
+"&gt;"
+)
+.replace(
+/"/g,
+"&quot;"
+)
+.replace(
+/'/g,
+"&#039;"
+);
 
 }
 
 
-/* START */
+/* =========================
+   START
+========================= */
 
-loadDashboard();
+document.addEventListener(
+"DOMContentLoaded",
+async function(){
+
+await loadDashboard();
+
+}
+);
 
 </script>
 
 </body>
-
 </html>
