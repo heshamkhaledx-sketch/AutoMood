@@ -1520,11 +1520,6 @@ async function api(
 
     });
 
-  params.append(
-    "_",
-    String(Date.now())
-  );
-
   const response =
     await fetch(
       API_URL +
@@ -1532,8 +1527,7 @@ async function api(
       params.toString(),
       {
         method:"GET",
-        cache:"no-store",
-        redirect:"follow"
+        cache:"no-store"
       }
     );
 
@@ -1545,28 +1539,260 @@ async function api(
 
   }
 
-  const text =
-    await response.text();
+  return response.json();
+
+}
+
+
+/* =========================================================
+ NAVIGATION
+========================================================= */
+
+const titles = {
+
+  dashboard:"لوحة التحكم",
+  invoice:"فاتورة جديدة",
+  invoices:"الفواتير",
+  customers:"العملاء",
+  stock:"المخزن",
+  purchases:"المشتريات",
+  suppliers:"الموردين",
+  expenses:"المصروفات",
+  reports:"التقارير",
+  days:"الأيام"
+
+};
+
+
+document
+.querySelectorAll(".nav button")
+.forEach(button=>{
+
+  button.addEventListener(
+    "click",
+    ()=>{
+
+      openSection(
+        button.dataset.section
+      );
+
+    }
+  );
+
+});
+
+
+function openSection(section){
+
+  document
+    .querySelectorAll(".section")
+    .forEach(el=>{
+
+      el.classList
+        .remove("active");
+
+    });
+
+
+  const target =
+    $(section);
+
+
+  if(target){
+
+    target.classList
+      .add("active");
+
+  }
+
+
+  document
+    .querySelectorAll(".nav button")
+    .forEach(btn=>{
+
+      btn.classList.toggle(
+        "active",
+        btn.dataset.section === section
+      );
+
+    });
+
+
+  $("pageTitle")
+    .textContent =
+    titles[section] ||
+    "AUTO MOOD";
+
+
+  $("sidebar")
+    .classList
+    .remove("open");
+
+
+  if(section==="dashboard"){
+    loadDashboard();
+  }
+
+  if(section==="invoice"){
+    loadInvoiceData();
+  }
+
+  if(section==="invoices"){
+    loadInvoices();
+  }
+
+  if(section==="stock"){
+    loadProducts();
+  }
+
+  if(section==="suppliers"){
+    loadSuppliers();
+  }
+
+  if(section==="purchases"){
+    loadPurchaseData();
+  }
+
+  if(section==="expenses"){
+    loadExpenses();
+  }
+
+  if(section==="reports"){
+    setDefaultReportDates();
+  }
+
+  if(section==="days"){
+    loadDays();
+  }
+
+}
+
+
+function toggleSidebar(){
+
+  $("sidebar")
+    .classList
+    .toggle("open");
+
+}
+
+
+/* =========================================================
+ INITIAL LOAD
+========================================================= */
+
+async function init(){
 
   try{
 
-    return JSON.parse(text);
+    showLoading();
+
+    await api("init");
+
+    await Promise.all([
+
+      loadServices(),
+      loadProducts(),
+      loadSuppliers()
+
+    ]);
+
+    await loadDashboard();
+
+    $("connectionStatus")
+      .textContent =
+      "متصل بقاعدة البيانات ✓";
 
   }catch(error){
 
-    console.error(
-      "API response:",
-      text
+    console.error(error);
+
+    $("connectionStatus")
+      .textContent =
+      "تعذر الاتصال";
+
+    toast(
+      error.message ||
+      "خطأ في الاتصال",
+      "error"
     );
 
-    throw new Error(
-      "الخادم أرجع استجابة غير صحيحة. تأكد من نشر أحدث إصدار من Google Apps Script."
-    );
+  }finally{
+
+    showLoading(false);
 
   }
 
 }
 
+
+/* =========================================================
+ SERVICES
+========================================================= */
+
+async function loadServices(){
+
+  const result =
+    await api(
+      "getServices"
+    );
+
+  if(!result.success){
+
+    throw new Error(
+      result.message
+    );
+
+  }
+
+  state.services =
+    result.data || [];
+
+  renderServices();
+
+}
+
+
+function renderServices(){
+
+  const select =
+    $("invoiceService");
+
+  select.innerHTML =
+    '<option value="">اختر نوع الخدمة</option>';
+
+
+  state.services
+    .forEach(service=>{
+
+      const option =
+        document.createElement(
+          "option"
+        );
+
+      option.value =
+        service.name;
+
+      /*
+       مهم:
+       اسم الخدمة فقط بدون السعر
+      */
+
+      option.textContent =
+        service.name;
+
+      select.appendChild(
+        option
+      );
+
+    });
+
+}
+
+
+/* =========================================================
+ PRODUCTS
+========================================================= */
 
 async function loadProducts(){
 
@@ -1990,5 +2216,2517 @@ async function saveStock(){
 
 }
 
+/* =========================================================
+ INVOICE
+========================================================= */
 
->
+async function loadInvoiceData(){
+
+  if(!state.products.length){
+
+    await loadProducts();
+
+  }
+
+  if(!state.services.length){
+
+    await loadServices();
+
+  }
+
+  renderServices();
+
+}
+
+
+function addInvoiceProduct(){
+
+  const container =
+    $("invoiceProducts");
+
+  const row =
+    document.createElement(
+      "div"
+    );
+
+  row.className =
+    "product-row";
+
+
+  row.innerHTML = `
+
+    <select
+      class="invoice-product">
+
+      <option value="">
+        اختر المنتج
+      </option>
+
+      ${state.products
+        .map(product=>`
+
+          <option
+            value="${escapeAttr(
+              product.id
+            )}">
+
+            ${escapeHtml(
+              product.name
+            )}
+            — متاح
+            ${Number(
+              product.stock || 0
+            )}
+
+          </option>
+
+        `)
+        .join("")}
+
+    </select>
+
+
+    <input
+      class="invoice-qty"
+      type="number"
+      min="1"
+      value="1">
+
+
+    <input
+      class="invoice-price"
+      type="number"
+      readonly
+      value="0">
+
+
+    <button
+      class="remove-product"
+      onclick="
+        this.parentElement.remove();
+        calculateInvoice();
+      ">
+
+      ×
+
+    </button>
+
+  `;
+
+
+  container.appendChild(
+    row
+  );
+
+
+  row
+    .querySelector(
+      ".invoice-product"
+    )
+    .addEventListener(
+      "change",
+      function(){
+
+        const product =
+          state.products.find(
+            p =>
+              String(p.id) ===
+              String(this.value)
+          );
+
+
+        row.querySelector(
+          ".invoice-price"
+        ).value =
+          product
+          ? Number(
+              product.price || 0
+            )
+          : 0;
+
+
+        calculateInvoice();
+
+      }
+    );
+
+
+  row
+    .querySelector(
+      ".invoice-qty"
+    )
+    .addEventListener(
+      "input",
+      calculateInvoice
+    );
+
+}
+
+
+function calculateInvoice(){
+
+  let total = 0;
+
+
+  document
+    .querySelectorAll(
+      ".product-row"
+    )
+    .forEach(row=>{
+
+      const select =
+        row.querySelector(
+          ".invoice-product"
+        );
+
+      const qty =
+        Number(
+          row.querySelector(
+            ".invoice-qty"
+          )?.value || 0
+        );
+
+
+      const product =
+        state.products.find(
+          p =>
+            String(p.id) ===
+            String(select?.value)
+        );
+
+
+      const price =
+        product
+        ? Number(
+            product.price || 0
+          )
+        : 0;
+
+
+      row.querySelector(
+        ".invoice-price"
+      ).value =
+        price;
+
+
+      total +=
+        price * qty;
+
+    });
+
+
+  const servicePrice =
+    Number(
+      $("invoiceServicePrice")
+        .value || 0
+    );
+
+
+  $("invoiceProductTotal")
+    .textContent =
+    money(total);
+
+
+  $("invoiceTotal")
+    .textContent =
+    money(
+      total +
+      servicePrice
+    );
+
+}
+
+
+$("invoiceServicePrice")
+.addEventListener(
+  "input",
+  calculateInvoice
+);
+
+
+async function saveInvoice(){
+
+  const phone =
+    $("invoicePhone")
+      .value
+      .trim();
+
+
+  const customerName =
+    $("invoiceCustomerName")
+      .value
+      .trim();
+
+
+  const service =
+    $("invoiceService")
+      .value;
+
+
+  const servicePrice =
+    Number(
+      $("invoiceServicePrice")
+        .value || 0
+    );
+
+
+  if(!phone){
+
+    toast(
+      "رقم التليفون مطلوب",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if(!service){
+
+    toast(
+      "اختر نوع الخدمة",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const products = [];
+
+
+  document
+    .querySelectorAll(
+      ".product-row"
+    )
+    .forEach(row=>{
+
+      const id =
+        row.querySelector(
+          ".invoice-product"
+        )?.value;
+
+
+      const qty =
+        Number(
+          row.querySelector(
+            ".invoice-qty"
+          )?.value || 0
+        );
+
+
+      if(id && qty > 0){
+
+        const product =
+          state.products.find(
+            p =>
+              String(p.id) ===
+              String(id)
+          );
+
+
+        products.push({
+
+          id,
+
+          name:
+            product?.name ||
+            "",
+
+          qty
+
+        });
+
+      }
+
+    });
+
+
+  try{
+
+    showLoading();
+
+    const result =
+      await api(
+        "createInvoice",
+        {
+          phone,
+          customerName,
+          service,
+          servicePrice,
+          products
+        }
+      );
+
+
+    if(!result.success){
+
+      throw new Error(
+        result.message
+      );
+
+    }
+
+
+    toast(
+      "تم حفظ الفاتورة بنجاح"
+    );
+
+
+    resetInvoice();
+
+    await loadProducts();
+
+    await loadDashboard();
+
+    if(
+      document
+        .getElementById("days")
+        ?.classList
+        .contains("active")
+    ){
+
+      await loadDays();
+
+    }
+
+  }catch(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+}
+
+
+function resetInvoice(){
+
+  $("invoicePhone").value="";
+  $("invoiceCustomerName").value="";
+  $("invoiceService").value="";
+  $("invoiceServicePrice").value="";
+
+  $("invoiceProducts")
+    .innerHTML="";
+
+  $("invoiceProductTotal")
+    .textContent="0";
+
+  $("invoiceTotal")
+    .textContent="0";
+
+}
+
+
+/* =========================================================
+ INVOICES
+========================================================= */
+
+async function loadInvoices(){
+
+  try{
+
+    showLoading();
+
+    const result =
+      await api(
+        "getInvoices"
+      );
+
+
+    if(!result.success){
+
+      throw new Error(
+        result.message
+      );
+
+    }
+
+
+    state.invoices =
+      result.data || [];
+
+
+    renderInvoices();
+
+  }catch(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+}
+
+
+function renderInvoices(){
+
+  const search =
+    $("invoiceSearch")
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  const tbody =
+    $("invoicesTable");
+
+
+  tbody.innerHTML="";
+
+
+  state.invoices
+    .filter(invoice=>{
+
+      if(!search){
+        return true;
+      }
+
+
+      return (
+
+        String(
+          invoice.customerName ||
+          ""
+        )
+        .toLowerCase()
+        .includes(search)
+
+        ||
+
+        String(
+          invoice.phone ||
+          ""
+        )
+        .toLowerCase()
+        .includes(search)
+
+      );
+
+    })
+    .forEach(invoice=>{
+
+      const tr =
+        document.createElement(
+          "tr"
+        );
+
+
+      tr.innerHTML = `
+
+        <td>
+          ${escapeHtml(
+            invoice.id
+          )}
+        </td>
+
+        <td>
+          ${formatDate(
+            invoice.date
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            invoice.customerName ||
+            "-"
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            invoice.phone ||
+            "-"
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            invoice.service ||
+            "-"
+          )}
+        </td>
+
+        <td>
+          ${money(
+            invoice.productTotal
+          )}
+        </td>
+
+        <td>
+          <strong>
+            ${money(
+              invoice.total
+            )}
+          </strong>
+        </td>
+
+      `;
+
+
+      tbody.appendChild(tr);
+
+    });
+
+}
+
+
+/* =========================================================
+ CUSTOMER
+========================================================= */
+
+async function searchCustomer(){
+
+  const phone =
+    $("customerPhone")
+      .value
+      .trim();
+
+
+  if(!phone){
+
+    toast(
+      "اكتب رقم الهاتف",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    showLoading();
+
+    const result =
+      await api(
+        "getCustomerHistory",
+        {
+          phone
+        }
+      );
+
+
+    if(!result.success){
+
+      throw new Error(
+        result.message
+      );
+
+    }
+
+
+    const invoices =
+      result.data || [];
+
+
+    if(!invoices.length){
+
+      $("customerResult")
+        .innerHTML =
+        "لا توجد فواتير لهذا العميل.";
+
+      return;
+
+    }
+
+
+    let total=0;
+
+
+    invoices.forEach(
+      invoice=>{
+
+        total +=
+          Number(
+            invoice.total ||
+            0
+          );
+
+      }
+    );
+
+
+    $("customerResult")
+      .innerHTML = `
+
+        <div class="grid">
+
+          <div class="card">
+
+            <div class="stat-title">
+              عدد الزيارات
+            </div>
+
+            <div
+              class="stat-value blue">
+
+              ${invoices.length}
+
+            </div>
+
+          </div>
+
+
+          <div class="card">
+
+            <div class="stat-title">
+              إجمالي الإنفاق
+            </div>
+
+            <div
+              class="stat-value green">
+
+              ${money(total)}
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th>التاريخ</th>
+                <th>الخدمة</th>
+                <th>المنتجات</th>
+                <th>الإجمالي</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              ${invoices
+                .map(invoice=>`
+
+                  <tr>
+
+                    <td>
+                      ${formatDate(
+                        invoice.date
+                      )}
+                    </td>
+
+                    <td>
+                      ${escapeHtml(
+                        invoice.service
+                      )}
+                    </td>
+
+                    <td>
+                      ${money(
+                        invoice.productTotal
+                      )}
+                    </td>
+
+                    <td>
+
+                      <strong>
+                        ${money(
+                          invoice.total
+                        )}
+                      </strong>
+
+                    </td>
+
+                  </tr>
+
+                `)
+                .join("")}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      `;
+
+
+  }catch(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+}
+
+
+/* =========================================================
+ SUPPLIERS
+========================================================= */
+
+async function loadSuppliers(){
+
+  const result =
+    await api(
+      "getSuppliers"
+    );
+
+
+  if(!result.success){
+
+    throw new Error(
+      result.message
+    );
+
+  }
+
+
+  state.suppliers =
+    result.data || [];
+
+
+  renderSuppliers();
+
+}
+
+
+function renderSuppliers(){
+
+  const tbody =
+    $("suppliersTable");
+
+
+  if(!tbody){
+    return;
+  }
+
+
+  tbody.innerHTML="";
+
+
+  state.suppliers
+    .forEach(supplier=>{
+
+      const tr =
+        document.createElement(
+          "tr"
+        );
+
+
+      tr.innerHTML = `
+
+        <td>
+          ${escapeHtml(
+            supplier.id
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            supplier.name ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            supplier.phone ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            supplier.notes ||
+            ""
+          )}
+        </td>
+
+      `;
+
+
+      tbody.appendChild(tr);
+
+    });
+
+}
+
+
+async function saveSupplier(){
+
+  const name =
+    $("supplierName")
+      .value
+      .trim();
+
+
+  const phone =
+    $("supplierPhone")
+      .value
+      .trim();
+
+
+  const notes =
+    $("supplierNotes")
+      .value
+      .trim();
+
+
+  if(!name){
+
+    toast(
+      "اسم المورد مطلوب",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    showLoading();
+
+    const result =
+      await api(
+        "addSupplier",
+        {
+          name,
+          phone,
+          notes
+        }
+      );
+
+
+    if(!result.success){
+
+      throw new Error(
+        result.message
+      );
+
+    }
+
+
+    toast(
+      result.message
+    );
+
+
+    $("supplierName").value="";
+    $("supplierPhone").value="";
+    $("supplierNotes").value="";
+
+
+    await loadSuppliers();
+
+  }catch(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+}
+
+
+/* =========================================================
+ PURCHASES
+========================================================= */
+
+async function loadPurchaseData(){
+
+  if(!state.products.length){
+
+    await loadProducts();
+
+  }
+
+
+  if(!state.suppliers.length){
+
+    await loadSuppliers();
+
+  }
+
+
+  const productSelect =
+    $("purchaseProduct");
+
+
+  productSelect.innerHTML =
+    '<option value="">اختر المنتج</option>';
+
+
+  state.products
+    .forEach(product=>{
+
+      const option =
+        document.createElement(
+          "option"
+        );
+
+
+      option.value =
+        product.id;
+
+
+      option.textContent =
+        product.name;
+
+
+      productSelect
+        .appendChild(option);
+
+    });
+
+
+  const supplierSelect =
+    $("purchaseSupplier");
+
+
+  supplierSelect.innerHTML =
+    '<option value="">اختر المورد</option>';
+
+
+  state.suppliers
+    .forEach(supplier=>{
+
+      const option =
+        document.createElement(
+          "option"
+        );
+
+
+      option.value =
+        supplier.id;
+
+
+      option.textContent =
+        supplier.name;
+
+
+      supplierSelect
+        .appendChild(option);
+
+    });
+
+}
+
+
+async function savePurchase(){
+
+  const productId =
+    $("purchaseProduct")
+      .value;
+
+
+  const supplierId =
+    $("purchaseSupplier")
+      .value;
+
+
+  const quantity =
+    Number(
+      $("purchaseQuantity")
+        .value || 0
+    );
+
+
+  const unitPrice =
+    Number(
+      $("purchaseUnitPrice")
+        .value || 0
+    );
+
+
+  const product =
+    state.products.find(
+      p =>
+        String(p.id) ===
+        String(productId)
+    );
+
+
+  const supplier =
+    state.suppliers.find(
+      s =>
+        String(s.id) ===
+        String(supplierId)
+    );
+
+
+  if(!productId){
+
+    toast(
+      "اختر المنتج",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if(quantity<=0){
+
+    toast(
+      "الكمية غير صحيحة",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    showLoading();
+
+    const result =
+      await api(
+        "addPurchase",
+        {
+
+          productId,
+
+          product:
+            product?.name ||
+            "",
+
+          supplierId,
+
+          supplier:
+            supplier?.name ||
+            "",
+
+          quantity,
+
+          unitPrice
+
+        }
+      );
+
+
+    if(!result.success){
+
+      throw new Error(
+        result.message
+      );
+
+    }
+
+
+    toast(
+      result.message
+    );
+
+
+    $("purchaseQuantity")
+      .value="";
+
+    $("purchaseUnitPrice")
+      .value="";
+
+
+    await loadProducts();
+
+  }catch(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+}
+
+
+/* =========================================================
+ EXPENSES
+========================================================= */
+
+async function loadExpenses(){
+
+  try{
+
+    showLoading();
+
+    const result =
+      await api(
+        "getExpenses"
+      );
+
+
+    if(!result.success){
+
+      throw new Error(
+        result.message
+      );
+
+    }
+
+
+    state.expenses =
+      result.data || [];
+
+
+    renderExpenses();
+
+  }catch(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+}
+
+
+function renderExpenses(){
+
+  const tbody =
+    $("expensesTable");
+
+
+  tbody.innerHTML="";
+
+
+  state.expenses
+    .forEach(expense=>{
+
+      const tr =
+        document.createElement(
+          "tr"
+        );
+
+
+      tr.innerHTML = `
+
+        <td>
+          ${formatDate(
+            expense.date
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            expense.name ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            expense.category ||
+            ""
+          )}
+        </td>
+
+        <td>
+
+          <strong>
+            ${money(
+              expense.amount
+            )}
+          </strong>
+
+        </td>
+
+        <td>
+          ${escapeHtml(
+            expense.notes ||
+            ""
+          )}
+        </td>
+
+      `;
+
+
+      tbody.appendChild(tr);
+
+    });
+
+}
+
+
+async function saveExpense(){
+
+  const name =
+    $("expenseName")
+      .value
+      .trim();
+
+
+  const amount =
+    Number(
+      $("expenseAmount")
+        .value || 0
+    );
+
+
+  const category =
+    $("expenseCategory")
+      .value
+      .trim();
+
+
+  const notes =
+    $("expenseNotes")
+      .value
+      .trim();
+
+
+  if(!name){
+
+    toast(
+      "اسم المصروف مطلوب",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if(amount<=0){
+
+    toast(
+      "المبلغ غير صحيح",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    showLoading();
+
+    const result =
+      await api(
+        "addExpense",
+        {
+          name,
+          amount,
+          category,
+          notes
+        }
+      );
+
+
+    if(!result.success){
+
+      throw new Error(
+        result.message
+      );
+
+    }
+
+
+    toast(
+      result.message
+    );
+
+
+    $("expenseName").value="";
+    $("expenseAmount").value="";
+    $("expenseCategory").value="";
+    $("expenseNotes").value="";
+
+
+    await loadExpenses();
+
+    await loadDashboard();
+
+    if(
+      $("days")
+      .classList
+      .contains("active")
+    ){
+
+      await loadDays();
+
+    }
+
+  }catch(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+}
+
+
+/* =========================================================
+ DASHBOARD
+========================================================= */
+
+async function loadDashboard(){
+
+  try{
+
+    const result =
+      await api(
+        "getDashboard"
+      );
+
+
+    if(!result.success){
+
+      throw new Error(
+        result.message
+      );
+
+    }
+
+
+    const data =
+      result.data || {};
+
+
+    $("dashInvoices")
+      .textContent =
+      money(
+        data.invoiceCount
+      );
+
+
+    $("dashSales")
+      .textContent =
+      money(
+        data.sales
+      );
+
+
+    $("dashExpenses")
+      .textContent =
+      money(
+        data.expenses
+      );
+
+
+    $("dashNet")
+      .textContent =
+      money(
+        data.net
+      );
+
+
+    await loadDayStatus();
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+
+}
+
+
+/* =========================================================
+ DAY STATUS
+========================================================= */
+
+async function loadDayStatus(){
+
+  try{
+
+    const result =
+      await api(
+        "getDayStatus"
+      );
+
+
+    if(!result.success){
+      return;
+    }
+
+
+    const finished =
+      result.data?.finished;
+
+
+    $("dayStatus")
+      .innerHTML =
+      finished
+
+      ?
+
+      '<span class="badge red">تم إنهاء اليوم</span>'
+
+      :
+
+      '<span class="badge green">اليوم مفتوح</span>';
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+
+}
+
+
+/* =========================================================
+ FINISH DAY
+========================================================= */
+
+async function finishDay(){
+
+  if(
+    !confirm(
+      "هل أنت متأكد من إنهاء اليوم؟"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  try{
+
+    showLoading();
+
+    const result =
+      await api(
+        "finishDay"
+      );
+
+
+    if(!result.success){
+
+      throw new Error(
+        result.message
+      );
+
+    }
+
+
+    toast(
+      result.message
+    );
+
+
+    await loadDayStatus();
+
+    await loadDays();
+
+  }catch(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+}
+
+
+/* =========================================================
+ DAYS
+========================================================= */
+
+async function loadDays(){
+
+  try{
+
+    const result =
+      await api(
+        "getDays"
+      );
+
+
+    if(!result.success){
+
+      throw new Error(
+        result.message ||
+        "تعذر تحميل الأيام"
+      );
+
+    }
+
+
+    state.days =
+      result.data || [];
+
+
+    renderDays();
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      error.message ||
+      "خطأ في تحميل الأيام",
+      "error"
+    );
+
+  }
+
+}
+
+
+function renderDays(){
+
+  const tbody =
+    $("daysTable");
+
+
+  if(!tbody){
+    return;
+  }
+
+
+  tbody.innerHTML="";
+
+
+  if(!state.days.length){
+
+    tbody.innerHTML = `
+
+      <tr>
+
+        <td
+          colspan="7"
+          style="text-align:center">
+
+          لا توجد أيام مسجلة
+
+        </td>
+
+      </tr>
+
+    `;
+
+    return;
+
+  }
+
+
+  state.days
+    .forEach(day=>{
+
+      const opening =
+        Number(
+          day.openingBalance ??
+          day.opening ??
+          day.startBalance ??
+          day.openingAmount ??
+          0
+        );
+
+
+      const sales =
+        Number(
+          day.sales ??
+          day.salesTotal ??
+          0
+        );
+
+
+      const expenses =
+        Number(
+          day.expenses ??
+          day.expenseTotal ??
+          0
+        );
+
+
+      const remaining =
+        Number(
+          day.remaining ??
+          day.balance ??
+          (
+            opening +
+            sales -
+            expenses
+          )
+        );
+
+
+      const dayName =
+        day.day ||
+        day.dayName ||
+        getDayName(
+          day.date
+        );
+
+
+      const tr =
+        document.createElement(
+          "tr"
+        );
+
+
+      tr.innerHTML = `
+
+        <td>
+          ${formatDate(
+            day.date
+          )}
+        </td>
+
+        <td>
+          ${money(
+            opening
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            dayName
+          )}
+        </td>
+
+        <td>
+
+          <strong>
+            ${money(
+              sales
+            )}
+          </strong>
+
+        </td>
+
+        <td>
+
+          <strong>
+            ${money(
+              expenses
+            )}
+          </strong>
+
+        </td>
+
+        <td>
+
+          <strong>
+            ${money(
+              remaining
+            )}
+          </strong>
+
+        </td>
+
+        <td>
+
+          <div
+            style="
+              display:flex;
+              gap:6px;
+              flex-wrap:wrap;
+            ">
+
+            <button
+              class="btn btn-secondary"
+              onclick="editDayByIndex(${state.days.indexOf(day)})">
+
+              تعديل
+
+            </button>
+
+
+            <button
+              class="btn btn-danger"
+              onclick="deleteDayByIndex(${state.days.indexOf(day)})">
+
+              حذف
+
+            </button>
+
+          </div>
+
+        </td>
+
+      `;
+
+
+      tbody.appendChild(
+        tr
+      );
+
+    });
+
+}
+
+
+/* =========================================================
+ ADD DAY
+========================================================= */
+
+async function saveDay(){
+
+  const date =
+    $("dayDate")
+      .value;
+
+
+  const openingBalance =
+    Number(
+      $("dayOpening")
+        .value || 0
+    );
+
+
+  if(!date){
+
+    toast(
+      "اختر التاريخ",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if(date < "2026-08-01"){
+
+    toast(
+      "يمكن إضافة الأيام بداية من 01/08/2026",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    showLoading();
+
+    const result =
+      await api(
+        "addDay",
+        {
+          date,
+          openingBalance
+        }
+      );
+
+
+    if(!result.success){
+
+      throw new Error(
+        result.message ||
+        "تعذر إضافة اليوم"
+      );
+
+    }
+
+
+    toast(
+      result.message ||
+      "تم إضافة اليوم بنجاح"
+    );
+
+
+    $("dayDate")
+      .value =
+      date;
+
+
+    $("dayOpening")
+      .value =
+      "0";
+
+
+    await loadDays();
+
+  }catch(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+}
+
+
+/* =========================================================
+ EDIT DAY
+========================================================= */
+
+function editDayByIndex(index){
+
+  const day =
+    state.days[index];
+
+
+  if(!day){
+    return;
+  }
+
+
+  const oldDate =
+    dateKey(
+      day.date
+    );
+
+
+  const opening =
+    Number(
+      day.openingBalance ??
+      day.opening ??
+      day.startBalance ??
+      day.openingAmount ??
+      0
+    );
+
+
+  const newDate =
+    prompt(
+      "التاريخ:",
+      oldDate
+    );
+
+
+  if(newDate === null){
+    return;
+  }
+
+
+  if(
+    !newDate ||
+    newDate < "2026-08-01"
+  ){
+
+    toast(
+      "التاريخ يجب أن يكون من 01/08/2026 أو بعده",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const newOpening =
+    prompt(
+      "رصيد أول المدة:",
+      opening
+    );
+
+
+  if(newOpening === null){
+    return;
+  }
+
+
+  updateDay(
+    day.id ||
+    oldDate,
+    newDate,
+    Number(
+      newOpening || 0
+    )
+  );
+
+}
+
+
+/* =========================================================
+ UPDATE DAY
+========================================================= */
+
+async function updateDay(
+  id,
+  date,
+  openingBalance
+){
+
+  try{
+
+    showLoading();
+
+    const result =
+      await api(
+        "updateDay",
+        {
+          id,
+          date,
+          openingBalance
+        }
+      );
+
+
+    if(!result.success){
+
+      throw new Error(
+        result.message ||
+        "تعذر تعديل اليوم"
+      );
+
+    }
+
+
+    toast(
+      result.message ||
+      "تم تعديل اليوم"
+    );
+
+
+    await loadDays();
+
+  }catch(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+}
+
+
+/* =========================================================
+ DELETE DAY
+========================================================= */
+
+function deleteDayByIndex(index){
+
+  const day =
+    state.days[index];
+
+
+  if(!day){
+    return;
+  }
+
+
+  const id =
+    day.id ||
+    dateKey(day.date);
+
+
+  deleteDay(id);
+
+}
+
+
+async function deleteDay(id){
+
+  if(
+    !confirm(
+      "هل أنت متأكد من حذف هذا اليوم؟"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  try{
+
+    showLoading();
+
+    const result =
+      await api(
+        "deleteDay",
+        {
+          id
+        }
+      );
+
+
+    if(!result.success){
+
+      throw new Error(
+        result.message ||
+        "تعذر حذف اليوم"
+      );
+
+    }
+
+
+    toast(
+      result.message ||
+      "تم حذف اليوم"
+    );
+
+
+    await loadDays();
+
+  }catch(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+}
+
+
+/* =========================================================
+ REPORTS
+========================================================= */
+
+function setDefaultReportDates(){
+
+  const today =
+    new Date();
+
+
+  const date =
+    today
+      .toISOString()
+      .slice(0,10);
+
+
+  if(!$("reportFrom").value){
+
+    $("reportFrom")
+      .value =
+      date;
+
+  }
+
+
+  if(!$("reportTo").value){
+
+    $("reportTo")
+      .value =
+      date;
+
+  }
+
+}
+
+
+async function loadReport(){
+
+  const from =
+    $("reportFrom")
+      .value;
+
+
+  const to =
+    $("reportTo")
+      .value;
+
+
+  if(!from || !to){
+
+    toast(
+      "اختر الفترة",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if(from > to){
+
+    toast(
+      "تاريخ البداية أكبر من تاريخ النهاية",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    showLoading();
+
+
+    const [
+      invoiceResult,
+      expenseResult
+    ] =
+      await Promise.all([
+
+        api(
+          "getInvoices"
+        ),
+
+        api(
+          "getExpenses"
+        )
+
+      ]);
+
+
+    if(!invoiceResult.success){
+
+      throw new Error(
+        invoiceResult.message
+      );
+
+    }
+
+
+    if(!expenseResult.success){
+
+      throw new Error(
+        expenseResult.message
+      );
+
+    }
+
+
+    const invoices =
+      invoiceResult.data ||
+      [];
+
+
+    const expenses =
+      expenseResult.data ||
+      [];
+
+
+    const filteredInvoices =
+      invoices.filter(item=>{
+
+        const date =
+          dateKey(
+            item.date
+          );
+
+
+        return (
+          date >= from &&
+          date <= to
+        );
+
+      });
+
+
+    const filteredExpenses =
+      expenses.filter(item=>{
+
+        const date =
+          dateKey(
+            item.date
+          );
+
+
+        return (
+          date >= from &&
+          date <= to
+        );
+
+      });
+
+
+    const sales =
+      filteredInvoices.reduce(
+        (sum,item)=>
+          sum +
+          Number(
+            item.total ||
+            0
+          ),
+        0
+      );
+
+
+    const expenseTotal =
+      filteredExpenses.reduce(
+        (sum,item)=>
+          sum +
+          Number(
+            item.amount ||
+            0
+          ),
+        0
+      );
+
+
+    $("reportInvoices")
+      .textContent =
+      money(
+        filteredInvoices.length
+      );
+
+
+    $("reportSales")
+      .textContent =
+      money(
+        sales
+      );
+
+
+    $("reportExpenses")
+      .textContent =
+      money(
+        expenseTotal
+      );
+
+
+    $("reportNet")
+      .textContent =
+      money(
+        sales -
+        expenseTotal
+      );
+
+  }catch(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+}
+
+
+/* =========================================================
+ DATE
+========================================================= */
+
+function dateKey(value){
+
+  if(!value){
+    return "";
+  }
+
+
+  const date =
+    new Date(value);
+
+
+  if(
+    isNaN(
+      date.getTime()
+    )
+  ){
+
+    return String(value)
+      .slice(0,10);
+
+  }
+
+
+  const y =
+    date.getFullYear();
+
+
+  const m =
+    String(
+      date.getMonth()+1
+    )
+    .padStart(2,"0");
+
+
+  const d =
+    String(
+      date.getDate()
+    )
+    .padStart(2,"0");
+
+
+  return `${y}-${m}-${d}`;
+
+}
+
+
+function formatDate(value){
+
+  if(!value){
+    return "-";
+  }
+
+
+  const date =
+    new Date(value);
+
+
+  if(
+    isNaN(
+      date.getTime()
+    )
+  ){
+
+    return String(value);
+
+  }
+
+
+  return date.toLocaleDateString(
+    "ar-EG",
+    {
+      year:"numeric",
+      month:"2-digit",
+      day:"2-digit"
+    }
+  );
+
+}
+
+
+function getDayName(value){
+
+  if(!value){
+    return "-";
+  }
+
+
+  const date =
+    new Date(value);
+
+
+  if(
+    isNaN(
+      date.getTime()
+    )
+  ){
+
+    return "-";
+
+  }
+
+
+  return date.toLocaleDateString(
+    "ar-EG",
+    {
+      weekday:"long"
+    }
+  );
+
+}
+
+
+/* =========================================================
+ SECURITY
+========================================================= */
+
+function escapeHtml(value){
+
+  return String(
+    value ?? ""
+  )
+  .replaceAll(
+    "&",
+    "&amp;"
+  )
+  .replaceAll(
+    "<",
+    "&lt;"
+  )
+  .replaceAll(
+    ">",
+    "&gt;"
+  )
+  .replaceAll(
+    '"',
+    "&quot;"
+  )
+  .replaceAll(
+    "'",
+    "&#039;"
+  );
+
+}
+
+
+function escapeAttr(value){
+
+  return escapeHtml(
+    value
+  );
+
+}
+
+
+/* =========================================================
+ START
+========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  init
+);
+
+</script>
+
+</body>
+</html>
