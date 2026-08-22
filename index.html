@@ -3760,7 +3760,9 @@ async function finishDay(){
     );
 
 
-    await loadDayStatus();
+    // بعد إنهاء اليوم نحدّث لوحة التحكم فورًا.
+    // الأرقام تظهر صفر، بينما تبقى بيانات اليوم محفوظة في التقارير.
+    await loadDashboard();
 
     await loadDays();
 
