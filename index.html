@@ -2714,14 +2714,14 @@ function buildWhatsAppInvoiceMessage(data){
     "عميلنا العزيز";
 
   let message =
-`أهلاً بك ${customer} 👋
+`أهلاً بك ${customer} 😍
 
-🚗 AUTO MOOD
+🚘 AUTO MOOD 🚘
 تم تسجيل فاتورتك بنجاح.
 
 ━━━━━━━━━━━━━━
 
-🧾 تفاصيل الفاتورة
+✅ تفاصيل الفاتورة
 
 الخدمة:
 ${data.service}
@@ -2737,7 +2737,7 @@ ${money(data.servicePrice)} جنيه
 
     message +=
 `
-🛍️ المنتجات:
+✅ المنتجات:
 
 `;
 
@@ -2777,11 +2777,11 @@ ${money(data.productTotal)} جنيه
 `
 ━━━━━━━━━━━━━━
 
-💰 الإجمالي:
+💲 الإجمالي:
 ${money(data.total)} جنيه
 
 شكراً لزيارتك AUTO MOOD ❤️
-نتمنى نشوفك تاني 🚗✨`;
+نتمنى نشوفك تاني 🚘🌹`;
 
   return message;
 
