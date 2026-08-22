@@ -2467,17 +2467,14 @@ async function saveInvoice(){
       .value
       .trim();
 
-
   const customerName =
     $("invoiceCustomerName")
       .value
       .trim();
 
-
   const service =
     $("invoiceService")
       .value;
-
 
   const servicePrice =
     Number(
@@ -2485,38 +2482,26 @@ async function saveInvoice(){
         .value || 0
     );
 
-
   if(!phone){
-
     toast(
       "رقم التليفون مطلوب",
       "error"
     );
-
     return;
-
   }
 
-
   if(!service){
-
     toast(
       "اختر نوع الخدمة",
       "error"
     );
-
     return;
-
   }
-
 
   const products = [];
 
-
   document
-    .querySelectorAll(
-      ".product-row"
-    )
+    .querySelectorAll(".product-row")
     .forEach(row=>{
 
       const id =
@@ -2524,14 +2509,12 @@ async function saveInvoice(){
           ".invoice-product"
         )?.value;
 
-
       const qty =
         Number(
           row.querySelector(
             ".invoice-qty"
           )?.value || 0
         );
-
 
       if(id && qty > 0){
 
@@ -2542,23 +2525,16 @@ async function saveInvoice(){
               String(id)
           );
 
-
         products.push({
-
           id,
-
           name:
-            product?.name ||
-            "",
-
+            product?.name || "",
           qty
-
         });
 
       }
 
     });
-
 
   try{
 
@@ -2576,20 +2552,87 @@ async function saveInvoice(){
         }
       );
 
-
     if(!result.success){
 
       throw new Error(
-        result.message
+        result.message ||
+        "تعذر حفظ الفاتورة"
       );
 
     }
 
+    /*
+      حساب إجمالي المنتجات
+    */
+
+    let productTotal = 0;
+
+    products.forEach(item=>{
+
+      const product =
+        state.products.find(
+          p =>
+            String(p.id) ===
+            String(item.id)
+        );
+
+      if(product){
+
+        productTotal +=
+          Number(product.price || 0) *
+          Number(item.qty || 0);
+
+      }
+
+    });
+
+    const total =
+      productTotal +
+      servicePrice;
+
+    /*
+      تجهيز رسالة واتساب
+    */
+
+    const whatsappMessage =
+      buildWhatsAppInvoiceMessage({
+        customerName,
+        phone,
+        service,
+        servicePrice,
+        products,
+        productTotal,
+        total
+      });
+
+    /*
+      تنظيف رقم الهاتف
+      مصر: 01xxxxxxxxx
+      يتحول إلى 201xxxxxxxxx
+    */
+
+    const whatsappPhone =
+      normalizeEgyptPhone(phone);
+
+    /*
+      حفظ رقم ورابط واتساب مؤقتًا
+      حتى نقدر نفتح الرسالة بعد الحفظ
+    */
+
+    window.lastWhatsAppInvoice = {
+      phone: whatsappPhone,
+      message: whatsappMessage
+    };
 
     toast(
       "تم حفظ الفاتورة بنجاح"
     );
 
+    /*
+      إظهار زر واتساب
+    */
+
+    showWhatsAppButton();
 
     resetInvoice();
 
@@ -2610,8 +2653,11 @@ async function saveInvoice(){
 
   }catch(error){
 
+    console.error(error);
+
     toast(
-      error.message,
+      error.message ||
+      "حدث خطأ أثناء حفظ الفاتورة",
       "error"
     );
 
@@ -2622,7 +2668,232 @@ async function saveInvoice(){
   }
 
 }
+  /* =========================================================
+ WHATSAPP
+========================================================= */
 
+function normalizeEgyptPhone(phone){
+
+  let number =
+    String(phone || "")
+      .replace(/\D/g,"");
+
+  /*
+    01012345678
+    01112345678
+    01212345678
+    01512345678
+  */
+
+  if(number.startsWith("0")){
+    number =
+      "20" +
+      number.substring(1);
+  }
+
+  /*
+    لو المستخدم كتب 20xxxxxxxxxx
+  */
+
+  if(
+    number.startsWith("20") &&
+    number.length === 12
+  ){
+    return number;
+  }
+
+  return number;
+
+}
+
+
+function buildWhatsAppInvoiceMessage(data){
+
+  const customer =
+    data.customerName ||
+    "عميلنا العزيز";
+
+  let message =
+`أهلاً بك ${customer} 👋
+
+🚗 AUTO MOOD
+تم تسجيل فاتورتك بنجاح.
+
+━━━━━━━━━━━━━━
+
+🧾 تفاصيل الفاتورة
+
+الخدمة:
+${data.service}
+
+سعر الخدمة:
+${money(data.servicePrice)} جنيه
+`;
+
+  if(
+    data.products &&
+    data.products.length
+  ){
+
+    message +=
+`
+🛍️ المنتجات:
+
+`;
+
+    data.products.forEach(item=>{
+
+      const product =
+        state.products.find(
+          p =>
+            String(p.id) ===
+            String(item.id)
+        );
+
+      const price =
+        Number(
+          product?.price || 0
+        );
+
+      const itemTotal =
+        price *
+        Number(item.qty || 0);
+
+      message +=
+`${item.name} × ${item.qty} = ${money(itemTotal)} جنيه
+`;
+
+    });
+
+    message +=
+`
+إجمالي المنتجات:
+${money(data.productTotal)} جنيه
+`;
+
+  }
+
+  message +=
+`
+━━━━━━━━━━━━━━
+
+💰 الإجمالي:
+${money(data.total)} جنيه
+
+شكراً لزيارتك AUTO MOOD ❤️
+نتمنى نشوفك تاني 🚗✨`;
+
+  return message;
+
+}
+
+
+function showWhatsAppButton(){
+
+  let button =
+    document.getElementById(
+      "whatsappInvoiceButton"
+    );
+
+  if(!button){
+
+    button =
+      document.createElement(
+        "button"
+      );
+
+    button.id =
+      "whatsappInvoiceButton";
+
+    button.className =
+      "btn btn-success";
+
+    button.innerHTML =
+      "📱 إرسال الفاتورة على واتساب";
+
+    button.onclick =
+      sendLastInvoiceWhatsApp;
+
+    /*
+      وضع الزر أعلى الصفحة
+    */
+
+    document.body.appendChild(
+      button
+    );
+
+  }
+
+  button.style.position =
+    "fixed";
+
+  button.style.left =
+    "20px";
+
+  button.style.bottom =
+    "20px";
+
+  button.style.zIndex =
+    "2000";
+
+  button.style.padding =
+    "14px 20px";
+
+  button.style.borderRadius =
+    "10px";
+
+  button.style.boxShadow =
+    "0 4px 15px rgba(0,0,0,.2)";
+
+}
+
+
+function sendLastInvoiceWhatsApp(){
+
+  if(
+    !window.lastWhatsAppInvoice
+  ){
+
+    toast(
+      "لا توجد فاتورة لإرسالها",
+      "error"
+    );
+
+    return;
+
+  }
+
+  const phone =
+    window.lastWhatsAppInvoice.phone;
+
+  const message =
+    window.lastWhatsAppInvoice.message;
+
+  if(!phone){
+
+    toast(
+      "رقم الهاتف غير صحيح",
+      "error"
+    );
+
+    return;
+
+  }
+
+  const url =
+    "https://wa.me/" +
+    phone +
+    "?text=" +
+    encodeURIComponent(
+      message
+    );
+
+  window.open(
+    url,
+    "_blank"
+  );
+
+}
 
 function resetInvoice(){
 
