@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>AUTO MOOD</title>
 
 <style>
+
 *{
   box-sizing:border-box;
   font-family:Arial,Tahoma,sans-serif;
@@ -161,10 +165,21 @@ button{
   font-weight:800;
 }
 
-.stat-value.blue{color:var(--primary)}
-.stat-value.green{color:var(--success)}
-.stat-value.red{color:var(--danger)}
-.stat-value.orange{color:var(--warning)}
+.stat-value.blue{
+  color:var(--primary);
+}
+
+.stat-value.green{
+  color:var(--success);
+}
+
+.stat-value.red{
+  color:var(--danger);
+}
+
+.stat-value.orange{
+  color:var(--warning);
+}
 
 .two{
   display:grid;
@@ -444,7 +459,9 @@ td{
     flex-direction:column;
     align-items:stretch;
   }
+
 }
+
 </style>
 </head>
 
@@ -504,6 +521,10 @@ td{
       📈 التقارير
     </button>
 
+    <button data-section="days">
+      📅 الأيام
+    </button>
+
   </nav>
 
 </aside>
@@ -515,14 +536,21 @@ td{
   <div class="topbar">
 
     <div>
-      <button class="mobile-menu" onclick="toggleSidebar()">
+      <button
+        class="mobile-menu"
+        onclick="toggleSidebar()">
         ☰ القائمة
       </button>
     </div>
 
     <div>
-      <h1 id="pageTitle">لوحة التحكم</h1>
-      <div class="status" id="connectionStatus">
+      <h1 id="pageTitle">
+        لوحة التحكم
+      </h1>
+
+      <div
+        class="status"
+        id="connectionStatus">
         متصل بقاعدة البيانات
       </div>
     </div>
@@ -538,23 +566,57 @@ td{
   <div class="grid">
 
     <div class="card">
-      <div class="stat-title">عدد الفواتير اليوم</div>
-      <div class="stat-value blue" id="dashInvoices">0</div>
+      <div class="stat-title">
+        عدد الفواتير اليوم
+      </div>
+
+      <div
+        class="stat-value blue"
+        id="dashInvoices">
+        0
+      </div>
     </div>
 
     <div class="card">
-      <div class="stat-title">المبيعات اليوم</div>
-      <div class="stat-value green" id="dashSales">0</div>
+
+      <div class="stat-title">
+        المبيعات اليوم
+      </div>
+
+      <div
+        class="stat-value green"
+        id="dashSales">
+        0
+      </div>
+
     </div>
 
     <div class="card">
-      <div class="stat-title">المصروفات اليوم</div>
-      <div class="stat-value red" id="dashExpenses">0</div>
+
+      <div class="stat-title">
+        المصروفات اليوم
+      </div>
+
+      <div
+        class="stat-value red"
+        id="dashExpenses">
+        0
+      </div>
+
     </div>
 
     <div class="card">
-      <div class="stat-title">صافي اليوم</div>
-      <div class="stat-value orange" id="dashNet">0</div>
+
+      <div class="stat-title">
+        صافي اليوم
+      </div>
+
+      <div
+        class="stat-value orange"
+        id="dashNet">
+        0
+      </div>
+
     </div>
 
   </div>
@@ -562,6 +624,7 @@ td{
   <div class="two">
 
     <div class="card">
+
       <h3>حالة اليوم</h3>
 
       <p id="dayStatus">
@@ -573,6 +636,7 @@ td{
         onclick="finishDay()">
         إنهاء اليوم
       </button>
+
     </div>
 
     <div class="card">
@@ -599,6 +663,12 @@ td{
           التقارير
         </button>
 
+        <button
+          class="btn btn-secondary"
+          onclick="openSection('days')">
+          الأيام
+        </button>
+
       </div>
 
     </div>
@@ -620,28 +690,47 @@ td{
     <div class="form-grid">
 
       <div class="form-group">
+
         <label>رقم الهاتف</label>
-        <input id="invoicePhone" type="tel">
+
+        <input
+          id="invoicePhone"
+          type="tel">
+
       </div>
 
       <div class="form-group">
+
         <label>اسم العميل</label>
-        <input id="invoiceCustomerName">
+
+        <input
+          id="invoiceCustomerName">
+
       </div>
 
       <div class="form-group">
+
         <label>نوع الخدمة</label>
 
-        <!-- بدون الأسعار -->
         <select id="invoiceService">
-          <option value="">اختر نوع الخدمة</option>
+
+          <option value="">
+            اختر نوع الخدمة
+          </option>
+
         </select>
 
       </div>
 
       <div class="form-group">
+
         <label>سعر الخدمة</label>
-        <input id="invoiceServicePrice" type="number" min="0">
+
+        <input
+          id="invoiceServicePrice"
+          type="number"
+          min="0">
+
       </div>
 
     </div>
@@ -658,16 +747,25 @@ td{
       + إضافة منتج
     </button>
 
-    <div class="card" style="margin-top:15px;background:#f9fafb">
+    <div
+      class="card"
+      style="margin-top:15px;background:#f9fafb">
 
       <div>
         إجمالي المنتجات:
-        <strong id="invoiceProductTotal">0</strong>
+        <strong id="invoiceProductTotal">
+          0
+        </strong>
       </div>
 
       <div style="margin-top:8px">
+
         الإجمالي:
-        <strong id="invoiceTotal">0</strong>
+
+        <strong id="invoiceTotal">
+          0
+        </strong>
+
       </div>
 
     </div>
@@ -703,10 +801,12 @@ td{
     <h2>الفواتير</h2>
 
     <div class="search">
+
       <input
         id="invoiceSearch"
         placeholder="بحث بالاسم أو الهاتف..."
         oninput="renderInvoices()">
+
     </div>
 
     <div class="table-wrap">
@@ -714,7 +814,9 @@ td{
       <table>
 
         <thead>
+
           <tr>
+
             <th>رقم</th>
             <th>التاريخ</th>
             <th>العميل</th>
@@ -722,7 +824,9 @@ td{
             <th>الخدمة</th>
             <th>المنتجات</th>
             <th>الإجمالي</th>
+
           </tr>
+
         </thead>
 
         <tbody id="invoicesTable"></tbody>
@@ -748,8 +852,11 @@ td{
     <div class="form-grid">
 
       <div class="form-group">
+
         <label>رقم الهاتف</label>
+
         <input id="customerPhone">
+
       </div>
 
     </div>
@@ -766,7 +873,9 @@ td{
 
   </div>
 
-  <div class="card" style="margin-top:15px">
+  <div
+    class="card"
+    style="margin-top:15px">
 
     <h3>سجل العميل</h3>
 
@@ -809,13 +918,17 @@ td{
       <table>
 
         <thead>
+
           <tr>
+
             <th>الكود</th>
             <th>المنتج</th>
             <th>الفئة</th>
             <th>سعر البيع</th>
             <th>المخزون</th>
+
           </tr>
+
         </thead>
 
         <tbody id="stockTable"></tbody>
@@ -841,25 +954,47 @@ td{
     <div class="form-grid">
 
       <div class="form-group">
+
         <label>المنتج</label>
+
         <select id="purchaseProduct"></select>
+
       </div>
 
       <div class="form-group">
+
         <label>المورد</label>
+
         <select id="purchaseSupplier">
-          <option value="">اختر المورد</option>
+
+          <option value="">
+            اختر المورد
+          </option>
+
         </select>
+
       </div>
 
       <div class="form-group">
+
         <label>الكمية</label>
-        <input id="purchaseQuantity" type="number" min="1">
+
+        <input
+          id="purchaseQuantity"
+          type="number"
+          min="1">
+
       </div>
 
       <div class="form-group">
+
         <label>سعر الشراء</label>
-        <input id="purchaseUnitPrice" type="number" min="0">
+
+        <input
+          id="purchaseUnitPrice"
+          type="number"
+          min="0">
+
       </div>
 
     </div>
@@ -891,18 +1026,27 @@ td{
     <div class="form-grid">
 
       <div class="form-group">
+
         <label>اسم المورد</label>
+
         <input id="supplierName">
+
       </div>
 
       <div class="form-group">
+
         <label>الهاتف</label>
+
         <input id="supplierPhone">
+
       </div>
 
       <div class="form-group full">
+
         <label>ملاحظات</label>
+
         <textarea id="supplierNotes"></textarea>
+
       </div>
 
     </div>
@@ -919,7 +1063,9 @@ td{
 
   </div>
 
-  <div class="card" style="margin-top:15px">
+  <div
+    class="card"
+    style="margin-top:15px">
 
     <h2>الموردين</h2>
 
@@ -928,12 +1074,16 @@ td{
       <table>
 
         <thead>
+
           <tr>
+
             <th>الكود</th>
             <th>الاسم</th>
             <th>الهاتف</th>
             <th>الملاحظات</th>
+
           </tr>
+
         </thead>
 
         <tbody id="suppliersTable"></tbody>
@@ -959,23 +1109,38 @@ td{
     <div class="form-grid">
 
       <div class="form-group">
+
         <label>اسم المصروف</label>
+
         <input id="expenseName">
+
       </div>
 
       <div class="form-group">
+
         <label>المبلغ</label>
-        <input id="expenseAmount" type="number" min="0">
+
+        <input
+          id="expenseAmount"
+          type="number"
+          min="0">
+
       </div>
 
       <div class="form-group">
+
         <label>التصنيف</label>
+
         <input id="expenseCategory">
+
       </div>
 
       <div class="form-group">
+
         <label>ملاحظات</label>
+
         <input id="expenseNotes">
+
       </div>
 
     </div>
@@ -992,7 +1157,9 @@ td{
 
   </div>
 
-  <div class="card" style="margin-top:15px">
+  <div
+    class="card"
+    style="margin-top:15px">
 
     <h2>المصروفات</h2>
 
@@ -1001,13 +1168,17 @@ td{
       <table>
 
         <thead>
+
           <tr>
+
             <th>التاريخ</th>
             <th>المصروف</th>
             <th>التصنيف</th>
             <th>المبلغ</th>
             <th>ملاحظات</th>
+
           </tr>
+
         </thead>
 
         <tbody id="expensesTable"></tbody>
@@ -1033,13 +1204,23 @@ td{
     <div class="form-grid">
 
       <div class="form-group">
+
         <label>من تاريخ</label>
-        <input id="reportFrom" type="date">
+
+        <input
+          id="reportFrom"
+          type="date">
+
       </div>
 
       <div class="form-group">
+
         <label>إلى تاريخ</label>
-        <input id="reportTo" type="date">
+
+        <input
+          id="reportTo"
+          type="date">
+
       </div>
 
     </div>
@@ -1056,26 +1237,157 @@ td{
 
   </div>
 
-  <div class="grid" style="margin-top:15px">
+  <div
+    class="grid"
+    style="margin-top:15px">
 
     <div class="card">
-      <div class="stat-title">الفواتير</div>
-      <div class="stat-value blue" id="reportInvoices">0</div>
+
+      <div class="stat-title">
+        الفواتير
+      </div>
+
+      <div
+        class="stat-value blue"
+        id="reportInvoices">
+        0
+      </div>
+
     </div>
 
     <div class="card">
-      <div class="stat-title">المبيعات</div>
-      <div class="stat-value green" id="reportSales">0</div>
+
+      <div class="stat-title">
+        المبيعات
+      </div>
+
+      <div
+        class="stat-value green"
+        id="reportSales">
+        0
+      </div>
+
     </div>
 
     <div class="card">
-      <div class="stat-title">المصروفات</div>
-      <div class="stat-value red" id="reportExpenses">0</div>
+
+      <div class="stat-title">
+        المصروفات
+      </div>
+
+      <div
+        class="stat-value red"
+        id="reportExpenses">
+        0
+      </div>
+
     </div>
 
     <div class="card">
-      <div class="stat-title">الصافي</div>
-      <div class="stat-value orange" id="reportNet">0</div>
+
+      <div class="stat-title">
+        الصافي
+      </div>
+
+      <div
+        class="stat-value orange"
+        id="reportNet">
+        0
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- =========================================================
+ DAYS
+========================================================= -->
+
+<section class="section" id="days">
+
+  <div class="card">
+
+    <h2>إضافة يوم</h2>
+
+    <div class="form-grid">
+
+      <div class="form-group">
+
+        <label>التاريخ</label>
+
+        <input
+          id="dayDate"
+          type="date"
+          min="2026-08-01"
+          value="2026-08-01">
+
+      </div>
+
+      <div class="form-group">
+
+        <label>رصيد أول المدة</label>
+
+        <input
+          id="dayOpening"
+          type="number"
+          min="0"
+          value="0">
+
+      </div>
+
+    </div>
+
+    <div class="actions">
+
+      <button
+        class="btn btn-success"
+        onclick="saveDay()">
+        إضافة اليوم
+      </button>
+
+      <button
+        class="btn btn-secondary"
+        onclick="loadDays()">
+        تحديث
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div
+    class="card"
+    style="margin-top:15px">
+
+    <h2>سجل الأيام</h2>
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>التاريخ</th>
+            <th>رصيد أول المدة</th>
+            <th>اليوم</th>
+            <th>المبيعات</th>
+            <th>المصروفات</th>
+            <th>المتبقي</th>
+            <th>الإجراءات</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody id="daysTable"></tbody>
+
+      </table>
+
     </div>
 
   </div>
@@ -1083,87 +1395,136 @@ td{
 </section>
 
 </main>
+
 </div>
+
 
 <script>
 
 /* =========================================================
-   CONFIG
+ CONFIG
 ========================================================= */
 
-/*
-  ضع هنا رابط Google Apps Script Web App
-*/
-const API_URL = "https://script.google.com/macros/s/AKfycbzNoSKZeYqTSWBNeJeCM1PK90i8Q3Vx0xXEiwMDmoiaKzHxupT92OfzJUAKivP5EqE3Ew/exec";
+const API_URL =
+"https://script.google.com/macros/s/AKfycbzNoSKZeYqTSWBNeJeCM1PK90i8Q3Vx0xXEiwMDmoiaKzHxupT92OfzJUAKivP5EqE3Ew/exec";
+
 
 /* =========================================================
-   STATE
+ STATE
 ========================================================= */
 
 const state = {
-  services: [],
-  products: [],
-  suppliers: [],
-  invoices: [],
-  expenses: []
+
+  services:[],
+  products:[],
+  suppliers:[],
+  invoices:[],
+  expenses:[],
+  days:[]
+
 };
 
 
 /* =========================================================
-   HELPERS
+ HELPERS
 ========================================================= */
 
 function $(id){
   return document.getElementById(id);
 }
 
+
 function money(value){
-  return Number(value || 0).toLocaleString("ar-EG");
+
+  return Number(
+    value || 0
+  ).toLocaleString("ar-EG");
+
 }
+
 
 function showLoading(show=true){
-  $("loading").classList.toggle("show",show);
+
+  $("loading")
+    .classList
+    .toggle(
+      "show",
+      show
+    );
+
 }
 
-function toast(message,type="success"){
 
-  const el = $("toast");
+function toast(
+  message,
+  type="success"
+){
 
-  el.textContent = message;
+  const el =
+    $("toast");
+
+  el.textContent =
+    message;
 
   el.className =
     "toast show " +
-    (type === "error" ? "error" : "success");
+    (
+      type === "error"
+      ? "error"
+      : "success"
+    );
 
   setTimeout(()=>{
-    el.className = "toast";
+
+    el.className =
+      "toast";
+
   },2500);
+
 }
 
-async function api(action,data={}){
 
-  const params = new URLSearchParams();
+async function api(
+  action,
+  data={}
+){
 
-  params.append("action",action);
+  const params =
+    new URLSearchParams();
 
-  Object.keys(data).forEach(key=>{
+  params.append(
+    "action",
+    action
+  );
 
-    let value = data[key];
+  Object.keys(data)
+    .forEach(key=>{
 
-    if(
-      typeof value === "object" &&
-      value !== null
-    ){
-      value = JSON.stringify(value);
-    }
+      let value =
+        data[key];
 
-    params.append(key,value);
+      if(
+        typeof value === "object" &&
+        value !== null
+      ){
 
-  });
+        value =
+          JSON.stringify(value);
+
+      }
+
+      params.append(
+        key,
+        value
+      );
+
+    });
 
   const response =
     await fetch(
-      API_URL + "?" + params.toString(),
+      API_URL +
+      "?" +
+      params.toString(),
       {
         method:"GET",
         cache:"no-store"
@@ -1171,15 +1532,20 @@ async function api(action,data={}){
     );
 
   if(!response.ok){
-    throw new Error("خطأ في الاتصال بالخادم");
+
+    throw new Error(
+      "خطأ في الاتصال بالخادم"
+    );
+
   }
 
   return response.json();
+
 }
 
 
 /* =========================================================
-   NAVIGATION
+ NAVIGATION
 ========================================================= */
 
 const titles = {
@@ -1192,20 +1558,26 @@ const titles = {
   purchases:"المشتريات",
   suppliers:"الموردين",
   expenses:"المصروفات",
-  reports:"التقارير"
+  reports:"التقارير",
+  days:"الأيام"
 
 };
 
-document.querySelectorAll(".nav button")
+
+document
+.querySelectorAll(".nav button")
 .forEach(button=>{
 
-  button.addEventListener("click",()=>{
+  button.addEventListener(
+    "click",
+    ()=>{
 
-    openSection(
-      button.dataset.section
-    );
+      openSection(
+        button.dataset.section
+      );
 
-  });
+    }
+  );
 
 });
 
@@ -1215,29 +1587,47 @@ function openSection(section){
   document
     .querySelectorAll(".section")
     .forEach(el=>{
-      el.classList.remove("active");
+
+      el.classList
+        .remove("active");
+
     });
+
 
   const target =
     $(section);
 
+
   if(target){
-    target.classList.add("active");
+
+    target.classList
+      .add("active");
+
   }
+
 
   document
     .querySelectorAll(".nav button")
     .forEach(btn=>{
+
       btn.classList.toggle(
         "active",
         btn.dataset.section === section
       );
+
     });
 
-  $("pageTitle").textContent =
-    titles[section] || "AUTO MOOD";
 
-  $("sidebar").classList.remove("open");
+  $("pageTitle")
+    .textContent =
+    titles[section] ||
+    "AUTO MOOD";
+
+
+  $("sidebar")
+    .classList
+    .remove("open");
+
 
   if(section==="dashboard"){
     loadDashboard();
@@ -1271,16 +1661,24 @@ function openSection(section){
     setDefaultReportDates();
   }
 
+  if(section==="days"){
+    loadDays();
+  }
+
 }
 
 
 function toggleSidebar(){
-  $("sidebar").classList.toggle("open");
+
+  $("sidebar")
+    .classList
+    .toggle("open");
+
 }
 
 
 /* =========================================================
-   INITIAL LOAD
+ INITIAL LOAD
 ========================================================= */
 
 async function init(){
@@ -1292,25 +1690,30 @@ async function init(){
     await api("init");
 
     await Promise.all([
+
       loadServices(),
       loadProducts(),
       loadSuppliers()
+
     ]);
 
     await loadDashboard();
 
-    $("connectionStatus").textContent =
+    $("connectionStatus")
+      .textContent =
       "متصل بقاعدة البيانات ✓";
 
   }catch(error){
 
     console.error(error);
 
-    $("connectionStatus").textContent =
+    $("connectionStatus")
+      .textContent =
       "تعذر الاتصال";
 
     toast(
-      error.message || "خطأ في الاتصال",
+      error.message ||
+      "خطأ في الاتصال",
       "error"
     );
 
@@ -1324,16 +1727,22 @@ async function init(){
 
 
 /* =========================================================
-   SERVICES
+ SERVICES
 ========================================================= */
 
 async function loadServices(){
 
   const result =
-    await api("getServices");
+    await api(
+      "getServices"
+    );
 
   if(!result.success){
-    throw new Error(result.message);
+
+    throw new Error(
+      result.message
+    );
+
   }
 
   state.services =
@@ -1352,40 +1761,52 @@ function renderServices(){
   select.innerHTML =
     '<option value="">اختر نوع الخدمة</option>';
 
-  state.services.forEach(service=>{
 
-    const option =
-      document.createElement("option");
+  state.services
+    .forEach(service=>{
 
-    option.value =
-      service.name;
+      const option =
+        document.createElement(
+          "option"
+        );
 
-    option.textContent =
-      service.name;
+      option.value =
+        service.name;
 
-    /*
-      مهم:
-      لا يوجد سعر بجانب اسم الخدمة
-    */
+      /*
+       مهم:
+       اسم الخدمة فقط بدون السعر
+      */
 
-    select.appendChild(option);
+      option.textContent =
+        service.name;
 
-  });
+      select.appendChild(
+        option
+      );
+
+    });
 
 }
 
 
 /* =========================================================
-   PRODUCTS
+ PRODUCTS
 ========================================================= */
 
 async function loadProducts(){
 
   const result =
-    await api("getProducts");
+    await api(
+      "getProducts"
+    );
 
   if(!result.success){
-    throw new Error(result.message);
+
+    throw new Error(
+      result.message
+    );
+
   }
 
   state.products =
@@ -1403,50 +1824,68 @@ function renderStock(){
 
   tbody.innerHTML = "";
 
-  state.products.forEach(product=>{
 
-    const tr =
-      document.createElement("tr");
+  state.products
+    .forEach(product=>{
 
-    tr.innerHTML = `
+      const tr =
+        document.createElement(
+          "tr"
+        );
 
-      <td>${escapeHtml(product.id)}</td>
+      tr.innerHTML = `
 
-      <td>${escapeHtml(product.name)}</td>
+        <td>
+          ${escapeHtml(product.id)}
+        </td>
 
-      <td>
-        <input
-          class="stock-category"
-          data-id="${escapeAttr(product.id)}"
-          value="${escapeAttr(product.category || "أخرى")}"
-        >
-      </td>
+        <td>
+          ${escapeHtml(product.name)}
+        </td>
 
-      <td>
-        <input
-          class="stock-price"
-          data-id="${escapeAttr(product.id)}"
-          type="number"
-          min="0"
-          value="${Number(product.price || 0)}"
-        >
-      </td>
+        <td>
 
-      <td>
-        <input
-          class="stock-qty"
-          data-id="${escapeAttr(product.id)}"
-          type="number"
-          min="0"
-          value="${Number(product.stock || 0)}"
-        >
-      </td>
+          <input
+            class="stock-category"
+            data-id="${escapeAttr(product.id)}"
+            value="${escapeAttr(
+              product.category ||
+              "أخرى"
+            )}">
 
-    `;
+        </td>
 
-    tbody.appendChild(tr);
+        <td>
 
-  });
+          <input
+            class="stock-price"
+            data-id="${escapeAttr(product.id)}"
+            type="number"
+            min="0"
+            value="${Number(
+              product.price || 0
+            )}">
+
+        </td>
+
+        <td>
+
+          <input
+            class="stock-qty"
+            data-id="${escapeAttr(product.id)}"
+            type="number"
+            min="0"
+            value="${Number(
+              product.stock || 0
+            )}">
+
+        </td>
+
+      `;
+
+      tbody.appendChild(tr);
+
+    });
 
 }
 
@@ -1454,7 +1893,9 @@ function renderStock(){
 function addProductRow(){
 
   const name =
-    prompt("اسم المنتج:");
+    prompt(
+      "اسم المنتج:"
+    );
 
   if(!name){
     return;
@@ -1462,16 +1903,25 @@ function addProductRow(){
 
   const price =
     Number(
-      prompt("سعر البيع:", "0")
+      prompt(
+        "سعر البيع:",
+        "0"
+      )
     );
 
   const stock =
     Number(
-      prompt("الكمية:", "0")
+      prompt(
+        "الكمية:",
+        "0"
+      )
     );
 
   const category =
-    prompt("الفئة:", "أخرى");
+    prompt(
+      "الفئة:",
+      "أخرى"
+    );
 
   saveNewProduct(
     name,
@@ -1506,10 +1956,16 @@ async function saveNewProduct(
       );
 
     if(!result.success){
-      throw new Error(result.message);
+
+      throw new Error(
+        result.message
+      );
+
     }
 
-    toast(result.message);
+    toast(
+      result.message
+    );
 
     await loadProducts();
 
@@ -1532,44 +1988,56 @@ async function saveNewProduct(
 async function saveStock(){
 
   const products =
-    state.products.map(product=>{
+    state.products
+      .map(product=>{
 
-      const priceInput =
-        document.querySelector(
-          `.stock-price[data-id="${CSS.escape(String(product.id))}"]`
-        );
+        const priceInput =
+          document.querySelector(
+            `.stock-price[data-id="${CSS.escape(
+              String(product.id)
+            )}"]`
+          );
 
-      const qtyInput =
-        document.querySelector(
-          `.stock-qty[data-id="${CSS.escape(String(product.id))}"]`
-        );
+        const qtyInput =
+          document.querySelector(
+            `.stock-qty[data-id="${CSS.escape(
+              String(product.id)
+            )}"]`
+          );
 
-      const categoryInput =
-        document.querySelector(
-          `.stock-category[data-id="${CSS.escape(String(product.id))}"]`
-        );
+        const categoryInput =
+          document.querySelector(
+            `.stock-category[data-id="${CSS.escape(
+              String(product.id)
+            )}"]`
+          );
 
-      return {
 
-        id:product.id,
+        return {
 
-        price:
-          Number(
-            priceInput?.value || 0
-          ),
+          id:
+            product.id,
 
-        stock:
-          Number(
-            qtyInput?.value || 0
-          ),
+          price:
+            Number(
+              priceInput?.value ||
+              0
+            ),
 
-        category:
-          categoryInput?.value ||
-          "أخرى"
+          stock:
+            Number(
+              qtyInput?.value ||
+              0
+            ),
 
-      };
+          category:
+            categoryInput?.value ||
+            "أخرى"
 
-    });
+        };
+
+      });
+
 
   try{
 
@@ -1578,14 +2046,22 @@ async function saveStock(){
     const result =
       await api(
         "saveStock",
-        {products}
+        {
+          products
+        }
       );
 
     if(!result.success){
-      throw new Error(result.message);
+
+      throw new Error(
+        result.message
+      );
+
     }
 
-    toast(result.message);
+    toast(
+      result.message
+    );
 
     await loadProducts();
 
@@ -1606,20 +2082,25 @@ async function saveStock(){
 
 
 /* =========================================================
-   INVOICE
+ INVOICE
 ========================================================= */
 
 async function loadInvoiceData(){
 
   if(!state.products.length){
+
     await loadProducts();
+
   }
 
   if(!state.services.length){
+
     await loadServices();
+
   }
 
   renderServices();
+
 }
 
 
@@ -1629,60 +2110,84 @@ function addInvoiceProduct(){
     $("invoiceProducts");
 
   const row =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   row.className =
     "product-row";
 
+
   row.innerHTML = `
 
-    <select class="invoice-product"
-      onchange="calculateInvoice()">
+    <select
+      class="invoice-product">
 
       <option value="">
         اختر المنتج
       </option>
 
-      ${state.products.map(product=>`
+      ${state.products
+        .map(product=>`
 
-        <option value="${escapeAttr(product.id)}">
+          <option
+            value="${escapeAttr(
+              product.id
+            )}">
 
-          ${escapeHtml(product.name)}
-          — متاح ${Number(product.stock || 0)}
+            ${escapeHtml(
+              product.name
+            )}
+            — متاح
+            ${Number(
+              product.stock || 0
+            )}
 
-        </option>
+          </option>
 
-      `).join("")}
+        `)
+        .join("")}
 
     </select>
+
 
     <input
       class="invoice-qty"
       type="number"
       min="1"
-      value="1"
-      onchange="calculateInvoice()"
-    >
+      value="1">
+
 
     <input
       class="invoice-price"
       type="number"
       readonly
-      value="0"
-    >
+      value="0">
+
 
     <button
       class="remove-product"
-      onclick="this.parentElement.remove();calculateInvoice()">
+      onclick="
+        this.parentElement.remove();
+        calculateInvoice();
+      ">
+
       ×
+
     </button>
 
   `;
 
-  container.appendChild(row);
+
+  container.appendChild(
+    row
+  );
+
 
   row
-    .querySelector(".invoice-product")
+    .querySelector(
+      ".invoice-product"
+    )
     .addEventListener(
       "change",
       function(){
@@ -1694,16 +2199,30 @@ function addInvoiceProduct(){
               String(this.value)
           );
 
+
         row.querySelector(
           ".invoice-price"
         ).value =
           product
-            ? Number(product.price || 0)
-            : 0;
+          ? Number(
+              product.price || 0
+            )
+          : 0;
+
 
         calculateInvoice();
 
       }
+    );
+
+
+  row
+    .querySelector(
+      ".invoice-qty"
+    )
+    .addEventListener(
+      "input",
+      calculateInvoice
     );
 
 }
@@ -1713,8 +2232,11 @@ function calculateInvoice(){
 
   let total = 0;
 
+
   document
-    .querySelectorAll(".product-row")
+    .querySelectorAll(
+      ".product-row"
+    )
     .forEach(row=>{
 
       const select =
@@ -1729,6 +2251,7 @@ function calculateInvoice(){
           )?.value || 0
         );
 
+
       const product =
         state.products.find(
           p =>
@@ -1736,29 +2259,38 @@ function calculateInvoice(){
             String(select?.value)
         );
 
+
       const price =
         product
-          ? Number(product.price || 0)
-          : 0;
+        ? Number(
+            product.price || 0
+          )
+        : 0;
+
 
       row.querySelector(
         ".invoice-price"
       ).value =
         price;
 
+
       total +=
         price * qty;
 
     });
 
+
   const servicePrice =
     Number(
-      $("invoiceServicePrice").value || 0
+      $("invoiceServicePrice")
+        .value || 0
     );
+
 
   $("invoiceProductTotal")
     .textContent =
     money(total);
+
 
   $("invoiceTotal")
     .textContent =
@@ -1784,14 +2316,17 @@ async function saveInvoice(){
       .value
       .trim();
 
+
   const customerName =
     $("invoiceCustomerName")
       .value
       .trim();
 
+
   const service =
     $("invoiceService")
       .value;
+
 
   const servicePrice =
     Number(
@@ -1799,26 +2334,38 @@ async function saveInvoice(){
         .value || 0
     );
 
+
   if(!phone){
+
     toast(
       "رقم التليفون مطلوب",
       "error"
     );
+
     return;
+
   }
 
+
   if(!service){
+
     toast(
       "اختر نوع الخدمة",
       "error"
     );
+
     return;
+
   }
+
 
   const products = [];
 
+
   document
-    .querySelectorAll(".product-row")
+    .querySelectorAll(
+      ".product-row"
+    )
     .forEach(row=>{
 
       const id =
@@ -1826,12 +2373,14 @@ async function saveInvoice(){
           ".invoice-product"
         )?.value;
 
+
       const qty =
         Number(
           row.querySelector(
             ".invoice-qty"
           )?.value || 0
         );
+
 
       if(id && qty > 0){
 
@@ -1842,20 +2391,23 @@ async function saveInvoice(){
               String(id)
           );
 
+
         products.push({
 
-          id:id,
+          id,
 
           name:
-            product?.name || "",
+            product?.name ||
+            "",
 
-          qty:qty
+          qty
 
         });
 
       }
 
     });
+
 
   try{
 
@@ -1873,19 +2425,37 @@ async function saveInvoice(){
         }
       );
 
+
     if(!result.success){
-      throw new Error(result.message);
+
+      throw new Error(
+        result.message
+      );
+
     }
+
 
     toast(
       "تم حفظ الفاتورة بنجاح"
     );
+
 
     resetInvoice();
 
     await loadProducts();
 
     await loadDashboard();
+
+    if(
+      document
+        .getElementById("days")
+        ?.classList
+        .contains("active")
+    ){
+
+      await loadDays();
+
+    }
 
   }catch(error){
 
@@ -1910,7 +2480,8 @@ function resetInvoice(){
   $("invoiceService").value="";
   $("invoiceServicePrice").value="";
 
-  $("invoiceProducts").innerHTML="";
+  $("invoiceProducts")
+    .innerHTML="";
 
   $("invoiceProductTotal")
     .textContent="0";
@@ -1922,7 +2493,7 @@ function resetInvoice(){
 
 
 /* =========================================================
-   INVOICES
+ INVOICES
 ========================================================= */
 
 async function loadInvoices(){
@@ -1932,14 +2503,23 @@ async function loadInvoices(){
     showLoading();
 
     const result =
-      await api("getInvoices");
+      await api(
+        "getInvoices"
+      );
+
 
     if(!result.success){
-      throw new Error(result.message);
+
+      throw new Error(
+        result.message
+      );
+
     }
+
 
     state.invoices =
       result.data || [];
+
 
     renderInvoices();
 
@@ -1967,10 +2547,13 @@ function renderInvoices(){
       .trim()
       .toLowerCase();
 
+
   const tbody =
     $("invoicesTable");
 
+
   tbody.innerHTML="";
+
 
   state.invoices
     .filter(invoice=>{
@@ -1979,17 +2562,24 @@ function renderInvoices(){
         return true;
       }
 
+
       return (
 
-        String(invoice.customerName || "")
-          .toLowerCase()
-          .includes(search)
+        String(
+          invoice.customerName ||
+          ""
+        )
+        .toLowerCase()
+        .includes(search)
 
         ||
 
-        String(invoice.phone || "")
-          .toLowerCase()
-          .includes(search)
+        String(
+          invoice.phone ||
+          ""
+        )
+        .toLowerCase()
+        .includes(search)
 
       );
 
@@ -1997,29 +2587,62 @@ function renderInvoices(){
     .forEach(invoice=>{
 
       const tr =
-        document.createElement("tr");
+        document.createElement(
+          "tr"
+        );
 
-      tr.innerHTML=`
 
-        <td>${escapeHtml(invoice.id)}</td>
+      tr.innerHTML = `
 
-        <td>${formatDate(invoice.date)}</td>
+        <td>
+          ${escapeHtml(
+            invoice.id
+          )}
+        </td>
 
-        <td>${escapeHtml(invoice.customerName || "-")}</td>
+        <td>
+          ${formatDate(
+            invoice.date
+          )}
+        </td>
 
-        <td>${escapeHtml(invoice.phone || "-")}</td>
+        <td>
+          ${escapeHtml(
+            invoice.customerName ||
+            "-"
+          )}
+        </td>
 
-        <td>${escapeHtml(invoice.service || "-")}</td>
+        <td>
+          ${escapeHtml(
+            invoice.phone ||
+            "-"
+          )}
+        </td>
 
-        <td>${money(invoice.productTotal)}</td>
+        <td>
+          ${escapeHtml(
+            invoice.service ||
+            "-"
+          )}
+        </td>
+
+        <td>
+          ${money(
+            invoice.productTotal
+          )}
+        </td>
 
         <td>
           <strong>
-            ${money(invoice.total)}
+            ${money(
+              invoice.total
+            )}
           </strong>
         </td>
 
       `;
+
 
       tbody.appendChild(tr);
 
@@ -2029,7 +2652,7 @@ function renderInvoices(){
 
 
 /* =========================================================
-   CUSTOMER
+ CUSTOMER
 ========================================================= */
 
 async function searchCustomer(){
@@ -2039,13 +2662,18 @@ async function searchCustomer(){
       .value
       .trim();
 
+
   if(!phone){
+
     toast(
       "اكتب رقم الهاتف",
       "error"
     );
+
     return;
+
   }
+
 
   try{
 
@@ -2054,108 +2682,156 @@ async function searchCustomer(){
     const result =
       await api(
         "getCustomerHistory",
-        {phone}
+        {
+          phone
+        }
       );
 
+
     if(!result.success){
-      throw new Error(result.message);
+
+      throw new Error(
+        result.message
+      );
+
     }
+
 
     const invoices =
       result.data || [];
 
+
     if(!invoices.length){
 
-      $("customerResult").innerHTML =
+      $("customerResult")
+        .innerHTML =
         "لا توجد فواتير لهذا العميل.";
 
       return;
 
     }
 
+
     let total=0;
+
 
     invoices.forEach(
       invoice=>{
+
         total +=
-          Number(invoice.total || 0);
+          Number(
+            invoice.total ||
+            0
+          );
+
       }
     );
 
-    $("customerResult").innerHTML = `
 
-      <div class="grid">
+    $("customerResult")
+      .innerHTML = `
 
-        <div class="card">
-          <div class="stat-title">
-            عدد الزيارات
+        <div class="grid">
+
+          <div class="card">
+
+            <div class="stat-title">
+              عدد الزيارات
+            </div>
+
+            <div
+              class="stat-value blue">
+
+              ${invoices.length}
+
+            </div>
+
           </div>
 
-          <div class="stat-value blue">
-            ${invoices.length}
+
+          <div class="card">
+
+            <div class="stat-title">
+              إجمالي الإنفاق
+            </div>
+
+            <div
+              class="stat-value green">
+
+              ${money(total)}
+
+            </div>
+
           </div>
+
         </div>
 
-        <div class="card">
-          <div class="stat-title">
-            إجمالي الإنفاق
-          </div>
 
-          <div class="stat-value green">
-            ${money(total)}
-          </div>
-        </div>
+        <div class="table-wrap">
 
-      </div>
+          <table>
 
-      <div class="table-wrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>التاريخ</th>
-              <th>الخدمة</th>
-              <th>المنتجات</th>
-              <th>الإجمالي</th>
-            </tr>
-          </thead>
-
-          <tbody>
-
-            ${invoices.map(invoice=>`
+            <thead>
 
               <tr>
 
-                <td>
-                  ${formatDate(invoice.date)}
-                </td>
-
-                <td>
-                  ${escapeHtml(invoice.service)}
-                </td>
-
-                <td>
-                  ${money(invoice.productTotal)}
-                </td>
-
-                <td>
-                  <strong>
-                    ${money(invoice.total)}
-                  </strong>
-                </td>
+                <th>التاريخ</th>
+                <th>الخدمة</th>
+                <th>المنتجات</th>
+                <th>الإجمالي</th>
 
               </tr>
 
-            `).join("")}
+            </thead>
 
-          </tbody>
+            <tbody>
 
-        </table>
+              ${invoices
+                .map(invoice=>`
 
-      </div>
+                  <tr>
 
-    `;
+                    <td>
+                      ${formatDate(
+                        invoice.date
+                      )}
+                    </td>
+
+                    <td>
+                      ${escapeHtml(
+                        invoice.service
+                      )}
+                    </td>
+
+                    <td>
+                      ${money(
+                        invoice.productTotal
+                      )}
+                    </td>
+
+                    <td>
+
+                      <strong>
+                        ${money(
+                          invoice.total
+                        )}
+                      </strong>
+
+                    </td>
+
+                  </tr>
+
+                `)
+                .join("")}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      `;
+
 
   }catch(error){
 
@@ -2174,20 +2850,29 @@ async function searchCustomer(){
 
 
 /* =========================================================
-   SUPPLIERS
+ SUPPLIERS
 ========================================================= */
 
 async function loadSuppliers(){
 
   const result =
-    await api("getSuppliers");
+    await api(
+      "getSuppliers"
+    );
+
 
   if(!result.success){
-    throw new Error(result.message);
+
+    throw new Error(
+      result.message
+    );
+
   }
+
 
   state.suppliers =
     result.data || [];
+
 
   renderSuppliers();
 
@@ -2199,32 +2884,59 @@ function renderSuppliers(){
   const tbody =
     $("suppliersTable");
 
+
   if(!tbody){
     return;
   }
 
+
   tbody.innerHTML="";
 
-  state.suppliers.forEach(supplier=>{
 
-    const tr =
-      document.createElement("tr");
+  state.suppliers
+    .forEach(supplier=>{
 
-    tr.innerHTML=`
+      const tr =
+        document.createElement(
+          "tr"
+        );
 
-      <td>${escapeHtml(supplier.id)}</td>
 
-      <td>${escapeHtml(supplier.name || "")}</td>
+      tr.innerHTML = `
 
-      <td>${escapeHtml(supplier.phone || "")}</td>
+        <td>
+          ${escapeHtml(
+            supplier.id
+          )}
+        </td>
 
-      <td>${escapeHtml(supplier.notes || "")}</td>
+        <td>
+          ${escapeHtml(
+            supplier.name ||
+            ""
+          )}
+        </td>
 
-    `;
+        <td>
+          ${escapeHtml(
+            supplier.phone ||
+            ""
+          )}
+        </td>
 
-    tbody.appendChild(tr);
+        <td>
+          ${escapeHtml(
+            supplier.notes ||
+            ""
+          )}
+        </td>
 
-  });
+      `;
+
+
+      tbody.appendChild(tr);
+
+    });
 
 }
 
@@ -2236,15 +2948,18 @@ async function saveSupplier(){
       .value
       .trim();
 
+
   const phone =
     $("supplierPhone")
       .value
       .trim();
 
+
   const notes =
     $("supplierNotes")
       .value
       .trim();
+
 
   if(!name){
 
@@ -2256,6 +2971,7 @@ async function saveSupplier(){
     return;
 
   }
+
 
   try{
 
@@ -2271,15 +2987,25 @@ async function saveSupplier(){
         }
       );
 
+
     if(!result.success){
-      throw new Error(result.message);
+
+      throw new Error(
+        result.message
+      );
+
     }
 
-    toast(result.message);
+
+    toast(
+      result.message
+    );
+
 
     $("supplierName").value="";
     $("supplierPhone").value="";
     $("supplierNotes").value="";
+
 
     await loadSuppliers();
 
@@ -2300,60 +3026,85 @@ async function saveSupplier(){
 
 
 /* =========================================================
-   PURCHASES
+ PURCHASES
 ========================================================= */
 
 async function loadPurchaseData(){
 
   if(!state.products.length){
+
     await loadProducts();
+
   }
 
+
   if(!state.suppliers.length){
+
     await loadSuppliers();
+
   }
+
 
   const productSelect =
     $("purchaseProduct");
 
+
   productSelect.innerHTML =
     '<option value="">اختر المنتج</option>';
 
-  state.products.forEach(product=>{
 
-    const option =
-      document.createElement("option");
+  state.products
+    .forEach(product=>{
 
-    option.value =
-      product.id;
+      const option =
+        document.createElement(
+          "option"
+        );
 
-    option.textContent =
-      product.name;
 
-    productSelect.appendChild(option);
+      option.value =
+        product.id;
 
-  });
+
+      option.textContent =
+        product.name;
+
+
+      productSelect
+        .appendChild(option);
+
+    });
+
 
   const supplierSelect =
     $("purchaseSupplier");
 
+
   supplierSelect.innerHTML =
     '<option value="">اختر المورد</option>';
 
-  state.suppliers.forEach(supplier=>{
 
-    const option =
-      document.createElement("option");
+  state.suppliers
+    .forEach(supplier=>{
 
-    option.value =
-      supplier.id;
+      const option =
+        document.createElement(
+          "option"
+        );
 
-    option.textContent =
-      supplier.name;
 
-    supplierSelect.appendChild(option);
+      option.value =
+        supplier.id;
 
-  });
+
+      option.textContent =
+        supplier.name;
+
+
+      supplierSelect
+        .appendChild(option);
+
+    });
 
 }
 
@@ -2364,9 +3115,11 @@ async function savePurchase(){
     $("purchaseProduct")
       .value;
 
+
   const supplierId =
     $("purchaseSupplier")
       .value;
+
 
   const quantity =
     Number(
@@ -2374,11 +3127,13 @@ async function savePurchase(){
         .value || 0
     );
 
+
   const unitPrice =
     Number(
       $("purchaseUnitPrice")
         .value || 0
     );
+
 
   const product =
     state.products.find(
@@ -2387,12 +3142,14 @@ async function savePurchase(){
         String(productId)
     );
 
+
   const supplier =
     state.suppliers.find(
       s =>
         String(s.id) ===
         String(supplierId)
     );
+
 
   if(!productId){
 
@@ -2405,6 +3162,7 @@ async function savePurchase(){
 
   }
 
+
   if(quantity<=0){
 
     toast(
@@ -2415,6 +3173,7 @@ async function savePurchase(){
     return;
 
   }
+
 
   try{
 
@@ -2428,12 +3187,14 @@ async function savePurchase(){
           productId,
 
           product:
-            product?.name || "",
+            product?.name ||
+            "",
 
           supplierId,
 
           supplier:
-            supplier?.name || "",
+            supplier?.name ||
+            "",
 
           quantity,
 
@@ -2442,14 +3203,27 @@ async function savePurchase(){
         }
       );
 
+
     if(!result.success){
-      throw new Error(result.message);
+
+      throw new Error(
+        result.message
+      );
+
     }
 
-    toast(result.message);
 
-    $("purchaseQuantity").value="";
-    $("purchaseUnitPrice").value="";
+    toast(
+      result.message
+    );
+
+
+    $("purchaseQuantity")
+      .value="";
+
+    $("purchaseUnitPrice")
+      .value="";
+
 
     await loadProducts();
 
@@ -2470,7 +3244,7 @@ async function savePurchase(){
 
 
 /* =========================================================
-   EXPENSES
+ EXPENSES
 ========================================================= */
 
 async function loadExpenses(){
@@ -2480,14 +3254,23 @@ async function loadExpenses(){
     showLoading();
 
     const result =
-      await api("getExpenses");
+      await api(
+        "getExpenses"
+      );
+
 
     if(!result.success){
-      throw new Error(result.message);
+
+      throw new Error(
+        result.message
+      );
+
     }
+
 
     state.expenses =
       result.data || [];
+
 
     renderExpenses();
 
@@ -2512,42 +3295,64 @@ function renderExpenses(){
   const tbody =
     $("expensesTable");
 
+
   tbody.innerHTML="";
 
-  state.expenses.forEach(expense=>{
 
-    const tr =
-      document.createElement("tr");
+  state.expenses
+    .forEach(expense=>{
 
-    tr.innerHTML=`
+      const tr =
+        document.createElement(
+          "tr"
+        );
 
-      <td>
-        ${formatDate(expense.date)}
-      </td>
 
-      <td>
-        ${escapeHtml(expense.name || "")}
-      </td>
+      tr.innerHTML = `
 
-      <td>
-        ${escapeHtml(expense.category || "")}
-      </td>
+        <td>
+          ${formatDate(
+            expense.date
+          )}
+        </td>
 
-      <td>
-        <strong>
-          ${money(expense.amount)}
-        </strong>
-      </td>
+        <td>
+          ${escapeHtml(
+            expense.name ||
+            ""
+          )}
+        </td>
 
-      <td>
-        ${escapeHtml(expense.notes || "")}
-      </td>
+        <td>
+          ${escapeHtml(
+            expense.category ||
+            ""
+          )}
+        </td>
 
-    `;
+        <td>
 
-    tbody.appendChild(tr);
+          <strong>
+            ${money(
+              expense.amount
+            )}
+          </strong>
 
-  });
+        </td>
+
+        <td>
+          ${escapeHtml(
+            expense.notes ||
+            ""
+          )}
+        </td>
+
+      `;
+
+
+      tbody.appendChild(tr);
+
+    });
 
 }
 
@@ -2559,21 +3364,25 @@ async function saveExpense(){
       .value
       .trim();
 
+
   const amount =
     Number(
       $("expenseAmount")
         .value || 0
     );
 
+
   const category =
     $("expenseCategory")
       .value
       .trim();
 
+
   const notes =
     $("expenseNotes")
       .value
       .trim();
+
 
   if(!name){
 
@@ -2586,6 +3395,7 @@ async function saveExpense(){
 
   }
 
+
   if(amount<=0){
 
     toast(
@@ -2596,6 +3406,7 @@ async function saveExpense(){
     return;
 
   }
+
 
   try{
 
@@ -2612,19 +3423,40 @@ async function saveExpense(){
         }
       );
 
+
     if(!result.success){
-      throw new Error(result.message);
+
+      throw new Error(
+        result.message
+      );
+
     }
 
-    toast(result.message);
+
+    toast(
+      result.message
+    );
+
 
     $("expenseName").value="";
     $("expenseAmount").value="";
     $("expenseCategory").value="";
     $("expenseNotes").value="";
 
+
     await loadExpenses();
+
     await loadDashboard();
+
+    if(
+      $("days")
+      .classList
+      .contains("active")
+    ){
+
+      await loadDays();
+
+    }
 
   }catch(error){
 
@@ -2643,7 +3475,7 @@ async function saveExpense(){
 
 
 /* =========================================================
-   DASHBOARD
+ DASHBOARD
 ========================================================= */
 
 async function loadDashboard(){
@@ -2651,30 +3483,51 @@ async function loadDashboard(){
   try{
 
     const result =
-      await api("getDashboard");
+      await api(
+        "getDashboard"
+      );
+
 
     if(!result.success){
-      throw new Error(result.message);
+
+      throw new Error(
+        result.message
+      );
+
     }
+
 
     const data =
       result.data || {};
 
+
     $("dashInvoices")
       .textContent =
-      money(data.invoiceCount);
+      money(
+        data.invoiceCount
+      );
+
 
     $("dashSales")
       .textContent =
-      money(data.sales);
+      money(
+        data.sales
+      );
+
 
     $("dashExpenses")
       .textContent =
-      money(data.expenses);
+      money(
+        data.expenses
+      );
+
 
     $("dashNet")
       .textContent =
-      money(data.net);
+      money(
+        data.net
+      );
+
 
     await loadDayStatus();
 
@@ -2688,7 +3541,7 @@ async function loadDashboard(){
 
 
 /* =========================================================
-   DAY
+ DAY STATUS
 ========================================================= */
 
 async function loadDayStatus(){
@@ -2696,19 +3549,31 @@ async function loadDayStatus(){
   try{
 
     const result =
-      await api("getDayStatus");
+      await api(
+        "getDayStatus"
+      );
+
 
     if(!result.success){
       return;
     }
 
+
     const finished =
       result.data?.finished;
 
-    $("dayStatus").innerHTML =
+
+    $("dayStatus")
+      .innerHTML =
       finished
-        ? '<span class="badge red">تم إنهاء اليوم</span>'
-        : '<span class="badge green">اليوم مفتوح</span>';
+
+      ?
+
+      '<span class="badge red">تم إنهاء اليوم</span>'
+
+      :
+
+      '<span class="badge green">اليوم مفتوح</span>';
 
   }catch(error){
 
@@ -2718,6 +3583,10 @@ async function loadDayStatus(){
 
 }
 
+
+/* =========================================================
+ FINISH DAY
+========================================================= */
 
 async function finishDay(){
 
@@ -2726,23 +3595,39 @@ async function finishDay(){
       "هل أنت متأكد من إنهاء اليوم؟"
     )
   ){
+
     return;
+
   }
+
 
   try{
 
     showLoading();
 
     const result =
-      await api("finishDay");
+      await api(
+        "finishDay"
+      );
+
 
     if(!result.success){
-      throw new Error(result.message);
+
+      throw new Error(
+        result.message
+      );
+
     }
 
-    toast(result.message);
+
+    toast(
+      result.message
+    );
+
 
     await loadDayStatus();
+
+    await loadDays();
 
   }catch(error){
 
@@ -2761,7 +3646,562 @@ async function finishDay(){
 
 
 /* =========================================================
-   REPORTS
+ DAYS
+========================================================= */
+
+async function loadDays(){
+
+  try{
+
+    const result =
+      await api(
+        "getDays"
+      );
+
+
+    if(!result.success){
+
+      throw new Error(
+        result.message ||
+        "تعذر تحميل الأيام"
+      );
+
+    }
+
+
+    state.days =
+      result.data || [];
+
+
+    renderDays();
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      error.message ||
+      "خطأ في تحميل الأيام",
+      "error"
+    );
+
+  }
+
+}
+
+
+function renderDays(){
+
+  const tbody =
+    $("daysTable");
+
+
+  if(!tbody){
+    return;
+  }
+
+
+  tbody.innerHTML="";
+
+
+  if(!state.days.length){
+
+    tbody.innerHTML = `
+
+      <tr>
+
+        <td
+          colspan="7"
+          style="text-align:center">
+
+          لا توجد أيام مسجلة
+
+        </td>
+
+      </tr>
+
+    `;
+
+    return;
+
+  }
+
+
+  state.days
+    .forEach(day=>{
+
+      const opening =
+        Number(
+          day.openingBalance ??
+          day.opening ??
+          day.startBalance ??
+          day.openingAmount ??
+          0
+        );
+
+
+      const sales =
+        Number(
+          day.sales ??
+          day.salesTotal ??
+          0
+        );
+
+
+      const expenses =
+        Number(
+          day.expenses ??
+          day.expenseTotal ??
+          0
+        );
+
+
+      const remaining =
+        Number(
+          day.remaining ??
+          day.balance ??
+          (
+            opening +
+            sales -
+            expenses
+          )
+        );
+
+
+      const dayName =
+        day.day ||
+        day.dayName ||
+        getDayName(
+          day.date
+        );
+
+
+      const tr =
+        document.createElement(
+          "tr"
+        );
+
+
+      tr.innerHTML = `
+
+        <td>
+          ${formatDate(
+            day.date
+          )}
+        </td>
+
+        <td>
+          ${money(
+            opening
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            dayName
+          )}
+        </td>
+
+        <td>
+
+          <strong>
+            ${money(
+              sales
+            )}
+          </strong>
+
+        </td>
+
+        <td>
+
+          <strong>
+            ${money(
+              expenses
+            )}
+          </strong>
+
+        </td>
+
+        <td>
+
+          <strong>
+            ${money(
+              remaining
+            )}
+          </strong>
+
+        </td>
+
+        <td>
+
+          <div
+            style="
+              display:flex;
+              gap:6px;
+              flex-wrap:wrap;
+            ">
+
+            <button
+              class="btn btn-secondary"
+              onclick="editDayByIndex(${state.days.indexOf(day)})">
+
+              تعديل
+
+            </button>
+
+
+            <button
+              class="btn btn-danger"
+              onclick="deleteDayByIndex(${state.days.indexOf(day)})">
+
+              حذف
+
+            </button>
+
+          </div>
+
+        </td>
+
+      `;
+
+
+      tbody.appendChild(
+        tr
+      );
+
+    });
+
+}
+
+
+/* =========================================================
+ ADD DAY
+========================================================= */
+
+async function saveDay(){
+
+  const date =
+    $("dayDate")
+      .value;
+
+
+  const openingBalance =
+    Number(
+      $("dayOpening")
+        .value || 0
+    );
+
+
+  if(!date){
+
+    toast(
+      "اختر التاريخ",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if(date < "2026-08-01"){
+
+    toast(
+      "يمكن إضافة الأيام بداية من 01/08/2026",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    showLoading();
+
+    const result =
+      await api(
+        "addDay",
+        {
+          date,
+          openingBalance
+        }
+      );
+
+
+    if(!result.success){
+
+      throw new Error(
+        result.message ||
+        "تعذر إضافة اليوم"
+      );
+
+    }
+
+
+    toast(
+      result.message ||
+      "تم إضافة اليوم بنجاح"
+    );
+
+
+    $("dayDate")
+      .value =
+      date;
+
+
+    $("dayOpening")
+      .value =
+      "0";
+
+
+    await loadDays();
+
+  }catch(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+}
+
+
+/* =========================================================
+ EDIT DAY
+========================================================= */
+
+function editDayByIndex(index){
+
+  const day =
+    state.days[index];
+
+
+  if(!day){
+    return;
+  }
+
+
+  const oldDate =
+    dateKey(
+      day.date
+    );
+
+
+  const opening =
+    Number(
+      day.openingBalance ??
+      day.opening ??
+      day.startBalance ??
+      day.openingAmount ??
+      0
+    );
+
+
+  const newDate =
+    prompt(
+      "التاريخ:",
+      oldDate
+    );
+
+
+  if(newDate === null){
+    return;
+  }
+
+
+  if(
+    !newDate ||
+    newDate < "2026-08-01"
+  ){
+
+    toast(
+      "التاريخ يجب أن يكون من 01/08/2026 أو بعده",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const newOpening =
+    prompt(
+      "رصيد أول المدة:",
+      opening
+    );
+
+
+  if(newOpening === null){
+    return;
+  }
+
+
+  updateDay(
+    day.id ||
+    oldDate,
+    newDate,
+    Number(
+      newOpening || 0
+    )
+  );
+
+}
+
+
+/* =========================================================
+ UPDATE DAY
+========================================================= */
+
+async function updateDay(
+  id,
+  date,
+  openingBalance
+){
+
+  try{
+
+    showLoading();
+
+    const result =
+      await api(
+        "updateDay",
+        {
+          id,
+          date,
+          openingBalance
+        }
+      );
+
+
+    if(!result.success){
+
+      throw new Error(
+        result.message ||
+        "تعذر تعديل اليوم"
+      );
+
+    }
+
+
+    toast(
+      result.message ||
+      "تم تعديل اليوم"
+    );
+
+
+    await loadDays();
+
+  }catch(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+}
+
+
+/* =========================================================
+ DELETE DAY
+========================================================= */
+
+function deleteDayByIndex(index){
+
+  const day =
+    state.days[index];
+
+
+  if(!day){
+    return;
+  }
+
+
+  const id =
+    day.id ||
+    dateKey(day.date);
+
+
+  deleteDay(id);
+
+}
+
+
+async function deleteDay(id){
+
+  if(
+    !confirm(
+      "هل أنت متأكد من حذف هذا اليوم؟"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  try{
+
+    showLoading();
+
+    const result =
+      await api(
+        "deleteDay",
+        {
+          id
+        }
+      );
+
+
+    if(!result.success){
+
+      throw new Error(
+        result.message ||
+        "تعذر حذف اليوم"
+      );
+
+    }
+
+
+    toast(
+      result.message ||
+      "تم حذف اليوم"
+    );
+
+
+    await loadDays();
+
+  }catch(error){
+
+    toast(
+      error.message,
+      "error"
+    );
+
+  }finally{
+
+    showLoading(false);
+
+  }
+
+}
+
+
+/* =========================================================
+ REPORTS
 ========================================================= */
 
 function setDefaultReportDates(){
@@ -2769,18 +4209,28 @@ function setDefaultReportDates(){
   const today =
     new Date();
 
+
   const date =
-    today.toISOString()
+    today
+      .toISOString()
       .slice(0,10);
 
+
   if(!$("reportFrom").value){
-    $("reportFrom").value =
+
+    $("reportFrom")
+      .value =
       date;
+
   }
 
+
   if(!$("reportTo").value){
-    $("reportTo").value =
+
+    $("reportTo")
+      .value =
       date;
+
   }
 
 }
@@ -2789,10 +4239,14 @@ function setDefaultReportDates(){
 async function loadReport(){
 
   const from =
-    $("reportFrom").value;
+    $("reportFrom")
+      .value;
+
 
   const to =
-    $("reportTo").value;
+    $("reportTo")
+      .value;
+
 
   if(!from || !to){
 
@@ -2805,6 +4259,7 @@ async function loadReport(){
 
   }
 
+
   if(from > to){
 
     toast(
@@ -2816,50 +4271,65 @@ async function loadReport(){
 
   }
 
+
   try{
 
     showLoading();
 
-    /*
-      الـ Backend الحالي لا يحتوي Action
-      باسم getReport، لذلك نستخدم getInvoices
-      و getExpenses ونحسب التقرير هنا.
-    */
 
     const [
       invoiceResult,
       expenseResult
-    ] = await Promise.all([
+    ] =
+      await Promise.all([
 
-      api("getInvoices"),
+        api(
+          "getInvoices"
+        ),
 
-      api("getExpenses")
+        api(
+          "getExpenses"
+        )
 
-    ]);
+      ]);
+
 
     if(!invoiceResult.success){
+
       throw new Error(
         invoiceResult.message
       );
+
     }
 
+
     if(!expenseResult.success){
+
       throw new Error(
         expenseResult.message
       );
+
     }
 
+
     const invoices =
-      invoiceResult.data || [];
+      invoiceResult.data ||
+      [];
+
 
     const expenses =
-      expenseResult.data || [];
+      expenseResult.data ||
+      [];
+
 
     const filteredInvoices =
       invoices.filter(item=>{
 
         const date =
-          dateKey(item.date);
+          dateKey(
+            item.date
+          );
+
 
         return (
           date >= from &&
@@ -2867,12 +4337,16 @@ async function loadReport(){
         );
 
       });
+
 
     const filteredExpenses =
       expenses.filter(item=>{
 
         const date =
-          dateKey(item.date);
+          dateKey(
+            item.date
+          );
+
 
         return (
           date >= from &&
@@ -2881,21 +4355,30 @@ async function loadReport(){
 
       });
 
+
     const sales =
       filteredInvoices.reduce(
         (sum,item)=>
           sum +
-          Number(item.total || 0),
+          Number(
+            item.total ||
+            0
+          ),
         0
       );
+
 
     const expenseTotal =
       filteredExpenses.reduce(
         (sum,item)=>
           sum +
-          Number(item.amount || 0),
+          Number(
+            item.amount ||
+            0
+          ),
         0
       );
+
 
     $("reportInvoices")
       .textContent =
@@ -2903,13 +4386,20 @@ async function loadReport(){
         filteredInvoices.length
       );
 
+
     $("reportSales")
       .textContent =
-      money(sales);
+      money(
+        sales
+      );
+
 
     $("reportExpenses")
       .textContent =
-      money(expenseTotal);
+      money(
+        expenseTotal
+      );
+
 
     $("reportNet")
       .textContent =
@@ -2935,7 +4425,7 @@ async function loadReport(){
 
 
 /* =========================================================
-   DATE
+ DATE
 ========================================================= */
 
 function dateKey(value){
@@ -2944,25 +4434,40 @@ function dateKey(value){
     return "";
   }
 
+
   const date =
     new Date(value);
 
-  if(isNaN(date.getTime())){
-    return "";
+
+  if(
+    isNaN(
+      date.getTime()
+    )
+  ){
+
+    return String(value)
+      .slice(0,10);
+
   }
+
 
   const y =
     date.getFullYear();
 
+
   const m =
     String(
       date.getMonth()+1
-    ).padStart(2,"0");
+    )
+    .padStart(2,"0");
+
 
   const d =
     String(
       date.getDate()
-    ).padStart(2,"0");
+    )
+    .padStart(2,"0");
+
 
   return `${y}-${m}-${d}`;
 
@@ -2975,12 +4480,21 @@ function formatDate(value){
     return "-";
   }
 
+
   const date =
     new Date(value);
 
-  if(isNaN(date.getTime())){
+
+  if(
+    isNaN(
+      date.getTime()
+    )
+  ){
+
     return String(value);
+
   }
+
 
   return date.toLocaleDateString(
     "ar-EG",
@@ -2994,31 +4508,82 @@ function formatDate(value){
 }
 
 
+function getDayName(value){
+
+  if(!value){
+    return "-";
+  }
+
+
+  const date =
+    new Date(value);
+
+
+  if(
+    isNaN(
+      date.getTime()
+    )
+  ){
+
+    return "-";
+
+  }
+
+
+  return date.toLocaleDateString(
+    "ar-EG",
+    {
+      weekday:"long"
+    }
+  );
+
+}
+
+
 /* =========================================================
-   SECURITY / HTML
+ SECURITY
 ========================================================= */
 
 function escapeHtml(value){
 
-  return String(value ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+  return String(
+    value ?? ""
+  )
+  .replaceAll(
+    "&",
+    "&amp;"
+  )
+  .replaceAll(
+    "<",
+    "&lt;"
+  )
+  .replaceAll(
+    ">",
+    "&gt;"
+  )
+  .replaceAll(
+    '"',
+    "&quot;"
+  )
+  .replaceAll(
+    "'",
+    "&#039;"
+  );
 
 }
 
 
 function escapeAttr(value){
 
-  return escapeHtml(value);
+  return escapeHtml(
+    value
+  );
 
 }
 
 
 /* =========================================================
-   START
+ START
 ========================================================= */
 
 document.addEventListener(
